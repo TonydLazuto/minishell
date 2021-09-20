@@ -12,50 +12,6 @@
 
 #include "minishell.h"
 
-t_node	*push_right(t_node *node, t_info info)
-{
-	t_node *elet;
-
-	elet = new_node(info);
-	if (!elet)
-		return (NULL);
-	if (!node)
-		return (elet);
-	node->right = elet;
-	elet->parent = node;
-	return (node);
-}
-
-t_node	*push_left(t_node *node, t_info info)
-{
-	t_node *elet;
-
-	elet = new_node(info);
-	if (!elet)
-		return (NULL);
-	if (!node)
-		return (elet);
-	node->left = elet;
-	elet->parent = node;
-	return (node);
-}
-
-t_node	*push_parent(t_node *left, t_node *right, t_info info)
-{
-	t_node	*elet;
-
-	elet = new_node(info);
-	if (!elet)
-		return (NULL);
-	elet->left = left;
-	elet->right = right;
-	if (left)
-		left->parent = elet;
-	if (right)
-		right->parent = elet;
-	return (elet);
-}
-
 /*
 t_node	*pop_node(t_node *node, t_node *elet)
 {

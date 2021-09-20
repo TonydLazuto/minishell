@@ -1,8 +1,10 @@
-.PHONY		= all clean fclean re bonus
+.PHONY		= all clean fclean re bonus libclean libfclean
 
 NAME		= minishell
 
-LIB			= libft.a
+LIBA			= libft.a
+
+LIB_DIR		= libft
 
 CC			= gcc
 
@@ -24,27 +26,25 @@ OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 
 all: 			$(NAME)
 
-$(LIB):
-				$(MAKE) --silent -C $(LIB_DIR)
-
-$(NAME): 		$(OBJS) $(LIB)
-				$(CC) -o $(NAME) $(OBJS) -L$(LIB_DIR) -lft
+$(NAME): 		$(OBJS)
+				@make --silent -C $(LIB_DIR)
+				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) -L$(LIB_DIR) -lft
 
 $(OBJ_DIR)/%.o:	%.c
-				@ $(shell mkdir -p $(OBJ_DIR))
-				$(CC) $(CFLAGS) -c $< -o $@
+				@mkdir -p $(OBJ_DIR)
+				$(CC) -I$(LIB_DIR) -c $< -o $@
 
 libclean:		
-				$(MAKE) clean -C $(LIB_DIR)
+				@make clean -C $(LIB_DIR)
 
-libfclean:		libclean
-				$(RM) $(LIB_DIR)/$(LIB)
+libfclean:
+				@make fclean -C $(LIB_DIR)
 
 clean:			libclean
 				rm -rf $(OBJ_DIR)
 
 fclean:			clean
-				$(RM) $(LIB_DIR)/libft.a
+				$(RM) $(LIB_DIR)/$(LIBA)
 				$(RM) $(NAME)
 
 re:				fclean all

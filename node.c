@@ -12,20 +12,29 @@
 
 #include "minishell.h"
 
-t_node	*new_node(t_info info)
+t_node	*new_node(int type, t_arg *arg)
 {
 	t_node	*node;
 
 	node = (t_node *)malloc(sizeof(*node));
 	if (!node)
 		return (NULL);
-	info.node_info = NULL;
-	info.debug = NULL;
-
+	node->arg = arg;
+	node->type = type;
 	node->parent = NULL;
 	node->right = NULL;
 	node->left = NULL;
 	return (node);
+}
+
+t_node	*go_to_top_of_tree(t_node *node)
+{
+	t_node	*elet;
+
+	elet = node;
+	while (elet && elet->parent)
+		elet = elet->parent;
+	return (elet);
 }
 
 void	clear_node(t_node *node)
@@ -34,7 +43,38 @@ void	clear_node(t_node *node)
 		return ;
 	clear_node(node->right);
 	clear_node(node->left);
+	if (node)
+	{
+		node->type = 0;
+		free(node);
+		node = NULL;
+	}
+}
 
-	free(node);
-	node = NULL;
+t_node	*push_right(t_node *parent, int type)
+{
+	t_node *child_r;
+
+	child_r = new_node(type, NULL);
+	if (!child_r)
+		return (NULL);
+	if (!parent)
+		return (child_r);
+	child_r->parent = parent;
+	parent->right = child_r;
+	return (child_r);
+}
+
+t_node	*push_left(t_node *parent, int type)
+{
+	t_node *child_l;
+
+	child_l = new_node(type, NULL);
+	if (!child_l)
+		return (NULL);
+	if (!parent)
+		return (child_l);
+	child_l->parent = parent;
+	parent->left = child_l;
+	return (child_l);
 }
