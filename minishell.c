@@ -16,17 +16,19 @@ void	print_node(t_node *node)
 {
 	if (!node)
 		return ;
-	/*while (node)
+	/*
+	while (node)
 	{
 		printf("node : %d\n", node->type);
 		node = node->right;
-	}*/
+	}
+	*/
 	print_node(node->left);
 	print_node(node->right);
 	printf("node : %d\n", node->type);
 }
 
-int		main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
 	t_node	*node;
 	t_node	*node2;
@@ -62,8 +64,6 @@ int		main(int ac, char *av[])
 	print_node(node2);
 	printf("------------------\n");
 	clear_node(node2);
-	if (node4)
-		//print_node(node4);
 	printf("------------------\n");
 	return (0);
 }
