@@ -47,7 +47,8 @@ typedef struct s_node
 t_node	*new_node(int type, t_arg *arg);
 t_node	*push_right(t_node *node, int type);
 t_node	*push_left(t_node *node, int type);
-t_node	*go_to_top_of_tree(t_node *node);
+void	rewind_tree(t_node **node);
 void	clear_node(t_node *node);
+t_node	*find_arg(t_node *node, char *arg);
 
 #endif

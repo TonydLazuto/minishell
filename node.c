@@ -27,14 +27,10 @@ t_node	*new_node(int type, t_arg *arg)
 	return (node);
 }
 
-t_node	*go_to_top_of_tree(t_node *node)
+void	rewind_tree(t_node **node)
 {
-	t_node	*elet;
-
-	elet = node;
-	while (elet && elet->parent)
-		elet = elet->parent;
-	return (elet);
+	while (*node && (*node)->parent)
+		*node = (*node)->parent;
 }
 
 void	clear_node(t_node *node)

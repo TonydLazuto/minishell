@@ -60,10 +60,12 @@ int	main(int ac, char *av[])
 
 	print_node(node4);
 	printf("------------------\n");
-	node2 = go_to_top_of_tree(node2);
+	rewind_tree(&node2);
 	print_node(node2);
 	printf("------------------\n");
 	clear_node(node2);
 	printf("------------------\n");
+	rewind_tree(&node3);
+	printf("%d\n", find_arg(node3, NULL));
 	return (0);
 }
