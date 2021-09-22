@@ -37,7 +37,7 @@ typedef struct s_arg
 
 typedef struct s_node
 {
-	t_arg			*arg;
+	char			**arg;
 	int				type;
 	struct s_node	*parent;
 	struct s_node	*right;

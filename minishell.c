@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+/*
+echo a > file | cat
+
+echo "ls > output.txt" ??
+echo "ls"
+--> affiche ls
+
+export qwe="ls"
+$qwe
+--> execute ls
+
+export qwe="ls -a"
+$qwe
+--> command not found ls -a
+*/
+
 void	print_node(t_node *node)
 {
 	if (!node)
@@ -42,6 +58,20 @@ int	main(int ac, char *av[])
 	node = NULL;
 	if (ac >= 2 || av[1])
 		return (0);
+	char	*name;	
+	int 	idtty = ttyslot();
+	printf("idtty : %d\n", idtty);
+	if (isatty(idtty))
+	{
+		name = ttyname(idtty);
+		if (name)
+			printf("ttyname : %s\n", name);
+		else
+			printf("Noname for mytty :o\n");
+	}
+	else
+		printf("FAILED\n");
+
 	node = new_node(1, NULL);
 	if (!node)
 	{
@@ -66,6 +96,6 @@ int	main(int ac, char *av[])
 	clear_node(node2);
 	printf("------------------\n");
 	rewind_tree(&node3);
-	printf("%d\n", find_arg(node3, NULL));
+	printf("%d\n", find_arg(node3, NULL)->type);
 	return (0);
 }
