@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-t_node	*new_node(int type, t_arg *arg)
+t_node	*new_node(enum e_ntype ntype)
 {
 	t_node	*node;
 
 	node = (t_node *)malloc(sizeof(*node));
 	if (!node)
 		return (NULL);
-	node->arg = arg;
-	node->type = type;
+	node->ntype = ntype;
+	node->cmd.arg = NULL;
 	node->parent = NULL;
 	node->right = NULL;
 	node->left = NULL;
@@ -29,29 +29,40 @@ t_node	*new_node(int type, t_arg *arg)
 
 void	rewind_tree(t_node **node)
 {
+	if (!*node)
+		return ;
 	while (*node && (*node)->parent)
 		*node = (*node)->parent;
 }
 
 void	clear_node(t_node *node)
 {
+	int	i;
+
 	if (!node)
 		return ;
 	clear_node(node->right);
 	clear_node(node->left);
 	if (node)
 	{
-		node->type = 0;
+		if (node->ntype == CMD && node->cmd.arg)
+		{
+			i = 0;
+			while (node->cmd.arg[i])
+			{
+				free(node->cmd.arg[i]);
+				node->cmd.arg[i] = NULL;
+				i++;
+			}
+			free(node->cmd.arg);
+		}
 		free(node);
 		node = NULL;
 	}
 }
 
-t_node	*push_right(t_node *parent, int type)
+t_node	*push_right(t_node *parent, t_node *child_r)
 {
-	t_node *child_r;
-
-	child_r = new_node(type, NULL);
 	if (!child_r)
 		return (NULL);
 	if (!parent)
@@ -61,11 +72,8 @@ t_node	*push_right(t_node *parent, int type)
 	return (child_r);
 }
 
-t_node	*push_left(t_node *parent, int type)
+t_node	*push_left(t_node *parent, t_node *child_l)
 {
-	t_node *child_l;
-
-	child_l = new_node(type, NULL);
 	if (!child_l)
 		return (NULL);
 	if (!parent)

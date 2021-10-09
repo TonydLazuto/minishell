@@ -13,9 +13,6 @@
 #include "minishell.h"
 
 /*
-echo a > file | cat
-
-echo "ls > output.txt" ??
 echo "ls"
 --> affiche ls
 
@@ -28,22 +25,6 @@ $qwe
 --> command not found ls -a
 */
 
-void	print_node(t_node *node)
-{
-	if (!node)
-		return ;
-	/*
-	while (node)
-	{
-		printf("node : %d\n", node->type);
-		node = node->right;
-	}
-	*/
-	print_node(node->left);
-	print_node(node->right);
-	printf("node : %d\n", node->type);
-}
-
 int	main(int ac, char *av[])
 {
 	t_node	*node;
@@ -55,47 +36,8 @@ int	main(int ac, char *av[])
 	t_node	*node7;
 	t_node	*node8;
 
-	node = NULL;
-	if (ac >= 2 || av[1])
-		return (0);
-	char	*name;	
-	int 	idtty = ttyslot();
-	printf("idtty : %d\n", idtty);
-	if (isatty(idtty))
-	{
-		name = ttyname(idtty);
-		if (name)
-			printf("ttyname : %s\n", name);
-		else
-			printf("Noname for mytty :o\n");
-	}
-	else
-		printf("FAILED\n");
-
-	node = new_node(1, NULL);
+	node = new_node(BREAK);
 	if (!node)
-	{
-		clear_node(node);
-		return (0);
-	}
-	node2 = push_right(node, 2);
-	node3 = push_left(node, 3);
-
-	node4 = push_left(node2, 4);
-	node5 = push_right(node2, 5);
-
-	node6 = push_right(node5, 6);
-	node7 = push_right(node6, 7);
-	node8 = push_left(node6, 8);
-
-	print_node(node4);
-	printf("------------------\n");
-	rewind_tree(&node2);
-	print_node(node2);
-	printf("------------------\n");
-	clear_node(node2);
-	printf("------------------\n");
-	rewind_tree(&node3);
-	printf("%d\n", find_arg(node3, NULL)->type);
+		ft_exit(node);
 	return (0);
 }
