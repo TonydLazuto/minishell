@@ -6,7 +6,7 @@
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/16 10:44:35 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/16 10:44:41 by aderose          ###   ########.fr       */
+/*   Updated: 2021/10/11 14:46:37 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_node	*set_node_cmd(t_node *node, const char **arg, enum e_cmdtype type)
 	i = 0;
 	while (arg[i])
 		i++;
-	node->cmd.arg = malloc(sizeof(char*) * (i + 1));
+	node->cmd.arg = (char **)malloc(sizeof(char *) * (i + 1));
 	if (!node->cmd.arg)
 		ft_exit(node, "malloc node->cmd.arg");
 	i = 0;

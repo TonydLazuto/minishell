@@ -6,7 +6,7 @@
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:57:47 by aderose           #+#    #+#             */
-/*   Updated: 2021/10/11 12:57:54 by aderose          ###   ########.fr       */
+/*   Updated: 2021/10/11 14:43:55 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	child_handle(t_node *node, char **env)
 		if (dup2(node->parent->cmd.pipefd[0], STDIN_FILENO) < 0)
 			ft_exit(node, "error : fatal");
 	}
-	if (node->cmd.type == PIPE ||
-		(node->parent && node->parent->cmd.type == PIPE))
+	if (node->cmd.type == PIPE
+		|| (node->parent && node->parent->cmd.type == PIPE))
 	{
 		close(node->cmd.pipefd[1]);
 		close(node->cmd.pipefd[0]);
@@ -36,8 +36,8 @@ void	child_handle(t_node *node, char **env)
 
 void	parent_handle(t_node *node)
 {
-	if (node->cmd.type == PIPE ||
-		(node->parent && node->parent->cmd.type == PIPE))
+	if (node->cmd.type == PIPE
+		|| (node->parent && node->parent->cmd.type == PIPE))
 	{
 		close(node->cmd.pipefd[1]);
 		if (node->cmd.type != PIPE)
@@ -54,8 +54,8 @@ void	pipes(t_node *node, char **env)
 	pid_t	pid;
 	int		status;
 
-	if (node->cmd.type == PIPE ||
-		(node->parent && node->parent->cmd.type == PIPE))
+	if (node->cmd.type == PIPE
+		|| (node->parent && node->parent->cmd.type == PIPE))
 	{
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_exit(node, "error : fatal");

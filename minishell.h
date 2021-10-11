@@ -6,7 +6,7 @@
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/16 10:02:12 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/16 10:02:13 by aderose          ###   ########.fr       */
+/*   Updated: 2021/10/11 14:44:23 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ t_node	*new_node(enum e_ntype ntype);
 void	rewind_tree(t_node **node);
 void	clear_node(t_node *node);
 t_node	*push_right(t_node *parent, enum e_ntype ntype,
-					const char **arg, enum e_cmdtype type);
+			const char **arg, enum e_cmdtype type);
 t_node	*push_left(t_node *parent, enum e_ntype ntype,
-					const char **arg, enum e_cmdtype type);
+			const char **arg, enum e_cmdtype type);
 t_node	*lastnode(t_node *node);
 
 void	ft_exit(t_node *node, char *err);

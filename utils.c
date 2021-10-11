@@ -9,7 +9,7 @@ void	printnodes(t_node *mynode)
 	while (node)
 	{
 		printf("node->ntype : %d\n", node->ntype);
-		if (node->ntype  == CMD)
+		if (node->ntype == CMD)
 		{
 			i = 0;
 			if (node->cmd.arg)
