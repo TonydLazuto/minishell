@@ -25,19 +25,44 @@ $qwe
 --> command not found ls -a
 */
 
-int	main(int ac, char *av[])
+int	main(int ac, char *av[], char **env)
 {
 	t_node	*node;
 	t_node	*node2;
 	t_node	*node3;
-	t_node	*node4;
-	t_node	*node5;
-	t_node	*node6;
-	t_node	*node7;
-	t_node	*node8;
+
+	(void)ac;
+	(void)av;
+
+	const char *arg1[] = {
+		"/usr/bin/ls",
+		"-l",
+		NULL
+	};
+	const char *arg2[] = {
+		"/usr/bin/grep",
+		"no",
+		NULL
+	};
+	const char *arg3[] = {
+		"/usr/bin/cat",
+		"-e",
+		NULL
+	};
 
 	node = new_node(BREAK);
 	if (!node)
-		ft_exit(node);
+		ft_exit(node, "err create node");
+	node2 = push_right(node, CMD, arg1, PIPE);
+	node3 = push_right(node2, CMD, arg2, PIPE);
+	push_right(node3, CMD, arg3, END);
+
+	while (node)
+	{
+		pipes(node, env);
+		node = node->right;
+	}
+	//printnodes(node);
+	clear_node(node);
 	return (0);
 }

@@ -20,7 +20,9 @@ OBJ_DIR		= obj
 
 SRCS		=	minishell.c \
 				node.c \
-				node2.c
+				node2.c \
+				pipe.c \
+				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 
@@ -32,7 +34,7 @@ $(NAME): 		$(OBJS)
 
 $(OBJ_DIR)/%.o:	%.c
 				@mkdir -p $(OBJ_DIR)
-				$(CC) -I$(LIB_DIR) -c $< -o $@
+				$(CC) $(CFLAGS) -I$(LIB_DIR) -c $< -o $@
 
 libclean:		
 				@make clean -C $(LIB_DIR)

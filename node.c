@@ -61,10 +61,15 @@ void	clear_node(t_node *node)
 	}
 }
 
-t_node	*push_right(t_node *parent, t_node *child_r)
+t_node	*push_right(t_node *parent, enum e_ntype ntype,
+					const char **arg, enum e_cmdtype type)
 {
+	t_node	*child_r;
+
+	child_r = new_node(ntype);
 	if (!child_r)
-		return (NULL);
+		ft_exit(parent, "push right failed");
+	child_r = set_node_cmd(child_r, arg, type);
 	if (!parent)
 		return (child_r);
 	child_r->parent = parent;
@@ -72,10 +77,15 @@ t_node	*push_right(t_node *parent, t_node *child_r)
 	return (child_r);
 }
 
-t_node	*push_left(t_node *parent, t_node *child_l)
+t_node	*push_left(t_node *parent, enum e_ntype ntype,
+					const char **arg, enum e_cmdtype type)
 {
+	t_node	*child_l;
+
+	child_l = new_node(ntype);
 	if (!child_l)
-		return (NULL);
+		ft_exit(parent, "push left failed");
+	child_l = set_node_cmd(child_l, arg, type);
 	if (!parent)
 		return (child_l);
 	child_l->parent = parent;

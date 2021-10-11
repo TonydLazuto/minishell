@@ -34,8 +34,8 @@
  * 
  * 
  * PIPE |
- * GT_DIR >
- * LT_DIR <
+ * OUTPUT_REDI >
+ * INPUT_REDI <
  * APPEND >>
  * RD_UNTIL <<
  */
@@ -53,8 +53,8 @@ enum e_cmdtype
 {
 	END = 0,
 	PIPE = 1,
-	INPUT_RED = 2,
-	OUTPUT_RED = 3,
+	INPUT_REDI = 2,
+	OUTPUT_REDI = 3,
 	APPEND = 4,
 	RD_UNTIL = 5
 };
@@ -77,11 +77,17 @@ typedef struct s_node
 
 t_node	*new_node(enum e_ntype ntype);
 void	rewind_tree(t_node **node);
-void	clear_nodes(t_node *node);
-t_node	*push_right(t_node *parent, t_node *child_r);
-t_node	*push_left(t_node *parent, t_node *child_l);
+void	clear_node(t_node *node);
+t_node	*push_right(t_node *parent, enum e_ntype ntype,
+					const char **arg, enum e_cmdtype type);
+t_node	*push_left(t_node *parent, enum e_ntype ntype,
+					const char **arg, enum e_cmdtype type);
 t_node	*lastnode(t_node *node);
-void	nodeadd_back(t_node **anode, char *arg[]);
 
+void	ft_exit(t_node *node, char *err);
+void	printnodes(t_node *mynode);
+
+t_node	*set_node_cmd(t_node *node, const char **arg, enum e_cmdtype type);
+void	pipes(t_node *node, char **env);
 
 #endif

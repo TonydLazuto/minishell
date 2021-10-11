@@ -16,11 +16,11 @@ void	printnodes(t_node *mynode)
 			{
 				while (node->cmd.arg[i])
 				{
-					printf("node->cmd.arg : %s\n", node->cmd.arg[i]);
+					printf("node->cmd.arg[%d] : %s\n", i, node->cmd.arg[i]);
 					i++;
 				}
 			}
-			printf("node->type : %d\n", node->cmd.type);
+			printf("node->cmd.type : %d\n", node->cmd.type);
 			if (node->right)
 				printf("\n");
 		}
@@ -28,14 +28,12 @@ void	printnodes(t_node *mynode)
 	}
 }
 
-void	ft_exit(t_node *node, const char *err, int check_exec)
+void	ft_exit(t_node *node, char *err)
 {
-	ft_putstr(err);
-	if (check_exec)
-		ft_putstr(node->cmd.arg[0]);
-	ft_putstr("\n");
+	ft_putstr_fd(err, 1);
+	ft_putstr_fd("\n", 1);
 	while (node->parent)
 		node = node->parent;
-	clear_nodes(&node);
+	clear_node(node);
 	exit(EXIT_FAILURE);
 }
