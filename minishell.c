@@ -34,8 +34,15 @@ int	main(int ac, char *av[], char **env)
 	(void)env;
 
 	line = NULL;
-
-		line = readline("Here: ");
+	while (1)
+	{
+		line = readline("minishell-v1$ ");
+		if (!line)
+			break ;
+		else
+			add_history(line);
+		free(line);
+	}
 	free(line);
 	return (0);
 }
