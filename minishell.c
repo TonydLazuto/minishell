@@ -25,24 +25,39 @@ $qwe
 --> command not found ls -a
 */
 
+/**
+ * int rl_on_new_line ()
+ * Tell the update routines that we have moved onto a new (empty) line,
+ * usually after ouputting a newline.
+ * 
+ * int rl_redisplay ()
+ * Change what's displayed on the screen to reflect the current contents of rl_line_buffer.
+ */
 int	main(int ac, char *av[], char **env)
 {
 //	t_node		*node;
-	char	*line;
+	char	*line_read;
+
 	(void)ac;
 	(void)av;
 	(void)env;
+	line_read = NULL;
 
-	line = NULL;
+	char *s = ft_strdup("test");
+	if (!s)
+		return (0);
 	while (1)
 	{
-		line = readline("minishell-v1$ ");
-		if (!line)
-			break ;
+		line_read = readline("minishell-v1$ ");
+		if (line_read && *line_read)
+			add_history(line_read);
 		else
-			add_history(line);
-		free(line);
+		{
+			clear_history();
+			break ;
+		}
+		//free(line_read);
 	}
-	free(line);
+	free(line_read);
 	return (0);
 }

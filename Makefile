@@ -2,7 +2,7 @@
 
 NAME		= minishell
 
-LIBA			= libft.a
+LIBA		= libft.a
 
 LIB_DIR		= libft
 
@@ -24,7 +24,7 @@ SRCS		=	minishell.c \
 				node.c \
 				node2.c \
 				pipe.c \
-				utils.c 
+				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 
@@ -32,7 +32,7 @@ all: 			$(NAME)
 
 $(NAME): 		$(OBJS)
 				@make --silent -C $(LIB_DIR)
-				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) -L$(LIB_DIR) -lft
+				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) -L$(LIB_DIR) -lft -lreadline
 
 $(OBJ_DIR)/%.o:	%.c
 				@mkdir -p $(OBJ_DIR)
