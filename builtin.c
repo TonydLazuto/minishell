@@ -1,41 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 10:02:06 by aderose           #+#    #+#             */
-/*   Updated: 2021/10/11 14:50:48 by aderose          ###   ########.fr       */
+/*   Created: 2021/10/11 12:55:56 by aderose           #+#    #+#             */
+/*   Updated: 2021/10/11 14:48:49 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-echo "ls"
---> affiche ls
-
-export qwe="ls"
-$qwe
---> execute ls
-
-export qwe="ls -a"
-$qwe
---> command not found ls -a
-*/
-
-int	main(int ac, char *av[], char **env)
+void	change_dir(t_node *node)
 {
-//	t_node		*node;
-	char	*line;
-	(void)ac;
-	(void)av;
-	(void)env;
+	int	i;
+	int	ret;
 
-	line = NULL;
-
-		line = readline("Here: ");
-	free(line);
-	return (0);
+	i = 0;
+	while (node->cmd.arg[i])
+		i++;
+	if (i != 2 || !node->cmd.arg[1])
+		ft_exit(node, "error: cd bad arguments", 0);
+	ret = chdir(node->cmd.arg[1]);
+	if (ret == -1)
+		ft_exit(node, "error: chdir", 0);
 }

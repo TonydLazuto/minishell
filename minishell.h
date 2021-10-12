@@ -24,7 +24,10 @@
 # include <dirent.h>
 # include <errno.h>
 # include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "libft/libft.h"
+# define BUFFER_SIZE 50
 
 /**
  * BREAK ;
@@ -62,6 +65,7 @@ enum e_cmdtype
 typedef struct s_cmd
 {
 	char			**arg;
+	int				len; // maybe nombre d'args
 	int				pipefd[2];
 	enum e_cmdtype	type;
 }				t_cmd;
@@ -74,6 +78,14 @@ typedef struct s_node
 	struct s_node	*right;
 	struct s_node	*left;
 }				t_node;
+
+int				get_next_line(int fd, char **line);
+void			my_free(char **s);
+size_t			my_strlen(const char *str);
+char			*strjoinfree(char *s1, char *s2);
+char			*my_strdup(char *s1);
+char			*my_substr(char *s, unsigned int start, size_t len);
+
 
 t_node	*new_node(enum e_ntype ntype);
 void	rewind_tree(t_node **node);
@@ -89,5 +101,8 @@ void	printnodes(t_node *mynode);
 
 t_node	*set_node_cmd(t_node *node, const char **arg, enum e_cmdtype type);
 void	pipes(t_node *node, char **env);
+void	output_redi(t_node *node, char **env);
+
+
 
 #endif

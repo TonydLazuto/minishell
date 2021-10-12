@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	child_handle(t_node *node, char **env)
+void	child_pipe(t_node *node, char **env)
 {
 	if (node->cmd.type == PIPE && node->right)
 	{
@@ -34,7 +34,7 @@ void	child_handle(t_node *node, char **env)
 		ft_exit(node, "error: cannot execve");
 }
 
-void	parent_handle(t_node *node)
+void	parent_pipe(t_node *node)
 {
 	if (node->cmd.type == PIPE
 		|| (node->parent && node->parent->cmd.type == PIPE))
@@ -64,10 +64,10 @@ void	pipes(t_node *node, char **env)
 	if (pid < 0)
 		ft_exit(node, "error : fatal");
 	if (pid == 0)
-		child_handle(node, env);
+		child_pipe(node, env);
 	else
 	{
-		parent_handle(node);
+		parent_pipe(node);
 		waitpid(pid, &status, 0);
 	}
 }
