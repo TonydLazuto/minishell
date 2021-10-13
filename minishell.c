@@ -35,18 +35,17 @@ $qwe
  */
 int	main(int ac, char *av[], char **env)
 {
-	t_node	*node=NULL;
-	t_cmd	*cmd=NULL;
+	t_cmd	*cmd;
 //	char	*line_read;
 
 	(void)ac;
 	(void)av;
-	(void)env;
+	cmd = NULL;
 
 	char **arg = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("ls");
+	arg[0] = ft_strdup("/usr/bin/ls");
 	arg[1] = ft_strdup("-l");
 	arg[2] = NULL;
 	cmdadd_back(&cmd, arg, PIPE);
@@ -54,14 +53,17 @@ int	main(int ac, char *av[], char **env)
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("grep");
-	arg2[1] = ft_strdup("no");
+	arg2[0] = ft_strdup("/usr/bin/grep");
+	arg2[1] = ft_strdup("min");
 	arg2[2] = NULL;
-	cmdadd_back(&cmd, arg2, PIPE);
-	
-	nodeadd_back(&node, cmd);
-	printnodes(node);
+	cmdadd_back(&cmd, arg2, END);
 
+
+	while (cmd)
+	{
+		pipes(cmd, env);
+		cmd = cmd->next;
+	}
 /*
 	while (1)
 	{

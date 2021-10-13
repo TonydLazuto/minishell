@@ -12,62 +12,62 @@
 
 #include "minishell.h"
 
-void	child_pipe(t_node *node, char **env)
+void	child_pipe(t_cmd *cmd, char **env)
 {
-	if (node->cmd->type == PIPE && node->cmd->next)
+	if (cmd->type == PIPE && cmd->next)
 	{
-		if (dup2(node->cmd->pipefd[1], STDOUT_FILENO) < 0)
-			ft_exit(node, "error : fatal");
+		if (dup2(cmd->pipefd[1], STDOUT_FILENO) < 0)
+			ft_exit(cmd, "error : dup2()");
 	}
-	if (node->cmd->back && node->cmd->back->type == PIPE)
+	if (cmd->back && cmd->back->type == PIPE)
 	{
-		if (dup2(node->cmd->back->pipefd[0], STDIN_FILENO) < 0)
-			ft_exit(node, "error : fatal");
+		if (dup2(cmd->back->pipefd[0], STDIN_FILENO) < 0)
+			ft_exit(cmd, "error : dup2()");
 	}
-	if (node->cmd->type == PIPE ||
-		(node->cmd->back && node->cmd->back->type == PIPE))
+	if (cmd->type == PIPE ||
+		(cmd->back && cmd->back->type == PIPE))
 	{
-		close(node->cmd->pipefd[1]);
-		close(node->cmd->pipefd[0]);
+		close(cmd->pipefd[1]);
+		close(cmd->pipefd[0]);
 	}
-	if (execve(node->cmd->arg[0], node->cmd->arg, env) == -1)
-		ft_exit(node, "error: cannot execute ");
+	if (execve(cmd->arg[0], cmd->arg, env) == -1)
+		ft_exit(cmd, "error: execve()");
 }
 
-void	parent_pipe(t_node *node)
+void	parent_pipe(t_cmd *cmd)
 {
-	if (node->cmd->type == PIPE
-		|| (node->cmd->back && node->cmd->back->type == PIPE))
+	if (cmd->type == PIPE
+		|| (cmd->back && cmd->back->type == PIPE))
 	{
-		close(node->cmd->pipefd[1]);
-		if (node->cmd->type != PIPE)
+		close(cmd->pipefd[1]);
+		if (cmd->back && cmd->back->type == PIPE)
 		{
-			close(node->cmd->back->pipefd[0]);
-			if (!node->cmd->next || (node->cmd->next && node->cmd->next->type != PIPE))
-				close(node->cmd->pipefd[0]);
+			close(cmd->back->pipefd[0]);
+			if (!cmd->next || (cmd->next && cmd->next->type != PIPE))
+				close(cmd->pipefd[0]);
 		}
 	}
 }
 
-void	pipes(t_node *node, char **env)
+void	pipes(t_cmd *cmd, char **env)
 {
 	pid_t	pid;
 	int		status;
 
-	if (node->cmd->type == PIPE
-		|| (node->cmd->back && node->cmd->back->type == PIPE))
+	if (cmd->type == PIPE
+		|| (cmd->back && cmd->back->type == PIPE))
 	{
-		if (pipe(node->cmd->pipefd) == -1)
-			ft_exit(node, "error : fatal");
+		if (pipe(cmd->pipefd) == -1)
+			ft_exit(cmd, "error : pipe()");
 	}
 	pid = fork();
 	if (pid < 0)
-		ft_exit(node, "error : fatal");
+		ft_exit(cmd, "error : fork()");
 	if (pid == 0)
-		child_pipe(node, env);
+		child_pipe(cmd, env);
 	else
 	{
-		parent_pipe(node);
+		parent_pipe(cmd);
 		waitpid(pid, &status, 0);
 	}
 }

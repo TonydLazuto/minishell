@@ -1,18 +1,5 @@
 #include "minishell.h"
 
-void	printnodes(t_node *mynode)
-{
-	t_node	*node;
-
-	node = mynode;
-	while (node)
-	{
-		printcmds(node->cmd);
-		node = node->next;
-	}
-}
-
-
 void	printcmds(t_cmd *mycmd)
 {
 	t_cmd	*cmd;
@@ -38,12 +25,12 @@ void	printcmds(t_cmd *mycmd)
 }
 
 
-void	ft_exit(t_node *node, char *err)
+void	ft_exit(t_cmd *cmd, char *err)
 {
 	ft_putstr_fd(err, 1);
 	ft_putstr_fd("\n", 1);
-	while (node->back)
-		node = node->back;
-	clearnodes(node);
+	while (cmd->back)
+		cmd = cmd->back;
+	clearcmds(&cmd);
 	exit(EXIT_FAILURE);
 }

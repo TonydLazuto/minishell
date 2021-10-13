@@ -20,7 +20,6 @@ OBJ_DIR		= obj
 
 SRCS		=	minishell.c \
 				cmd.c \
-				node.c \
 				pipe.c \
 				utils.c
 
