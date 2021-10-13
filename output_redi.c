@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 /**
- * 	if node->cmd.arg == NULL
+ * 	if node->cmd->arg == NULL
  * 		child_stdin() //redirige sur STDIN
  */
 
@@ -22,13 +22,13 @@ void	append_args_to_file(t_node *node)
 	int	i;
 
 	i = 1;
-	fd = open(node->right->cmd.arg[0], O_APPEND);
+	fd = open(node->next->cmd->arg[0], O_APPEND);
 	if (fd == -1)
 		ft_exit(node, "error : fatal");
-	while (node->right->cmd.arg[i])
+	while (node->next->cmd->arg[i])
 	{
-		write(fd, (void *)node->right->cmd.arg[i], ft_strlen(node->right->cmd.arg[i]));
-		if (node->right->cmd.arg[i + 1])
+		write(fd, (void *)node->next->cmd->arg[i], ft_strlen(node->next->cmd->arg[i]));
+		if (node->next->cmd->arg[i + 1])
 			write(fd, " ", 1);
 		i++;
 	}
@@ -36,24 +36,24 @@ void	append_args_to_file(t_node *node)
 
 void	child_redi(t_node *node, char **env, int fd)
 {
-	if (node->cmd.arg != NULL)
+	if (node->cmd->arg != NULL)
 	{
-		if (dup2(node->cmd.pipefd[1], fd) < 0)
+		if (dup2(node->cmd->pipefd[1], fd) < 0)
 			ft_exit(node, "error : fatal");
 	}
-//	else if (node->cmd.arg == NULL)
+//	else if (node->cmd->arg == NULL)
 //		child_stdin(node, env);
-	close(node->cmd.pipefd[1]);
-	close(node->cmd.pipefd[0]);
-	if (execve(node->cmd.arg[0], node->cmd.arg, env) == -1)
+	close(node->cmd->pipefd[1]);
+	close(node->cmd->pipefd[0]);
+	if (execve(node->cmd->arg[0], node->cmd->arg, env) == -1)
 		ft_exit(node, "error: cannot execve");
 }
 
 void	check_exceptions(t_node *node)
 {
-	if (!node->cmd.arg)
+	if (!node->cmd->arg)
 	{
-		if (node->right && node->right->)
+		if (node->next && node->next->)
 	}
 }
 
@@ -63,15 +63,15 @@ void	output_redi(t_node *node, char **env)
 	int		status;
 	int		fd;
 
-	if (!node->right)
+	if (!node->next)
  		ft_exit(node, "error after output redir");
 	check_exceptions(node);
-	if (node->cmd.type == OUTPUT_REDI)
+	if (node->cmd->type == OUTPUT_REDI)
 	{
-		if (pipe(node->cmd.pipefd) == -1)
+		if (pipe(node->cmd->pipefd) == -1)
 			ft_exit(node, "error : fatal");
 	}
-	fd = open(node->right->cmd.arg[0], O_RDWR | O_CREAT);
+	fd = open(node->next->cmd->arg[0], O_RDWR | O_CREAT);
 	if (fd == -1)
 		ft_exit(node, "error : fatal");
 	pid = fork();
@@ -81,11 +81,11 @@ void	output_redi(t_node *node, char **env)
 		child_redi(node, env, fd);
 	else
 	{
-		close(node->cmd.pipefd[1]);
-		close(node->cmd.pipefd[0]);
+		close(node->cmd->pipefd[1]);
+		close(node->cmd->pipefd[0]);
 		waitpid(pid, &status, 0);
 	}
 	close(fd);
-	if (node->cmd.arg != NULL && node->right->cmd.arg[1] != NULL)
+	if (node->cmd->arg != NULL && node->next->cmd->arg[1] != NULL)
 		append_args_to_file(node);
 }

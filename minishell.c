@@ -35,29 +35,50 @@ $qwe
  */
 int	main(int ac, char *av[], char **env)
 {
-//	t_node		*node;
-	char	*line_read;
+	t_node	*node=NULL;
+	t_cmd	*cmd=NULL;
+//	char	*line_read;
 
 	(void)ac;
 	(void)av;
 	(void)env;
-	line_read = NULL;
 
-	char *s = ft_strdup("test");
-	if (!s)
+	char **arg = (char **)malloc(sizeof(char * ) * 3);
+	if (!arg)
 		return (0);
+	arg[0] = ft_strdup("ls");
+	arg[1] = ft_strdup("-l");
+	arg[2] = NULL;
+	cmdadd_back(&cmd, arg, PIPE);
+
+	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
+	if (!arg2)
+		return (0);
+	arg2[0] = ft_strdup("grep");
+	arg2[1] = ft_strdup("no");
+	arg2[2] = NULL;
+	cmdadd_back(&cmd, arg2, PIPE);
+	
+	nodeadd_back(&node, cmd);
+	printnodes(node);
+
+/*
 	while (1)
 	{
 		line_read = readline("minishell-v1$ ");
 		if (line_read && *line_read)
+		{
 			add_history(line_read);
+
+		}
 		else
 		{
-			clear_history();
+			rl_clear_history();
 			break ;
 		}
-		//free(line_read);
+		free(line_read);
 	}
 	free(line_read);
+*/
 	return (0);
 }

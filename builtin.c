@@ -18,11 +18,11 @@ void	change_dir(t_node *node)
 	int	ret;
 
 	i = 0;
-	while (node->cmd.arg[i])
+	while (node->cmd->arg[i])
 		i++;
-	if (i != 2 || !node->cmd.arg[1])
+	if (i != 2 || !node->cmd->arg[1])
 		ft_exit(node, "error: cd bad arguments", 0);
-	ret = chdir(node->cmd.arg[1]);
+	ret = chdir(node->cmd->arg[1]);
 	if (ret == -1)
 		ft_exit(node, "error: chdir", 0);
 }

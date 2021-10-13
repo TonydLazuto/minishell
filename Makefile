@@ -19,10 +19,8 @@ LIB_DIR		= libft
 OBJ_DIR		= obj
 
 SRCS		=	minishell.c \
-				get_next_line.c \
-				get_next_line_utils.c \
+				cmd.c \
 				node.c \
-				node2.c \
 				pipe.c \
 				utils.c
 

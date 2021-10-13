@@ -30,27 +30,12 @@
 # define BUFFER_SIZE 50
 
 /**
- * BREAK ;
- * AND_IF &&
- * OR_IF ||
- * BRACKET (
- * 
- * 
  * PIPE |
  * OUTPUT_REDI >
  * INPUT_REDI <
  * APPEND >>
  * RD_UNTIL <<
  */
-
-enum e_ntype
-{
-	BREAK = 0,
-	AND_IF = 1,
-	OR_IF = 2,
-	BRACKET = 3,
-	CMD = 4
-};
 
 enum e_cmdtype
 {
@@ -65,38 +50,39 @@ enum e_cmdtype
 typedef struct s_cmd
 {
 	char			**arg;
-	int				len; // maybe nombre d'args
+	int				type;
 	int				pipefd[2];
-	enum e_cmdtype	type;
+	struct s_cmd 	*next;
+	struct s_cmd 	*back;
 }				t_cmd;
+
 
 typedef struct s_node
 {
-	enum e_ntype	ntype;
-	t_cmd			cmd;
-	struct s_node	*parent;
-	struct s_node	*right;
-	struct s_node	*left;
+	t_cmd			*cmd;
+	struct s_node	*next;
+	struct s_node	*back;
 }				t_node;
 
-int				get_next_line(int fd, char **line);
-void			my_free(char **s);
-size_t			my_strlen(const char *str);
-char			*strjoinfree(char *s1, char *s2);
-char			*my_strdup(char *s1);
-char			*my_substr(char *s, unsigned int start, size_t len);
+int		get_next_line(int fd, char **line);
+void	my_free(char **s);
+size_t	my_strlen(const char *str);
+char	*strjoinfree(char *s1, char *s2);
+char	*my_strdup(char *s1);
+char	*my_substr(char *s, unsigned int start, size_t len);
 
+t_node	*new_node(t_cmd *cmd);
+void	rewind_node(t_node **node);
+void	clearnodes(t_node *node);
+void	nodeadd_back(t_node **anode, t_cmd *cmd);
 
-t_node	*new_node(enum e_ntype ntype);
-void	rewind_tree(t_node **node);
-void	clear_node(t_node *node);
-t_node	*push_right(t_node *parent, enum e_ntype ntype,
-			const char **arg, enum e_cmdtype type);
-t_node	*push_left(t_node *parent, enum e_ntype ntype,
-			const char **arg, enum e_cmdtype type);
-t_node	*lastnode(t_node *node);
+t_cmd	*new_cmd(char **arg, int type);
+t_cmd	*cmdlast(t_cmd *cmd);
+void	clearcmds(t_cmd **cmd);
+void	cmdadd_back(t_cmd **acmd, char *arg[], int len);
 
 void	ft_exit(t_node *node, char *err);
+void	printcmds(t_cmd *mycmd);
 void	printnodes(t_node *mynode);
 
 t_node	*set_node_cmd(t_node *node, const char **arg, enum e_cmdtype type);

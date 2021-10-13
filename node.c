@@ -12,83 +12,61 @@
 
 #include "minishell.h"
 
-t_node	*new_node(enum e_ntype ntype)
+t_node	*nodelast(t_node *node)
+{
+	if (!node)
+		return (NULL);
+	while (node->next)
+		node = node->next;
+	return (node);
+}
+
+t_node	*new_node(t_cmd *cmd)
 {
 	t_node	*node;
 
 	node = (t_node *)malloc(sizeof(*node));
 	if (!node)
 		return (NULL);
-	node->ntype = ntype;
-	node->cmd.arg = NULL;
-	node->parent = NULL;
-	node->right = NULL;
-	node->left = NULL;
+	node->cmd = cmd;
+	node->next = NULL;
+	node->back = NULL;
 	return (node);
 }
 
-void	rewind_tree(t_node **node)
+void	rewind_node(t_node **node)
 {
 	if (!*node)
 		return ;
-	while (*node && (*node)->parent)
-		*node = (*node)->parent;
+	while (*node && (*node)->back)
+		*node = (*node)->back;
 }
 
-void	clear_node(t_node *node)
+void	clearnodes(t_node *node)
 {
-	int	i;
-
-	if (!node)
-		return ;
-	clear_node(node->right);
-	clear_node(node->left);
+	clearnodes(node->next);
 	if (node)
 	{
-		if (node->ntype == CMD && node->cmd.arg)
-		{
-			i = 0;
-			while (node->cmd.arg[i])
-			{
-				free(node->cmd.arg[i]);
-				node->cmd.arg[i] = NULL;
-				i++;
-			}
-			free(node->cmd.arg);
-		}
+		clearcmds(&node->cmd);
 		free(node);
 		node = NULL;
 	}
 }
 
-t_node	*push_right(t_node *parent, enum e_ntype ntype,
-					const char **arg, enum e_cmdtype type)
+void	nodeadd_back(t_node **anode, t_cmd *cmd)
 {
-	t_node	*child_r;
+	t_node	*node;
+	t_node	*new;
 
-	child_r = new_node(ntype);
-	if (!child_r)
-		ft_exit(parent, "push right failed");
-	child_r = set_node_cmd(child_r, arg, type);
-	if (!parent)
-		return (child_r);
-	child_r->parent = parent;
-	parent->right = child_r;
-	return (child_r);
-}
-
-t_node	*push_left(t_node *parent, enum e_ntype ntype,
-					const char **arg, enum e_cmdtype type)
-{
-	t_node	*child_l;
-
-	child_l = new_node(ntype);
-	if (!child_l)
-		ft_exit(parent, "push left failed");
-	child_l = set_node_cmd(child_l, arg, type);
-	if (!parent)
-		return (child_l);
-	child_l->parent = parent;
-	parent->left = child_l;
-	return (child_l);
+	new = new_node(cmd);
+	if (!new)
+		return ;
+	if (!*anode)
+	{
+		*anode = new;
+		return ;
+	}
+	node = nodelast(*anode);
+	node->next = new;
+	new->back = node;
 }
