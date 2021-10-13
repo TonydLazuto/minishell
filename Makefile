@@ -21,6 +21,7 @@ OBJ_DIR		= obj
 SRCS		=	minishell.c \
 				cmd.c \
 				pipe.c \
+				redir_out.c \
 				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))

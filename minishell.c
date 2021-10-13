@@ -48,20 +48,31 @@ int	main(int ac, char *av[], char **env)
 	arg[0] = ft_strdup("/usr/bin/ls");
 	arg[1] = ft_strdup("-l");
 	arg[2] = NULL;
-	cmdadd_back(&cmd, arg, PIPE);
+	cmdadd_back(&cmd, arg, REDIR_OUT);
 
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("/usr/bin/grep");
-	arg2[1] = ft_strdup("min");
-	arg2[2] = NULL;
+	arg2[0] = ft_strdup("test/1");
+	arg2[1] = NULL;
 	cmdadd_back(&cmd, arg2, END);
+/*
+	char **arg3 = (char **)malloc(sizeof(char * ) * 3);
+	if (!arg3)
+		return (0);
+	arg3[0] = ft_strdup("test/2");
+	arg3[1] = NULL;
+	cmdadd_back(&cmd, arg2, END);
+*/
 
+//644
 
 	while (cmd)
 	{
-		pipes(cmd, env);
+		if (cmd->type == PIPE)
+			pipes(cmd, env);
+		if (cmd->type == REDIR_OUT)
+			cmd = redir_out(cmd, env);
 		cmd = cmd->next;
 	}
 /*

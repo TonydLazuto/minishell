@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <signal.h>
@@ -72,7 +73,7 @@ void	ft_exit(t_cmd *cmd, char *err);
 void	printcmds(t_cmd *mycmd);
 
 void	pipes(t_cmd *cmd, char **env);
-void	redir_out(t_cmd *cmd, char **env);
+t_cmd	*redir_out(t_cmd *cmd, char **env);
 
 
 
