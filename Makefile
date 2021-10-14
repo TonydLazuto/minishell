@@ -14,8 +14,6 @@ RM			= /bin/rm -f
 
 INC			= minishell.h
 
-LIB_DIR		= libft
-
 OBJ_DIR		= obj
 
 SRCS		=	minishell.c \
