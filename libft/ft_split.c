@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <stdlib.h>
 
-static char	**fillstr(char *s, char c, char **str)
+static char	**fillstr(const char *s, char c, char **str)
 {
 	unsigned int	i;
 	unsigned int	start;
@@ -42,7 +42,7 @@ static char	**fillstr(char *s, char c, char **str)
 	return (str);
 }
 
-static size_t	get_nbwords(char *s, char c)
+static size_t	get_nbwords(const char *s, char c)
 {
 	size_t	i;
 	int		j;
@@ -67,7 +67,7 @@ static size_t	get_nbwords(char *s, char c)
 	return (words);
 }
 
-char	**ft_split(char *s, char c)
+char	**ft_split(const char *s, char c)
 {
 	char	**str;
 	size_t	words;

@@ -72,9 +72,15 @@ void	cmdadd_back(t_cmd **acmd, char *arg[], int len);
 void	ft_exit(t_cmd *cmd, char *err);
 void	printcmds(t_cmd *mycmd);
 
+void	exec_cmd(t_cmd *cmd, char **env);
 void	pipes(t_cmd *cmd, char **env);
 t_cmd	*redir_out(t_cmd *cmd, char **env);
+int		ft_strcmp(char *s1, const char *s2);
+int		check_builtin(t_cmd *cmd, int is_builtin);
 
+void	parent_pipe(t_cmd *cmd);
+void	child_pipe(t_cmd *cmd);
 
+void	child_redi(t_cmd *cmd);
 
 #endif

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	child_pipe(t_cmd *cmd, char **env)
+void	child_pipe(t_cmd *cmd)
 {
 	if (cmd->type == PIPE && cmd->next)
 	{
@@ -30,8 +30,6 @@ void	child_pipe(t_cmd *cmd, char **env)
 		close(cmd->pipefd[1]);
 		close(cmd->pipefd[0]);
 	}
-	if (execve(cmd->arg[0], cmd->arg, env) == -1)
-		ft_exit(cmd, "error: execve()");
 }
 
 void	parent_pipe(t_cmd *cmd)
@@ -46,28 +44,5 @@ void	parent_pipe(t_cmd *cmd)
 			if (!cmd->next || (cmd->next && cmd->next->type != PIPE))
 				close(cmd->pipefd[0]);
 		}
-	}
-}
-
-void	pipes(t_cmd *cmd, char **env)
-{
-	pid_t	pid;
-	int		status;
-
-	if (cmd->type == PIPE
-		|| (cmd->back && cmd->back->type == PIPE))
-	{
-		if (pipe(cmd->pipefd) == -1)
-			ft_exit(cmd, "error : pipe()");
-	}
-	pid = fork();
-	if (pid < 0)
-		ft_exit(cmd, "error : fork()");
-	if (pid == 0)
-		child_pipe(cmd, env);
-	else
-	{
-		parent_pipe(cmd);
-		waitpid(pid, &status, 0);
 	}
 }

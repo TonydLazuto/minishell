@@ -36,6 +36,7 @@ $qwe
 int	main(int ac, char *av[], char **env)
 {
 	t_cmd	*cmd;
+	int		is_builtin;
 //	char	*line_read;
 
 	(void)ac;
@@ -48,31 +49,36 @@ int	main(int ac, char *av[], char **env)
 	arg[0] = ft_strdup("/usr/bin/ls");
 	arg[1] = ft_strdup("-l");
 	arg[2] = NULL;
-	cmdadd_back(&cmd, arg, REDIR_OUT);
+	cmdadd_back(&cmd, arg, PIPE);
 
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("test/1");
-	arg2[1] = NULL;
-	cmdadd_back(&cmd, arg2, END);
-/*
+	arg2[0] = ft_strdup("/usr/bin/grep");
+	arg2[1] = ft_strdup("mini");
+	arg2[2] = NULL;
+	cmdadd_back(&cmd, arg2, REDIR_OUT);
+
 	char **arg3 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("test/2");
+	arg3[0] = ft_strdup("test34");
 	arg3[1] = NULL;
-	cmdadd_back(&cmd, arg2, END);
-*/
+	cmdadd_back(&cmd, arg3, END);
 
 //644
-
 	while (cmd)
 	{
+		is_builtin = 1;
+		is_builtin = check_builtin(cmd, is_builtin);
+		if (is_builtin == 0)
+			exec_cmd(cmd, env);
+/*
 		if (cmd->type == PIPE)
 			pipes(cmd, env);
-		if (cmd->type == REDIR_OUT)
+		else if (cmd->type == REDIR_OUT)
 			cmd = redir_out(cmd, env);
+*/					
 		cmd = cmd->next;
 	}
 /*

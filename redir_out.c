@@ -43,7 +43,7 @@ void	check_exceptions(t_cmd *cmd)
 	}
 }
 */
-void	child_redi(t_cmd *cmd, char **env)
+void	child_redi(t_cmd *cmd)
 {
 	int			file;
 /*	int		ret;
@@ -52,6 +52,8 @@ void	child_redi(t_cmd *cmd, char **env)
 	if (ret == -1)
 		ft_exit(cmd, "error : access()");
 */
+	if (!cmd->next)
+ 		ft_exit(cmd, "output redirection nulle part");
 	file = open(cmd->next->arg[0], O_RDWR | O_CREAT);
 	if (file == -1)
 		ft_exit(cmd, "error : open()");
@@ -61,27 +63,4 @@ void	child_redi(t_cmd *cmd, char **env)
 			ft_exit(cmd, "error : fatal");	
 	}
 	close(file);
-	if ((cmd->next && cmd->next->type != REDIR_OUT)
-			|| !cmd->next)
-	{
-		if (execve(cmd->arg[0], cmd->arg, env) == -1)
-			ft_exit(cmd, "error: cannot execve");
-	}
-}
-
-t_cmd	*redir_out(t_cmd *cmd, char **env)
-{
-	pid_t	pid;
-	int		status;
-
-	if (!cmd->next)
- 		ft_exit(cmd, "syntax error near unexpected token newline");
-	pid = fork();
-	if (pid < 0)
-		ft_exit(cmd, "error : fatal");
-	if (pid == 0)
-		child_redi(cmd, env);
-	else
-		waitpid(pid, &status, 0);
-	return (cmd);
 }
