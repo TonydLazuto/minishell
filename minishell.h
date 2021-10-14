@@ -48,10 +48,17 @@ enum e_cmdtype
 	RD_UNTIL = 5
 };
 
+enum e_var
+{
+	NONE = 0,
+	VAR = 1,
+};
+
 typedef struct s_cmd
 {
 	char			**arg;
 	int				type;
+	int				var;
 	int				pipefd[2];
 	struct s_cmd 	*next;
 	struct s_cmd 	*back;

@@ -44,30 +44,29 @@ int	main(int ac, char *av[], char **env)
 	(void)ac;
 	(void)av;
 	cmd = NULL;
-
+/*
 	char **arg = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("/usr/bin/ls");
-	arg[1] = ft_strdup("-l");
+	arg[0] = ft_strdup("echo");
+	arg[1] = ft_strdup("yessir");
 	arg[2] = NULL;
 	cmdadd_back(&cmd, arg, PIPE);
 
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("/usr/bin/grep");
-	arg2[1] = ft_strdup("mini");
+	arg2[0] = ft_strdup("/usr/bin/cat");
+	arg2[1] = ft_strdup("-e");
 	arg2[2] = NULL;
 	cmdadd_back(&cmd, arg2, REDIR_OUT);
-
+*/
 	char **arg3 = (char **)malloc(sizeof(char * ) * 2);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("22");
+	arg3[0] = ft_strdup("pwd");
 	arg3[1] = NULL;
 	cmdadd_back(&cmd, arg3, END);
-
 
 	while (cmd)
 	{

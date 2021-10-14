@@ -46,14 +46,20 @@ void	exec_cmd(t_cmd *cmd, char **env)
 		if (pipe(cmd->pipefd) == -1)
 			ft_exit(cmd, "error : pipe()");
 	}
-	pid = fork();
-	if (pid < 0)
-		ft_exit(cmd, "error : fork()");
-	if (pid == 0)
+	if ((!cmd->back || (cmd->back && cmd->back->type == END))
+		&& cmd->type == END)
 		child_cmd(cmd, env);
 	else
 	{
-		parent_cmd(cmd);
-		waitpid(pid, &status, 0);
+		pid = fork();
+		if (pid < 0)
+			ft_exit(cmd, "error : fork()");
+		if (pid == 0)
+			child_cmd(cmd, env);
+		else
+		{
+			parent_cmd(cmd);
+			waitpid(pid, &status, 0);
+		}
 	}
 }
