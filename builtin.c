@@ -29,27 +29,42 @@ void	change_dir(t_cmd *cmd)
 
 void	ft_echo(t_cmd *cmd)
 {
-	cmd = cmd->next;
+	if (!cmd->arg[1])
+		ft_putstr_fd("\n", 1);
+	if (cmd->arg[1])
+	{
+		if (ft_strcmp(cmd->arg[1], "-n") == 0)
+		{
+			if (cmd->arg[2])
+				ft_putstr_fd(cmd->arg[2], 1);
+			else
+				return ; // rl_on_new_line()
+		}
+		else
+			ft_putendl_fd(cmd->arg[1], 1);
+	}
 }
 
-int		check_builtin(t_cmd *cmd, int is_builtin)
+int		check_builtin(t_cmd *cmd)
 {
-	if (strcmp(cmd->arg[0], "cd") == 0)
+	if (!cmd->arg)
+		return (0);
+	else if (ft_strcmp(cmd->arg[0], "cd") == 0)
 		change_dir(cmd);
-	else if (strcmp(cmd->arg[0], "echo") == 0)
+	else if (ft_strcmp(cmd->arg[0], "echo") == 0)
 		ft_echo(cmd);
-/*	else if (strcmp(cmd->arg[0], "pwd") == 0)
-		;
-	else if (strcmp(cmd->arg[0], "export") == 0)
-		;
-	else if (strcmp(cmd->arg[0], "unset") == 0)
-		;
-	else if (strcmp(cmd->arg[0], "env") == 0)
-		;
-	else if (strcmp(cmd->arg[0], "exit") == 0)
-		;
-*/	
 	else
-		is_builtin = 0;
-	return (is_builtin);
+		return (0);
+/*	else if (ft_strcmp(cmd->arg[0], "pwd") == 0)
+		;
+	else if (ft_strcmp(cmd->arg[0], "export") == 0)
+		;
+	else if (ft_strcmp(cmd->arg[0], "unset") == 0)
+		;
+	else if (ft_strcmp(cmd->arg[0], "env") == 0)
+		;
+	else if (ft_strcmp(cmd->arg[0], "exit") == 0)
+		;
+*/
+	return (1);
 }

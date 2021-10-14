@@ -23,6 +23,9 @@ $qwe
 export qwe="ls -a"
 $qwe
 --> command not found ls -a
+
+cat << ""
+
 */
 
 /**
@@ -36,7 +39,6 @@ $qwe
 int	main(int ac, char *av[], char **env)
 {
 	t_cmd	*cmd;
-	int		is_builtin;
 //	char	*line_read;
 
 	(void)ac;
@@ -59,26 +61,17 @@ int	main(int ac, char *av[], char **env)
 	arg2[2] = NULL;
 	cmdadd_back(&cmd, arg2, REDIR_OUT);
 
-	char **arg3 = (char **)malloc(sizeof(char * ) * 3);
+	char **arg3 = (char **)malloc(sizeof(char * ) * 2);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("test34");
+	arg3[0] = ft_strdup("22");
 	arg3[1] = NULL;
 	cmdadd_back(&cmd, arg3, END);
 
-//644
+
 	while (cmd)
 	{
-		is_builtin = 1;
-		is_builtin = check_builtin(cmd, is_builtin);
-		if (is_builtin == 0)
-			exec_cmd(cmd, env);
-/*
-		if (cmd->type == PIPE)
-			pipes(cmd, env);
-		else if (cmd->type == REDIR_OUT)
-			cmd = redir_out(cmd, env);
-*/					
+		exec_cmd(cmd, env);
 		cmd = cmd->next;
 	}
 /*
