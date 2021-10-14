@@ -45,16 +45,13 @@ void	check_exceptions(t_cmd *cmd)
 */
 void	child_redi(t_cmd *cmd)
 {
-	int			file;
-/*	int		ret;
+	int		file;
+//	int		ret;
 
-	ret = access(cmd->next->arg[0], R_OK | W_OK);
-	if (ret == -1)
-		ft_exit(cmd, "error : access()");
-*/
 	if (!cmd->next)
  		ft_exit(cmd, "output redirection nulle part");
-	file = open(cmd->next->arg[0], O_RDWR | O_CREAT);
+	file = open(cmd->next->arg[0], O_RDWR | O_CREAT,
+	S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file == -1)
 		ft_exit(cmd, "error : open()");
 	if (cmd->arg != NULL)
