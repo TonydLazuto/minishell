@@ -10,18 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bis.h"
 
 /*
 echo "ls"
 --> affiche ls
 
-export qwe="ls"
-$qwe
---> execute ls
+export A+=qwe
+export A+=rty
+--> A=qwerty
 
-export qwe="ls -a"
-$qwe
+export MAVAR="ls -a"
+$MAVAR
 --> command not found ls -a
 
 cat << ""
@@ -56,16 +56,18 @@ int	main(int ac, char *av[], char **env)
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("/usr/bin/cat");
-	arg2[1] = ft_strdup("-e");
-	arg2[2] = NULL;
+	arg2[0] = ft_strdup("env");
+	arg2[1] = NULL;
+	// arg2[1] = ft_strdup("-e");
+	// arg2[2] = NULL;
 	cmdadd_back(&cmd, arg2, REDIR_OUT);
 */
 	char **arg3 = (char **)malloc(sizeof(char * ) * 2);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("pwd");
-	arg3[1] = NULL;
+	arg3[0] = ft_strdup("export");
+	arg3[1] = ft_strdup("MY_ENV_VAL=6");
+	arg3[2] = NULL;
 	cmdadd_back(&cmd, arg3, END);
 
 	while (cmd)
@@ -73,6 +75,7 @@ int	main(int ac, char *av[], char **env)
 		exec_cmd(cmd, env);
 		cmd = cmd->next;
 	}
+	
 /*
 	while (1)
 	{

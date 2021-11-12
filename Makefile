@@ -6,6 +6,8 @@ LIBA		= libft.a
 
 LIB_DIR		= libft
 
+FLAGS		= -L libft -lft -lreadline
+
 CC			= gcc
 
 CFLAGS		= -Wall -Wextra -Werror
@@ -21,6 +23,7 @@ SRCS		=	minishell.c \
 				pipe.c \
 				redir_out.c \
 				builtin.c \
+				builtin2.c \
 				exec_cmd.c \
 				utils.c
 
@@ -30,7 +33,7 @@ all: 			$(NAME)
 
 $(NAME): 		$(OBJS)
 				@make --silent -C $(LIB_DIR)
-				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) -L$(LIB_DIR) -lft -lreadline
+				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) $(FLAGS)
 
 $(OBJ_DIR)/%.o:	%.c
 				@mkdir -p $(OBJ_DIR)

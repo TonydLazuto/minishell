@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "minishell_bis.h"
 
 void	printcmds(t_cmd *mycmd)
 {

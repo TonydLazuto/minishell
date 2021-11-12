@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bis.h"
 
 void	child_redi(t_cmd *cmd)
 {

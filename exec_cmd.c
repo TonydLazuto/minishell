@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bis.h"
 
 void	child_cmd(t_cmd *cmd, char **env)
 {
@@ -21,7 +21,7 @@ void	child_cmd(t_cmd *cmd, char **env)
 		child_redi(cmd);
 	if (cmd->back && cmd->back->type == REDIR_OUT)
 		return ;
-	if (check_builtin(cmd) == 0)
+	if (check_builtin(cmd, env) == 0)
 	{
 		if (execve(cmd->arg[0], cmd->arg, env) == -1)
 			ft_exit(cmd, "error: execve()");

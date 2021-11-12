@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bis.h"
 
 t_cmd	*new_cmd(char **arg, int type)
 {

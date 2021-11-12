@@ -10,7 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/**
+ * Tous les builtin doivent retourner une valeur
+ * pour $?
+ */
+
+#include "minishell_bis.h"
+
+void    ft_env(t_cmd *cmd, char **env)
+{
+    int	line;
+
+	line = 0;
+	if (cmd->arg[1])
+		ft_exit(cmd, "env: too many arguments");
+	while (env[line])
+	{
+		ft_putendl_fd(env[line], 1);
+		line++;
+	}
+}
 
 void	change_dir(t_cmd *cmd)
 {
@@ -52,12 +71,12 @@ void	ft_pwd(t_cmd *cmd)
 	buf = NULL;
 
 	if (cmd->arg[1])
-		ft_exit(cmd, "multiple arg for pwd");
+		ft_exit(cmd, "pwd: too many arguments");
 	buf = getcwd(buf, 0);
 	ft_putendl_fd(buf, 1);
 }
 
-int		check_builtin(t_cmd *cmd)
+int		check_builtin(t_cmd *cmd, char **env)
 {
 	if (!cmd->arg)
 		return (0);
@@ -67,15 +86,15 @@ int		check_builtin(t_cmd *cmd)
 		ft_echo(cmd);
 	else if (ft_strcmp(cmd->arg[0], "pwd") == 0)
 		ft_pwd(cmd);
-/*	else if (ft_strcmp(cmd->arg[0], "export") == 0)
-		;
-	else if (ft_strcmp(cmd->arg[0], "unset") == 0)
-		;
 	else if (ft_strcmp(cmd->arg[0], "env") == 0)
-		;
+		ft_env(cmd, env);
+	else if (ft_strcmp(cmd->arg[0], "export") == 0)
+		ft_export(cmd, env);
+	// else if (ft_strcmp(cmd->arg[0], "unset") == 0)
+	// 	;
 	else if (ft_strcmp(cmd->arg[0], "exit") == 0)
 		;
-*/
+
 	else
 		return (0);
 	return (1);
