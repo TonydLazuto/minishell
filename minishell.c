@@ -26,6 +26,9 @@ $MAVAR
 
 cat << ""
 
+echo $truc
+--> si truc n'est pas dans env \n
+
 */
 
 /**

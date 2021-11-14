@@ -18,7 +18,6 @@
  * 
  * key = value
  * 
- * stocker tous les export dans une liste chainee ?
  * 
  */
 
