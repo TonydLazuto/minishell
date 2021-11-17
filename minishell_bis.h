@@ -44,16 +44,6 @@ typedef struct s_cmd
 	int		pipefd[2];
 }				t_cmd;
 
-enum e_cmdtype
-{
-	END = 0,
-	PIPE = 1,
-	REDIR_IN = 2,
-	REDIR_OUT = 3,
-	APPEND = 4,
-	RD_UNTIL = 5
-};
-
 enum e_tk_type
 {
 	TK_PIPE,
@@ -78,13 +68,6 @@ typedef struct s_astNode
 	struct s_astNode	*left;
 }						t_astnode;
 
-typedef struct s_token
-{
-	enum e_tk_type		type;
-	char				*value;
-}				t_token;
-
-
 
 
 int		get_next_line(int fd, char **line);
@@ -101,10 +84,10 @@ void	nodeadd_right(t_astnode **anode, char *arg[], int type);
 void	ft_exit(t_astnode *node, char *err);
 void	printnodes(t_astnode *mynode);
 
-int		check_builtin(t_cmd *cmd, char **env);
-void	ft_export(t_cmd *cmd, char **env);
+int		check_builtin(t_astnode *node, char **env);
+void	ft_export(t_astnode *node, char **env);
 
-void	exec_node(t_astnode *node, char **env);
+void	exec_cmd(t_astnode *node, char **env);
 void	parent_pipe(t_astnode *node);
 void	child_redi(t_astnode *node);
 void	child_pipe(t_astnode *node);

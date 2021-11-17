@@ -47,36 +47,48 @@ int	main(int ac, char *av[], char **env)
 	(void)ac;
 	(void)av;
 	node = NULL;
-/*
+
 	char **arg = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("echo");
-	arg[1] = ft_strdup("yessir");
+	arg[0] = ft_strdup("/bin/ls");
+	arg[1] = ft_strdup("-l");
 	arg[2] = NULL;
-	nodeadd_right(&node, arg, PIPE);
-*/
-	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
-	if (!arg2)
-		return (0);
-	arg2[0] = ft_strdup("cd");
-	arg2[1] = ft_strdup("/usr/bi");
-	arg2[2] = NULL;
-	// arg2[1] = ft_strdup("-e");
-	// arg2[2] = NULL;
-	nodeadd_right(&node, arg2, END);
+	nodeadd_right(&node, arg, TK_WORD);
 
-	char **arg3 = (char **)malloc(sizeof(char * ) * 2);
+	nodeadd_right(&node, NULL, TK_PIPE);
+
+	char **arg3 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("ls");
-	arg3[1] = ft_strdup("-l");
+	arg3[0] = ft_strdup("/bin/grep");
+	arg3[1] = ft_strdup("l");
 	arg3[2] = NULL;
-	nodeadd_right(&node, arg3, END);
+	nodeadd_right(&node, arg3, TK_WORD);
+
+	nodeadd_right(&node, NULL, TK_PIPE);
+
+	char **arg4 = (char **)malloc(sizeof(char * ) * 3);
+	if (!arg4)
+		return (0);
+	arg4[0] = ft_strdup("/bin/cat");
+	arg4[1] = ft_strdup("-e");
+	arg4[2] = NULL;
+	nodeadd_right(&node, arg4, TK_WORD);
+
+	nodeadd_right(&node, NULL, TK_OUT_REDIR);
+
+	char **arg5 = (char **)malloc(sizeof(char * ) * 3);
+	if (!arg5)
+		return (0);
+	arg5[0] = ft_strdup("file");
+	arg5[1] = NULL;
+	nodeadd_right(&node, arg5, TK_WORD);
 
 	while (node)
 	{
-		exec_node(node, env);
+		if (node->type == TK_WORD)
+			exec_cmd(node, env);
 		node = node->right;
 	}
 	

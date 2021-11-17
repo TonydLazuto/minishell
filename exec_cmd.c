@@ -14,12 +14,12 @@
 
 void	child_node(t_astnode *node, char **env)
 {
-	if (node->type == PIPE
-		|| (node->parent && node->parent->type == PIPE))
+	if ((node->right && node->right->type == TK_PIPE)
+		|| (node->parent && node->parent->type == TK_PIPE))
 		child_pipe(node);
-	if (node->type == REDIR_OUT)
+	if (node->right && node->right->type == TK_OUT_REDIR)
 		child_redi(node);
-	if (node->parent && node->parent->type == REDIR_OUT)
+	if (node->parent && node->parent->type == TK_OUT_REDIR)
 		return ;
 	if (check_builtin(node, env) == 0)
 	{
@@ -30,24 +30,24 @@ void	child_node(t_astnode *node, char **env)
 
 void	parent_node(t_astnode *node)
 {
-	if (node->type == PIPE
-		|| (node->parent && node->parent->type == PIPE))
+	if ((node->right && node->right->type == TK_PIPE)
+		|| (node->parent && node->parent->type == TK_PIPE))
 		parent_pipe(node);
 }
 
-void	exec_node(t_astnode *node, char **env)
+void	exec_cmd(t_astnode *node, char **env)
 {
 	pid_t	pid;
 	int		status;
 
-	if (node->type == PIPE
-		|| (node->parent && node->parent->type == PIPE))
+	if ((node->right && node->right->type == TK_PIPE)
+		|| (node->parent && node->parent->type == TK_PIPE))
 	{
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_exit(node, "error : pipe()");
 	}
-	if ((!node->parent || (node->parent && node->parent->type == END))
-		&& node->type == END)
+	if ((!node->parent || (node->parent && node->parent->type != TK_PIPE))
+		&& (!node->right || (node->right && node->right->type != TK_PIPE)))
 		child_node(node, env);
 	else
 	{
@@ -58,7 +58,7 @@ void	exec_node(t_astnode *node, char **env)
 			child_node(node, env);
 		else
 		{
-			parent_astnode(node);
+			parent_node(node);
 			waitpid(pid, &status, 0);
 		}
 	}

@@ -18,7 +18,7 @@ void	child_redi(t_astnode *node)
 
 	if (!node->right)
  		ft_exit(node, "output redirection nulle part");
-	file = open(node->right->cmd.arg[0], O_RDWR | O_CREAT,
+	file = open(node->right->right->cmd.arg[0], O_RDWR | O_CREAT,
 	S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file == -1)
 		ft_exit(node, "error : open()");

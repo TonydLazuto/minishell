@@ -12,7 +12,7 @@
 
 #include "minishell_bis.h"
 
-t_astnode	*new_node(char **arg, int type)
+t_astnode	*new_node(char *arg[], int type)
 {
 	t_astnode	*node;
 

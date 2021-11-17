@@ -93,9 +93,8 @@ int		check_builtin(t_astnode *node, char **env)
 		ft_export(node, env);
 	// else if (ft_strcmp(node->cmd.arg[0], "unset") == 0)
 	// 	;
-	else if (ft_strcmp(node->cmd.arg[0], "exit") == 0)
-		;
-
+	// else if (ft_strcmp(node->cmd.arg[0], "exit") == 0)
+	// 	;
 	else
 		return (0);
 	return (1);
