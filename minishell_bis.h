@@ -30,14 +30,6 @@
 # include "libft/libft.h"
 # define BUFFER_SIZE 50
 
-/**
- * PIPE |
- * OUTPUT_REDI >
- * INPUT_REDI <
- * APPEND >>
- * RD_UNTIL <<
- */
-
 typedef struct s_cmd
 {
 	char	**arg;
@@ -59,16 +51,23 @@ enum e_tk_type
 	TK_WHITE_SPACE
 };
 
+typedef struct s_env
+{
+	char			*name;
+	char			*value;
+	struct s_env	*next;
+	struct s_env	*back;
+}				t_env;
+
 typedef struct s_astNode
 {
 	t_cmd				cmd;
 	enum e_tk_type		type;
+	t_env				*env;
 	struct s_astNode	*parent;
 	struct s_astNode	*right;
 	struct s_astNode	*left;
 }						t_astnode;
-
-
 
 int		get_next_line(int fd, char **line);
 void	my_free(char **s);
@@ -79,17 +78,22 @@ char	*my_substr(char *s, unsigned int start, size_t len);
 int		ft_strcmp(char *s1, const char *s2);
 
 void	clearnodes(t_astnode **node);
-void	nodeadd_right(t_astnode **anode, char *arg[], int type);
+void	nodeadd_right(t_astnode **anode, char *arg[],
+			int type, t_env *env);
 
 void	ft_exit(t_astnode *node, char *err);
 void	printnodes(t_astnode *mynode);
 
-int		check_builtin(t_astnode *node, char **env);
-void	ft_export(t_astnode *node, char **env);
+int		check_builtin(t_astnode *node);
+void    ft_env(t_astnode *node);
+void	ft_export(t_astnode *node);
 
 void	exec_cmd(t_astnode *node, char **env);
 void	parent_pipe(t_astnode *node);
 void	child_out_redi(t_astnode *node);
 void	child_pipe(t_astnode *node);
+
+t_env   *get_linked_list(char **envp);
+void	clear_env(t_env **env);
 
 #endif

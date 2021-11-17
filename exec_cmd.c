@@ -35,6 +35,8 @@ void	parent_node(t_astnode *node)
 		parent_pipe(node);
 }
 
+//check_if_exec();
+
 void	exec_cmd(t_astnode *node, char **env)
 {
 	pid_t	pid;

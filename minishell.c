@@ -38,33 +38,42 @@ echo $truc
  */
 int	main(int ac, char *av[], char **env)
 {
-	t_astnode	*node;
+	// t_astnode	*node;
+	t_env		*myenv;
 //	char	*line_read;
 
 	(void)ac;
 	(void)av;
-	node = NULL;
-
-	char **arg = (char **)malloc(sizeof(char * ) * 3);
+	// node = NULL;
+	myenv = get_linked_list(env);
+	while (myenv)
+	{
+		printf("%s\n%s\n", myenv->name, myenv->value);
+		myenv = myenv->next;
+	}
+/*
+	if (!myenv)
+		return (-1);
+	char **arg = (char **)malloc(sizeof(char *) * 3);
 	if (!arg)
 		return (0);
 	arg[0] = ft_strdup("export");
 	arg[1] = ft_strdup("truc=5");
 	arg[2] = NULL;
-	nodeadd_right(&node, arg, TK_WORD);
+	nodeadd_right(&node, arg, TK_WORD, myenv);
 
-	nodeadd_right(&node, NULL, TK_PIPE);
+	nodeadd_right(&node, NULL, TK_HERE_DOC);
 
-	char **arg3 = (char **)malloc(sizeof(char * ) * 3);
+	char **arg3 = (char **)malloc(sizeof(char *) * 2);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("/bin/grep");
-	arg3[1] = ft_strdup("li");
-	arg3[2] = NULL;
-	nodeadd_right(&node, arg3, TK_WORD);
-
-	nodeadd_right(&node, NULL, TK_PIPE);
+	arg3[0] = ft_strdup("point");
+	arg3[1] = NULL;
+	nodeadd_right(&node, arg3, TK_WORD, myenv);
+*/
 /*
+	nodeadd_right(&node, NULL, TK_PIPE);
+
 	char **arg4 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg4)
 		return (0);
@@ -82,13 +91,12 @@ int	main(int ac, char *av[], char **env)
 	arg5[1] = NULL;
 	nodeadd_right(&node, arg5, TK_WORD);
 */
-	while (node)
-	{
-		if (node->type == TK_WORD)
-			exec_cmd(node, env);
-		node = node->right;
-	}
-	
+	// while (node)
+	// {
+	// 	if (node->type == TK_WORD)
+	// 		exec_cmd(node, env);
+	// 	node = node->right;
+	// }
 /*
 	while (1)
 	{
