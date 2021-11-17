@@ -64,7 +64,8 @@ void		clearcmds(t_cmd **cmd)
 	}
 }
 
-void	cmdadd_back(t_cmd **acmd, char *arg[], int type)
+void	cmdadd_back(t_cmd **acmd, char *arg[],
+			int type)
 {
 	t_cmd	*cmd;
 	t_cmd	*new;

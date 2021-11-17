@@ -38,6 +38,50 @@
  * RD_UNTIL <<
  */
 
+typedef struct s_cmd
+{
+	char	**arg;
+	int		pipefd[2];
+}				t_cmd;
+
+enum e_tk_type
+{
+	TK_PIPE,
+	TK_IN_REDIR,
+	TK_OUT_REDIR,
+	TK_OUT_DREDIR,
+	TK_WORD,
+	TK_IN_BRAKET,
+	TK_OUT_BRAKET,
+	TK_OR,
+	TK_AND,
+	TK_HERE_DOC,
+	TK_WHITE_SPACE
+};
+
+/**
+ * t_cmd *cmd;
+ * cmd = malloc(sizeof(*t_cmd))
+ * ou alors
+ * t_cmd cmd;
+ * cmd.arg = malloc(sizeof(char*) * (size + 1));
+ */
+
+typedef struct s_astNode
+{
+	t_cmd				cmd;
+	enum e_tk_type		type;
+	struct s_astNode	*parent;
+	struct s_astNode	*right;
+	struct s_astNode	*left;
+}						t_astnode;
+
+typedef struct s_token
+{
+	enum e_tk_type		type;
+	char				*value;
+}				t_token;
+
 enum e_cmdtype
 {
 	END = 0,
@@ -53,16 +97,6 @@ enum e_var
 	NONE = 0,
 	VAR = 1,
 };
-
-typedef struct s_cmd
-{
-	char			**arg;
-	int				type;
-	int				var;
-	int				pipefd[2];
-	struct s_cmd 	*next;
-	struct s_cmd 	*back;
-}				t_cmd;
 
 int		get_next_line(int fd, char **line);
 void	my_free(char **s);
