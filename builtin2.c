@@ -25,7 +25,7 @@
  * 
  */
 
-void	mini_parse_export(t_astnode *node)
+void	mini_parse_export(t_astnode *node, char **key)
 {
 	int	i;
 
@@ -40,6 +40,9 @@ void	mini_parse_export(t_astnode *node)
 	}
 	if (node->cmd.arg[1][i] != '=')
 		ft_exit(node, "export: invalid argument");
+	*key = ft_substr(node->cmd.arg[1], 0, (size_t)i);
+	if (!*key)
+		ft_exit(node, "export: malloc");
 	i++;
 	if (node->cmd.arg[1][i] == '\0')
 		ft_exit(node, "export: not initialized");
@@ -53,12 +56,22 @@ void	mini_parse_export(t_astnode *node)
 
 void	ft_export(t_astnode *node, char **env)
 {
+	char *key;
+	// char *val;
+
 	(void)env;
+	key = NULL;
+	// val = NULL;
 	if (!node->cmd.arg[1])
 		ft_exit(node, "export: too few arguments");
 	if (node->cmd.arg[2])
 		ft_exit(node, "export: too many arguments");
-	mini_parse_export(node);
-
+	mini_parse_export(node, &key);
+	// val = getenv(key);
+	// if (val)
+	// 	;//modify env variable
+	// else
+	// 	;//add new env variable
+	free(key);
 }
 

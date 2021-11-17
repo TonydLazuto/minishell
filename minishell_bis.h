@@ -89,7 +89,7 @@ void	ft_export(t_astnode *node, char **env);
 
 void	exec_cmd(t_astnode *node, char **env);
 void	parent_pipe(t_astnode *node);
-void	child_redi(t_astnode *node);
+void	child_out_redi(t_astnode *node);
 void	child_pipe(t_astnode *node);
 
 #endif

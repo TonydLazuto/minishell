@@ -42,7 +42,6 @@ void	change_dir(t_astnode *node)
 	if (i != 2 || !node->cmd.arg[1])
 		ft_exit(node, "error: cd bad arguments");
 	ret = chdir(node->cmd.arg[1]);
-	
 	if (ret == -1)
 		ft_exit(node, "error: chdir");
 }

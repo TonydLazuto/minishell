@@ -12,7 +12,7 @@
 
 #include "minishell_bis.h"
 
-void	child_redi(t_astnode *node)
+void	child_out_redi(t_astnode *node)
 {
 	int		file;
 

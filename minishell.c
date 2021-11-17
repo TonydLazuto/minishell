@@ -13,9 +13,6 @@
 #include "minishell_bis.h"
 
 /*
-echo "ls"
---> affiche ls
-
 export A+=qwe
 export A+=rty
 --> A=qwerty
@@ -51,8 +48,8 @@ int	main(int ac, char *av[], char **env)
 	char **arg = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("/bin/ls");
-	arg[1] = ft_strdup("-l");
+	arg[0] = ft_strdup("export");
+	arg[1] = ft_strdup("truc=5");
 	arg[2] = NULL;
 	nodeadd_right(&node, arg, TK_WORD);
 
@@ -62,12 +59,12 @@ int	main(int ac, char *av[], char **env)
 	if (!arg3)
 		return (0);
 	arg3[0] = ft_strdup("/bin/grep");
-	arg3[1] = ft_strdup("l");
+	arg3[1] = ft_strdup("li");
 	arg3[2] = NULL;
 	nodeadd_right(&node, arg3, TK_WORD);
 
 	nodeadd_right(&node, NULL, TK_PIPE);
-
+/*
 	char **arg4 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg4)
 		return (0);
@@ -84,7 +81,7 @@ int	main(int ac, char *av[], char **env)
 	arg5[0] = ft_strdup("file");
 	arg5[1] = NULL;
 	nodeadd_right(&node, arg5, TK_WORD);
-
+*/
 	while (node)
 	{
 		if (node->type == TK_WORD)

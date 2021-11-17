@@ -18,7 +18,7 @@ void	child_node(t_astnode *node, char **env)
 		|| (node->parent && node->parent->type == TK_PIPE))
 		child_pipe(node);
 	if (node->right && node->right->type == TK_OUT_REDIR)
-		child_redi(node);
+		child_out_redi(node);
 	if (node->parent && node->parent->type == TK_OUT_REDIR)
 		return ;
 	if (check_builtin(node, env) == 0)
@@ -46,6 +46,11 @@ void	exec_cmd(t_astnode *node, char **env)
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_exit(node, "error : pipe()");
 	}
+	/**
+	 * Voir les conditioms pour entre dans le fork
+	 * parce que si execve est lance et qu'il y a pas eu de fork() avant
+	 * le programme s'arrete.
+	 */
 	if ((!node->parent || (node->parent && node->parent->type != TK_PIPE))
 		&& (!node->right || (node->right && node->right->type != TK_PIPE)))
 		child_node(node, env);
