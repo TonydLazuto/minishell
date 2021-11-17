@@ -44,6 +44,16 @@ typedef struct s_cmd
 	int		pipefd[2];
 }				t_cmd;
 
+enum e_cmdtype
+{
+	END = 0,
+	PIPE = 1,
+	REDIR_IN = 2,
+	REDIR_OUT = 3,
+	APPEND = 4,
+	RD_UNTIL = 5
+};
+
 enum e_tk_type
 {
 	TK_PIPE,
@@ -58,14 +68,6 @@ enum e_tk_type
 	TK_HERE_DOC,
 	TK_WHITE_SPACE
 };
-
-/**
- * t_cmd *cmd;
- * cmd = malloc(sizeof(*t_cmd))
- * ou alors
- * t_cmd cmd;
- * cmd.arg = malloc(sizeof(char*) * (size + 1));
- */
 
 typedef struct s_astNode
 {
@@ -82,21 +84,8 @@ typedef struct s_token
 	char				*value;
 }				t_token;
 
-enum e_cmdtype
-{
-	END = 0,
-	PIPE = 1,
-	REDIR_IN = 2,
-	REDIR_OUT = 3,
-	APPEND = 4,
-	RD_UNTIL = 5
-};
 
-enum e_var
-{
-	NONE = 0,
-	VAR = 1,
-};
+
 
 int		get_next_line(int fd, char **line);
 void	my_free(char **s);
@@ -106,22 +95,18 @@ char	*my_strdup(char *s1);
 char	*my_substr(char *s, unsigned int start, size_t len);
 int		ft_strcmp(char *s1, const char *s2);
 
-t_cmd	*new_cmd(char **arg, int type);
-t_cmd	*cmdlast(t_cmd *cmd);
-void	clearcmds(t_cmd **cmd);
-void	cmdadd_back(t_cmd **acmd, char *arg[], int len);
+void	clearnodes(t_astnode **node);
+void	nodeadd_right(t_astnode **anode, char *arg[], int type);
 
-void	ft_exit(t_cmd *cmd, char *err);
-void	printcmds(t_cmd *mycmd);
+void	ft_exit(t_astnode *node, char *err);
+void	printnodes(t_astnode *mynode);
 
 int		check_builtin(t_cmd *cmd, char **env);
 void	ft_export(t_cmd *cmd, char **env);
 
-void	exec_cmd(t_cmd *cmd, char **env);
-void	pipes(t_cmd *cmd, char **env);
-t_cmd	*redir_out(t_cmd *cmd, char **env);
-void	parent_pipe(t_cmd *cmd);
-void	child_pipe(t_cmd *cmd);
-void	child_redi(t_cmd *cmd);
+void	exec_node(t_astnode *node, char **env);
+void	parent_pipe(t_astnode *node);
+void	child_redi(t_astnode *node);
+void	child_pipe(t_astnode *node);
 
 #endif

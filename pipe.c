@@ -12,37 +12,37 @@
 
 #include "minishell_bis.h"
 
-void	child_pipe(t_cmd *cmd)
+void	child_pipe(t_astnode *node)
 {
-	if (cmd->type == PIPE && cmd->next)
+	if (node->type == PIPE && node->right)
 	{
-		if (dup2(cmd->pipefd[1], STDOUT_FILENO) < 0)
-			ft_exit(cmd, "error : dup2()");
+		if (dup2(node->cmd.pipefd[1], STDOUT_FILENO) < 0)
+			ft_exit(node, "error : dup2()");
 	}
-	if (cmd->back && cmd->back->type == PIPE)
+	if (node->parent && node->parent->type == PIPE)
 	{
-		if (dup2(cmd->back->pipefd[0], STDIN_FILENO) < 0)
-			ft_exit(cmd, "error : dup2()");
+		if (dup2(node->parent->cmd.pipefd[0], STDIN_FILENO) < 0)
+			ft_exit(node, "error : dup2()");
 	}
-	if (cmd->type == PIPE ||
-		(cmd->back && cmd->back->type == PIPE))
+	if (node->type == PIPE ||
+		(node->parent && node->parent->type == PIPE))
 	{
-		close(cmd->pipefd[1]);
-		close(cmd->pipefd[0]);
+		close(node->cmd.pipefd[1]);
+		close(node->cmd.pipefd[0]);
 	}
 }
 
-void	parent_pipe(t_cmd *cmd)
+void	parent_pipe(t_astnode *node)
 {
-	if (cmd->type == PIPE
-		|| (cmd->back && cmd->back->type == PIPE))
+	if (node->type == PIPE
+		|| (node->parent && node->parent->type == PIPE))
 	{
-		close(cmd->pipefd[1]);
-		if (cmd->back && cmd->back->type == PIPE)
+		close(node->cmd.pipefd[1]);
+		if (node->parent && node->parent->type == PIPE)
 		{
-			close(cmd->back->pipefd[0]);
-			if (!cmd->next || (cmd->next && cmd->next->type != PIPE))
-				close(cmd->pipefd[0]);
+			close(node->parent->cmd.pipefd[0]);
+			if (!node->right || (node->right && node->right->type != PIPE))
+				close(node->cmd.pipefd[0]);
 		}
 	}
 }

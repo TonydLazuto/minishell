@@ -19,7 +19,7 @@ INC			= minishell.h
 OBJ_DIR		= obj
 
 SRCS		=	minishell.c \
-				cmd.c \
+				node.c \
 				pipe.c \
 				redir_out.c \
 				builtin.c \

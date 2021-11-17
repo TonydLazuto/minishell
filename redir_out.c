@@ -12,20 +12,20 @@
 
 #include "minishell_bis.h"
 
-void	child_redi(t_cmd *cmd)
+void	child_redi(t_astnode *node)
 {
 	int		file;
 
-	if (!cmd->next)
- 		ft_exit(cmd, "output redirection nulle part");
-	file = open(cmd->next->arg[0], O_RDWR | O_CREAT,
+	if (!node->right)
+ 		ft_exit(node, "output redirection nulle part");
+	file = open(node->right->cmd.arg[0], O_RDWR | O_CREAT,
 	S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file == -1)
-		ft_exit(cmd, "error : open()");
-	if (cmd->arg != NULL)
+		ft_exit(node, "error : open()");
+	if (node->cmd.arg != NULL)
 	{
 		if (dup2(file, 1) < 0)
-			ft_exit(cmd, "error : fatal");	
+			ft_exit(node, "error : fatal");	
 	}
 	close(file);
 }

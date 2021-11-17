@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd.c                                              :+:      :+:    :+:   */
+/*   node.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,73 +12,73 @@
 
 #include "minishell_bis.h"
 
-t_cmd	*new_cmd(char **arg, int type)
+t_astnode	*new_node(char **arg, int type)
 {
-	t_cmd	*cmd;
+	t_astnode	*node;
 
-	cmd = (t_cmd *)malloc(sizeof(*cmd));
-	if (!cmd)
+	node = (t_astnode *)malloc(sizeof(*node));
+	if (!node)
 		return (NULL);
-	cmd->arg = arg;
-	cmd->pipefd[0] = 0;
-	cmd->pipefd[1] = 0;
-	cmd->type = type;
-	cmd->next = NULL;
-	cmd->back = NULL;
-	return (cmd);
+	node->cmd.arg = arg;
+	node->cmd.pipefd[0] = 0;
+	node->cmd.pipefd[1] = 0;
+	node->type = type;
+	node->left = NULL;
+	node->right = NULL;
+	node->parent = NULL;
+	return (node);
 }
-t_cmd	*cmdlast(t_cmd *cmd)
+t_astnode	*nodelast(t_astnode *node)
 {
-	if (!cmd)
+	if (!node)
 		return (NULL);
-	while (cmd->next)
-		cmd = cmd->next;
-	return (cmd);
+	while (node->right)
+		node = node->right;
+	return (node);
 }
 
-void		clearcmds(t_cmd **cmd)
+void		clearnodes(t_astnode **node)
 {
-	t_cmd	*tmp;
+	t_astnode	*tmp;
 	int		i;
 
 	tmp = NULL;
-	if (*cmd)
+	if (*node)
 	{
-		while (*cmd)
+		while (*node)
 		{
-			tmp = (*cmd)->next;
-			if ((*cmd)->arg)
+			tmp = (*node)->right;
+			if ((*node)->cmd.arg)
 			{
 				i = 0;
-				while ((*cmd)->arg[i])
+				while ((*node)->cmd.arg[i])
 				{
-					free((*cmd)->arg[i]);
+					free((*node)->cmd.arg[i]);
 					i++;
 				}
-				free((*cmd)->arg);
+				free((*node)->cmd.arg);
 			}
-			free(*cmd);
-			*cmd = NULL;
-			*cmd = tmp;
+			free(*node);
+			*node = NULL;
+			*node = tmp;
 		}
 	}
 }
 
-void	cmdadd_back(t_cmd **acmd, char *arg[],
-			int type)
+void	nodeadd_right(t_astnode **anode, char *arg[], int type)
 {
-	t_cmd	*cmd;
-	t_cmd	*new;
+	t_astnode	*node;
+	t_astnode	*new;
 
-	new = new_cmd(arg, type);
+	new = new_node(arg, type);
 	if (!new)
 		return ;
-	if (!*acmd)
+	if (!*anode)
 	{
-		*acmd = new;
+		*anode = new;
 		return ;
 	}
-	cmd = cmdlast(*acmd);
-	cmd->next = new;
-	new->back = cmd;
+	node = nodelast(*anode);
+	node->right = new;
+	new->parent = node;
 }

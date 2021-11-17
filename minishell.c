@@ -41,12 +41,12 @@ echo $truc
  */
 int	main(int ac, char *av[], char **env)
 {
-	t_cmd	*cmd;
+	t_astnode	*node;
 //	char	*line_read;
 
 	(void)ac;
 	(void)av;
-	cmd = NULL;
+	node = NULL;
 /*
 	char **arg = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg)
@@ -54,29 +54,30 @@ int	main(int ac, char *av[], char **env)
 	arg[0] = ft_strdup("echo");
 	arg[1] = ft_strdup("yessir");
 	arg[2] = NULL;
-	cmdadd_back(&cmd, arg, PIPE);
-
+	nodeadd_right(&node, arg, PIPE);
+*/
 	char **arg2 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("env");
-	arg2[1] = NULL;
+	arg2[0] = ft_strdup("cd");
+	arg2[1] = ft_strdup("/usr/bi");
+	arg2[2] = NULL;
 	// arg2[1] = ft_strdup("-e");
 	// arg2[2] = NULL;
-	cmdadd_back(&cmd, arg2, REDIR_OUT);
-*/
+	nodeadd_right(&node, arg2, END);
+
 	char **arg3 = (char **)malloc(sizeof(char * ) * 2);
 	if (!arg3)
 		return (0);
-	arg3[0] = ft_strdup("export");
-	arg3[1] = ft_strdup("MY_ENV_VAL=6");
+	arg3[0] = ft_strdup("ls");
+	arg3[1] = ft_strdup("-l");
 	arg3[2] = NULL;
-	cmdadd_back(&cmd, arg3, END);
+	nodeadd_right(&node, arg3, END);
 
-	while (cmd)
+	while (node)
 	{
-		exec_cmd(cmd, env);
-		cmd = cmd->next;
+		exec_node(node, env);
+		node = node->right;
 	}
 	
 /*

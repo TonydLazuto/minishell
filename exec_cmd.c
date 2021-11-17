@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*   exec_node.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,53 +12,53 @@
 
 #include "minishell_bis.h"
 
-void	child_cmd(t_cmd *cmd, char **env)
+void	child_node(t_astnode *node, char **env)
 {
-	if (cmd->type == PIPE
-		|| (cmd->back && cmd->back->type == PIPE))
-		child_pipe(cmd);
-	if (cmd->type == REDIR_OUT)
-		child_redi(cmd);
-	if (cmd->back && cmd->back->type == REDIR_OUT)
+	if (node->type == PIPE
+		|| (node->parent && node->parent->type == PIPE))
+		child_pipe(node);
+	if (node->type == REDIR_OUT)
+		child_redi(node);
+	if (node->parent && node->parent->type == REDIR_OUT)
 		return ;
-	if (check_builtin(cmd, env) == 0)
+	if (check_builtin(node, env) == 0)
 	{
-		if (execve(cmd->arg[0], cmd->arg, env) == -1)
-			ft_exit(cmd, "error: execve()");
+		if (execve(node->cmd.arg[0], node->cmd.arg, env) == -1)
+			ft_exit(node, "error: execve()");
 	}
 }
 
-void	parent_cmd(t_cmd *cmd)
+void	parent_node(t_astnode *node)
 {
-	if (cmd->type == PIPE
-		|| (cmd->back && cmd->back->type == PIPE))
-		parent_pipe(cmd);
+	if (node->type == PIPE
+		|| (node->parent && node->parent->type == PIPE))
+		parent_pipe(node);
 }
 
-void	exec_cmd(t_cmd *cmd, char **env)
+void	exec_node(t_astnode *node, char **env)
 {
 	pid_t	pid;
 	int		status;
 
-	if (cmd->type == PIPE
-		|| (cmd->back && cmd->back->type == PIPE))
+	if (node->type == PIPE
+		|| (node->parent && node->parent->type == PIPE))
 	{
-		if (pipe(cmd->pipefd) == -1)
-			ft_exit(cmd, "error : pipe()");
+		if (pipe(node->cmd.pipefd) == -1)
+			ft_exit(node, "error : pipe()");
 	}
-	if ((!cmd->back || (cmd->back && cmd->back->type == END))
-		&& cmd->type == END)
-		child_cmd(cmd, env);
+	if ((!node->parent || (node->parent && node->parent->type == END))
+		&& node->type == END)
+		child_node(node, env);
 	else
 	{
 		pid = fork();
 		if (pid < 0)
-			ft_exit(cmd, "error : fork()");
+			ft_exit(node, "error : fork()");
 		if (pid == 0)
-			child_cmd(cmd, env);
+			child_node(node, env);
 		else
 		{
-			parent_cmd(cmd);
+			parent_astnode(node);
 			waitpid(pid, &status, 0);
 		}
 	}

@@ -1,26 +1,26 @@
 #include "minishell_bis.h"
 
-void	printcmds(t_cmd *mycmd)
+void	printnodes(t_astnode *mynode)
 {
-	t_cmd	*cmd;
+	t_astnode	*node;
 	int		i;
 
-	cmd = mycmd;
-	while (cmd)
+	node = mynode;
+	while (node)
 	{
 		i = 0;
-		if (cmd->arg)
+		if (node->cmd.arg)
 		{
-			while (cmd->arg[i])
+			while (node->cmd.arg[i])
 			{
-				printf("cmd->arg : %s\n", cmd->arg[i]);
+				printf("node->cmd.arg : %s\n", node->cmd.arg[i]);
 				i++;
 			}
 		}
-		printf("cmd->type : %d\n", cmd->type);
-		if (cmd->next)
+		printf("node->type : %d\n", node->type);
+		if (node->right)
 			printf("\n");
-		cmd = cmd->next;
+		node = node->right;
 	}
 }
 
@@ -41,12 +41,12 @@ int	ft_strcmp(char *s1, const char *s2)
 }
 
 
-void	ft_exit(t_cmd *cmd, char *err)
+void	ft_exit(t_astnode *node, char *err)
 {
 	ft_putstr_fd(err, 1);
 	ft_putstr_fd("\n", 1);
-	while (cmd->back)
-		cmd = cmd->back;
-	clearcmds(&cmd);
+	while (node->parent)
+		node = node->parent;
+	clearnodes(&node);
 	exit(EXIT_FAILURE);
 }
