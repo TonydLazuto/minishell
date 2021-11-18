@@ -23,7 +23,7 @@ t_astnode	*new_node(char *arg[], int type, t_env *env)
 	node->cmd.pipefd[0] = 0;
 	node->cmd.pipefd[1] = 0;
 	node->type = type;
-	node->env = env;
+	node->env = &env;
 	node->left = NULL;
 	node->right = NULL;
 	node->parent = NULL;
@@ -66,7 +66,7 @@ void		clearnodes(t_astnode **node)
 	}
 }
 
-void	nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
+void		nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
 {
 	t_astnode	*node;
 	t_astnode	*new;

@@ -25,17 +25,22 @@
  * 
  */
 
-void    ft_env(t_astnode *node, char **env)
+void    ft_env(t_astnode *node)
 {
-    int	line;
+	t_env	*env;
 
-	line = 0;
+	printf("%s\n", (*node->env)->name);
+
+//	env = (*node->env);
 	if (node->cmd.arg[1])
 		ft_exit(node, "env: too many arguments");
-	while (env[line])
+	while (env)
 	{
-		ft_putendl_fd(env[line], 1);
-		line++;
+		ft_putstr_fd(env->name, 1);
+		ft_putchar_fd('=', 1);
+		ft_putstr_fd(env->value, 1);
+		ft_putchar_fd('\n', 1);
+		env = env->next;
 	}
 }
 
@@ -64,26 +69,25 @@ void	mini_parse_export(t_astnode *node)
 		i++;
 	}
 }
-void	split_export(char *arg, char **key, char **val)
+void	split_export(t_astnode *node, char **key, char **val)
 {
 	size_t			len;
 	unsigned int	start;
 
 	len = 1;
-	while (arg[len] && arg[len] != '=')
+	while (node->cmd.arg[1][len] && node->cmd.arg[1][len] != '=')
 		len++;
 	start = len + 1;
-	*key = ft_substr(arg, 0, len);
+	*key = ft_substr(node->cmd.arg[1], 0, len);
 	if (!*key)
 		ft_exit(node, "export: malloc");
-	while (arg[len])
+	while (node->cmd.arg[1][len])
 		len++;
-	*val = ft_substr(arg, start, len);
+	*val = ft_substr(node->cmd.arg[1], start, len);
 	if (!*val)
 		ft_exit(node, "export: malloc");
-
 }
-
+/*
 int		is_exist_in_env(char **env)
 {
 	return (1);
@@ -100,23 +104,21 @@ int		ft_unsetenv(char *name, char **env)
 	if (!is_exist(name))
 		return (1);
 }
-
-void	ft_export(t_astnode *node, char **env)
+*/
+void	ft_export(t_astnode *node)
 {
 	char *key;
 	char *val;
 
-	(void)env;
 	key = NULL;
 	val = NULL;
-	if (!node->cmd.arg[1])
-		; //export ==> env with no args + declare
+	// if (!node->cmd.arg[1])
+	// 	; //export ==> env with no args + declare
 	if (node->cmd.arg[2])
 		ft_exit(node, "export: too many arguments");
-	mini_parse_export(node, &key);
-	split_export(node->cmd.arg[1] &key, &val);
+	mini_parse_export(node);
+	split_export(node, &key, &val);
 
-	printf()
 	// if (val)
 	// 	;//modify env variable
 	// else

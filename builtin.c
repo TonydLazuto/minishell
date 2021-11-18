@@ -91,7 +91,9 @@ void	ft_pwd(t_astnode *node)
 
 int		check_builtin(t_astnode *node)
 {
-	if (!node->cmd.arg)
+	printf("%s\n", (*node->env)->name);
+
+	if (!node->cmd.arg[0])
 		return (0);
 	else if (ft_strcmp(node->cmd.arg[0], "cd") == 0)
 		change_dir(node);

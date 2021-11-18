@@ -63,7 +63,7 @@ typedef struct s_astNode
 {
 	t_cmd				cmd;
 	enum e_tk_type		type;
-	t_env				*env;
+	t_env				**env;
 	struct s_astNode	*parent;
 	struct s_astNode	*right;
 	struct s_astNode	*left;
@@ -95,5 +95,8 @@ void	child_pipe(t_astnode *node);
 
 t_env   *get_linked_list(char **envp);
 void	clear_env(t_env **env);
+void	envadd_back(t_env **aenv, char *name, char *value);
+t_env	*get_env_by_name(t_env *env, char *name);
+
 
 #endif

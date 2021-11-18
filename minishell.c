@@ -26,6 +26,8 @@ cat << ""
 echo $truc
 --> si truc n'est pas dans env \n
 
+MANDATORY PATH DIFF !!!
+
 */
 
 /**
@@ -35,42 +37,37 @@ echo $truc
  * 
  * int rl_redisplay ()
  * Change what's displayed on the screen to reflect the current contents of rl_line_buffer.
+ * 
  */
-int	main(int ac, char *av[], char **env)
+int	main(int ac, char *av[], char **envp)
 {
-	// t_astnode	*node;
-	t_env		*myenv;
-//	char	*line_read;
+	t_astnode	*node;
+	t_env		*env;
+	// char		*line_read;
 
 	(void)ac;
 	(void)av;
-	// node = NULL;
-	myenv = get_linked_list(env);
-	while (myenv)
-	{
-		printf("%s\n%s\n", myenv->name, myenv->value);
-		myenv = myenv->next;
-	}
-/*
-	if (!myenv)
+	node = NULL;
+	env = get_linked_list(envp);
+	if (!env)
 		return (-1);
-	char **arg = (char **)malloc(sizeof(char *) * 3);
+
+	char **arg = (char **)malloc(sizeof(char *) * 2);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("export");
-	arg[1] = ft_strdup("truc=5");
-	arg[2] = NULL;
-	nodeadd_right(&node, arg, TK_WORD, myenv);
+	arg[0] = ft_strdup("env");
+	arg[1] = NULL;
+	nodeadd_right(&node, arg, TK_WORD, env);
 
-	nodeadd_right(&node, NULL, TK_HERE_DOC);
+	// nodeadd_right(&node, NULL, TK_HERE_DOC, env);
 
-	char **arg3 = (char **)malloc(sizeof(char *) * 2);
-	if (!arg3)
-		return (0);
-	arg3[0] = ft_strdup("point");
-	arg3[1] = NULL;
-	nodeadd_right(&node, arg3, TK_WORD, myenv);
-*/
+	// char **arg3 = (char **)malloc(sizeof(char *) * 2);
+	// if (!arg3)
+	// 	return (0);
+	// arg3[0] = ft_strdup("point");
+	// arg3[1] = NULL;
+	// nodeadd_right(&node, arg3, TK_WORD, env);
+
 /*
 	nodeadd_right(&node, NULL, TK_PIPE);
 
@@ -91,12 +88,13 @@ int	main(int ac, char *av[], char **env)
 	arg5[1] = NULL;
 	nodeadd_right(&node, arg5, TK_WORD);
 */
-	// while (node)
-	// {
-	// 	if (node->type == TK_WORD)
-	// 		exec_cmd(node, env);
-	// 	node = node->right;
-	// }
+	while (node)
+	{
+		if (node->type == TK_WORD)
+			exec_cmd(node, envp);
+		node = node->right;
+	}
+	clear_env(&env);
 /*
 	while (1)
 	{
