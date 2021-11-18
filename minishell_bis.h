@@ -54,6 +54,14 @@ enum e_var
 	VAR = 1,
 };
 
+typedef struct s_env
+{
+	char			*name;
+	char			*value;
+	struct s_env	*next;
+	struct s_env	*back;
+}			t_env;
+
 typedef struct s_cmd
 {
 	char			**arg;
