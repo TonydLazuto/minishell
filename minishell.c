@@ -56,21 +56,21 @@ int	main(int ac, char *av[], char **envp)
 	if (!arg)
 		return (0);
 	arg[0] = ft_strdup("export");
-	arg[1] = ft_strdup("mavar=123");
+	arg[1] = NULL;
 	arg[2] = NULL;
-	nodeadd_right(&node, arg, TK_WORD, env);
+	nodeadd_right(&node, arg, NODE_WORD, env);
 
-	// nodeadd_right(&node, NULL, TK_HERE_DOC, env);
+	// nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
 
 	// char **arg3 = (char **)malloc(sizeof(char *) * 2);
 	// if (!arg3)
 	// 	return (0);
 	// arg3[0] = ft_strdup("/bin/ls");
 	// arg3[1] = NULL;
-	// nodeadd_right(&node, arg3, TK_WORD, env);
+	// nodeadd_right(&node, arg3, NODE_WORD, env);
 
 
-	// nodeadd_right(&node, NULL, TK_PIPE, env);
+	// nodeadd_right(&node, NULL, NODE_PIPE, env);
 
 	// char **arg4 = (char **)malloc(sizeof(char * ) * 3);
 	// if (!arg4)
@@ -78,22 +78,22 @@ int	main(int ac, char *av[], char **envp)
 	// arg4[0] = ft_strdup("env");
 	// arg4[1] = NULL;
 	// arg4[2] = NULL;
-	// nodeadd_right(&node, arg4, TK_WORD, env);
+	// nodeadd_right(&node, arg4, NODE_WORD, env);
 /*
-	nodeadd_right(&node, NULL, TK_OUT_REDIR);
+	nodeadd_right(&node, NULL, NODE_OUT_REDIR);
 
 	char **arg5 = (char **)malloc(sizeof(char * ) * 3);
 	if (!arg5)
 		return (0);
 	arg5[0] = ft_strdup("file");
 	arg5[1] = NULL;
-	nodeadd_right(&node, arg5, TK_WORD);
+	nodeadd_right(&node, arg5, NODE_WORD);
 */
 	t_astnode *first;
 	first = node;
 	while (node)
 	{
-		if (node->type == TK_WORD)
+		if (node->type == NODE_WORD)
 			exec_cmd(node, envp);
 		node = node->right;
 	}

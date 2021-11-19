@@ -27,19 +27,19 @@ enum e_state
 	STATE_NULL
 };
 
-enum e_tk_type
+enum e_node_type
 {
-	TK_PIPE,
-	TK_IN_REDIR,
-	TK_OUT_REDIR,
-	TK_OUT_DREDIR,
-	TK_WORD,
-	TK_IN_BRAKET,
-	TK_OUT_BRAKET,
-	TK_OR,
-	TK_AND,
-	TK_HERE_DOC,
-	TK_WHITE_SPACE
+	NODE_PIPE,
+	NODE_IN_REDIR,
+	NODE_OUT_REDIR,
+	NODE_OUT_DREDIR,
+	NODE_WORD,
+	NODE_IN_BRAKET,
+	NODE_OUT_BRAKET,
+	NODE_OR,
+	NODE_AND,
+	NODE_HERE_DOC,
+	NODE_WHITE_SPACE
 };
 
 typedef struct s_astNode
@@ -51,7 +51,7 @@ typedef struct s_astNode
 
 typedef struct s_token
 {
-	enum e_tk_type		type;
+	enum e_node_type		type;
 	char				*value;
 }				t_token;
 

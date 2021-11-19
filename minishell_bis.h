@@ -36,19 +36,16 @@ typedef struct s_cmd
 	int		pipefd[2];
 }				t_cmd;
 
-enum e_tk_type
+enum e_node_type
 {
-	TK_PIPE,
-	TK_IN_REDIR,
-	TK_OUT_REDIR,
-	TK_OUT_DREDIR,
-	TK_WORD,
-	TK_IN_BRAKET,
-	TK_OUT_BRAKET,
-	TK_OR,
-	TK_AND,
-	TK_HERE_DOC,
-	TK_WHITE_SPACE
+	NODE_PIPE,
+	NODE_IN_REDIR,
+	NODE_OUT_REDIR,
+	NODE_OUT_DREDIR,
+	NODE_WORD,
+	NODE_OR,
+	NODE_AND,
+	NODE_HERE_DOC
 };
 
 typedef struct s_env
@@ -62,7 +59,7 @@ typedef struct s_env
 typedef struct s_astNode
 {
 	t_cmd				cmd;
-	enum e_tk_type		type;
+	enum e_node_type		type;
 	t_env				*env;
 	struct s_astNode	*parent;
 	struct s_astNode	*right;
@@ -75,7 +72,7 @@ size_t	my_strlen(const char *str);
 char	*strjoinfree(char *s1, char *s2);
 char	*my_strdup(char *s1);
 char	*my_substr(char *s, unsigned int start, size_t len);
-int		ft_strcmp(char *s1, const char *s2);
+int		my_strncmp(char *s1, char *s2);
 
 void	clearnodes(t_astnode **node);
 void	nodeadd_right(t_astnode **anode, char *arg[],
@@ -98,5 +95,9 @@ void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);
 t_env	*get_env_by_name(t_env *env, char *name);
 t_env	*envlast(t_env *env);
+int		get_env_size(t_env *env);
+t_env	*get_lowest_env_ascii(t_env *env, t_env *tmp, int size);
+void    export_no_args(t_astnode *node);
+t_env	*cpy_env_list(t_env *env);
 
 #endif

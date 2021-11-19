@@ -25,8 +25,10 @@ SRCS		=	minishell.c \
 				builtin.c \
 				builtin2.c \
 				exec_cmd.c \
+				export_no_args.c \
 				env_list.c \
 				env_list2.c \
+				env_list3.c \
 				utils.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))

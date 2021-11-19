@@ -14,18 +14,18 @@
 
 void	child_pipe(t_astnode *node)
 {
-	if (node->right && node->right->type == TK_PIPE)
+	if (node->right && node->right->type == NODE_PIPE)
 	{
 		if (dup2(node->cmd.pipefd[1], STDOUT_FILENO) < 0)
 			ft_error(node, "error : dup2()");
 	}
-	if (node->parent && node->parent->type == TK_PIPE)
+	if (node->parent && node->parent->type == NODE_PIPE)
 	{
 		if (dup2(node->parent->parent->cmd.pipefd[0], STDIN_FILENO) < 0)
 			ft_error(node, "error : dup2()");
 	}
-	if ((node->right && node->right->type == TK_PIPE)
-		|| (node->parent && node->parent->type == TK_PIPE))
+	if ((node->right && node->right->type == NODE_PIPE)
+		|| (node->parent && node->parent->type == NODE_PIPE))
 	{
 		close(node->cmd.pipefd[1]);
 		close(node->cmd.pipefd[0]);
@@ -34,14 +34,14 @@ void	child_pipe(t_astnode *node)
 
 void	parent_pipe(t_astnode *node)
 {
-	if ((node->right && node->right->type == TK_PIPE)
-		|| (node->parent && node->parent->type == TK_PIPE))
+	if ((node->right && node->right->type == NODE_PIPE)
+		|| (node->parent && node->parent->type == NODE_PIPE))
 	{
 		close(node->cmd.pipefd[1]);
-		if (node->parent && node->parent->type == TK_PIPE)
+		if (node->parent && node->parent->type == NODE_PIPE)
 		{
 			close(node->parent->parent->cmd.pipefd[0]);
-			if (!node->right || (node->right && node->right->type != TK_PIPE))
+			if (!node->right || (node->right && node->right->type != NODE_PIPE))
 				close(node->cmd.pipefd[0]);
 		}
 	}

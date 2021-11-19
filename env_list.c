@@ -19,7 +19,7 @@ t_env	*get_env_by_name(t_env *env, char *name)
 	elet = env;
 	while (elet)
 	{
-		if (ft_strcmp(elet->name, name) == 0)
+		if (my_strncmp(elet->name, name) == 0)
 			return (elet);
 		elet = elet->next;
 	}

@@ -37,7 +37,7 @@ int		check_dash_n(t_astnode *node)
 	int i;
 
 	i = 2;
-	if (ft_strcmp(node->cmd.arg[1], "-n") == 0)
+	if (my_strncmp(node->cmd.arg[1], "-n") == 0)
 	{
 		while (node->cmd.arg[1][i])
 		{
@@ -92,19 +92,19 @@ int		launch_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);
-	else if (ft_strcmp(node->cmd.arg[0], "cd") == 0)
+	else if (my_strncmp(node->cmd.arg[0], "cd") == 0)
 		change_dir(node);
-	else if (ft_strcmp(node->cmd.arg[0], "echo") == 0)
+	else if (my_strncmp(node->cmd.arg[0], "echo") == 0)
 		ft_echo(node);
-	else if (ft_strcmp(node->cmd.arg[0], "pwd") == 0)
+	else if (my_strncmp(node->cmd.arg[0], "pwd") == 0)
 		ft_pwd(node);
-	else if (ft_strcmp(node->cmd.arg[0], "env") == 0)
+	else if (my_strncmp(node->cmd.arg[0], "env") == 0)
 		ft_env(node);
-	else if (ft_strcmp(node->cmd.arg[0], "export") == 0)
+	else if (my_strncmp(node->cmd.arg[0], "export") == 0)
 		ft_export(node);
-	// else if (ft_strcmp(node->cmd.arg[0], "unset") == 0)
+	// else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
 	//  	ft_unset(node);
-	// else if (ft_strcmp(node->cmd.arg[0], "exit") == 0)
+	// else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
 	// 	ft_exit(node);
 	else
 		return (0);

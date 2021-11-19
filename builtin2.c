@@ -21,8 +21,6 @@
  * A sequence of characters treated as a unit by the shell.
  * Words may not include unquoted metacharacters. 
  * 
- * key = value
- * 
  */
 
 void    ft_env(t_astnode *node)
@@ -94,8 +92,11 @@ void	ft_export(t_astnode *node)
 
 	name = NULL;
 	val = NULL;
-	// if (!node->cmd.arg[1])
-	//  	; export ==> env with no args + declare
+	if (!node->cmd.arg[1])
+	{
+	 	export_no_args(node);
+		return ;
+	}
 	if (node->cmd.arg[2])
 		ft_error(node, "export: too many arguments");
 	mini_parse_export(node);

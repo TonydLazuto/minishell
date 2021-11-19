@@ -24,22 +24,6 @@ void	printnodes(t_astnode *mynode)
 	}
 }
 
-int	ft_strcmp(char *s1, const char *s2)
-{
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	i = 0;
-	while (str1[i] && str2[i] && str1[i] == str2[i])
-		i++;
-	if (str1[i] != str2[i])
-		return (-1);
-	return (0);
-}
-
 
 void	ft_error(t_astnode *node, char *err)
 {
@@ -49,4 +33,32 @@ void	ft_error(t_astnode *node, char *err)
 		node = node->parent;
 	clearnodes(&node);
 	exit(EXIT_FAILURE);
+}
+
+int		my_strncmp(char *s1, char *s2)
+{
+	size_t			i;
+	unsigned char	*str1;
+	unsigned char	*str2;
+	size_t			n;
+
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
+	if (ft_strlen(s1) <= ft_strlen(s2))
+		n = ft_strlen(s1);
+	else
+		n = ft_strlen(s2);
+	i = 0;
+	if (n == 0)
+		return (0);
+	while (str1[i] && str2[i] && str1[i] == str2[i] && i < n - 1)
+		i++;
+	if (str1[i] != str2[i])
+	{
+		if (str1[i] - str2[i] > 0)
+			return (1);
+		else
+			return (-1);
+	}
+	return (0);
 }

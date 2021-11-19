@@ -26,6 +26,22 @@ t_env	*new_env(char *name, char *value)
 	return (env);
 }
 
+int		get_env_size(t_env *env)
+{
+	int		size;
+
+	size = 0;
+	if (env)
+	{
+		while (env)
+		{
+			++size;
+			env = env->next;
+		}
+	}
+	return (size);
+}
+
 t_env	*envlast(t_env *env)
 {
 	if (!env)

@@ -16,25 +16,25 @@ int		is_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);
-	if (ft_strcmp(node->cmd.arg[0], "cd") == 0
-		|| ft_strcmp(node->cmd.arg[0], "echo") == 0
-		|| ft_strcmp(node->cmd.arg[0], "pwd") == 0
-		|| ft_strcmp(node->cmd.arg[0], "env") == 0
-		|| ft_strcmp(node->cmd.arg[0], "export") == 0
-		|| ft_strcmp(node->cmd.arg[0], "unset") == 0
-		|| ft_strcmp(node->cmd.arg[0], "exit") == 0)
+	if (my_strncmp(node->cmd.arg[0], "cd") == 0
+		|| my_strncmp(node->cmd.arg[0], "echo") == 0
+		|| my_strncmp(node->cmd.arg[0], "pwd") == 0
+		|| my_strncmp(node->cmd.arg[0], "env") == 0
+		|| my_strncmp(node->cmd.arg[0], "export") == 0
+		|| my_strncmp(node->cmd.arg[0], "unset") == 0
+		|| my_strncmp(node->cmd.arg[0], "exit") == 0)
 		return (1);
 	return (0);
 }
 
 void	child_node(t_astnode *node, char **envp)
 {
-	if ((node->right && node->right->type == TK_PIPE)
-		|| (node->parent && node->parent->type == TK_PIPE))
+	if ((node->right && node->right->type == NODE_PIPE)
+		|| (node->parent && node->parent->type == NODE_PIPE))
 		child_pipe(node);
-	if (node->right && node->right->type == TK_OUT_REDIR)
+	if (node->right && node->right->type == NODE_OUT_REDIR)
 		child_out_redi(node);
-	if (node->parent && node->parent->type == TK_OUT_REDIR)
+	if (node->parent && node->parent->type == NODE_OUT_REDIR)
 		return ;
 	if (launch_builtin(node) == 0)
 	{
@@ -45,15 +45,15 @@ void	child_node(t_astnode *node, char **envp)
 
 void	parent_node(t_astnode *node)
 {
-	if ((node->right && node->right->type == TK_PIPE)
-		|| (node->parent && node->parent->type == TK_PIPE))
+	if ((node->right && node->right->type == NODE_PIPE)
+		|| (node->parent && node->parent->type == NODE_PIPE))
 		parent_pipe(node);
 }
 
 int		check_without_fork(t_astnode *node)
 {
-	if ((!node->parent || (node->parent && node->parent->type != TK_PIPE))
-		&& (!node->right || (node->right && node->right->type != TK_PIPE))
+	if ((!node->parent || (node->parent && node->parent->type != NODE_PIPE))
+		&& (!node->right || (node->right && node->right->type != NODE_PIPE))
 		&& is_builtin(node))
 		return (1);
 	return (0);
@@ -64,8 +64,8 @@ void	exec_cmd(t_astnode *node, char **envp)
 	pid_t	pid;
 	int		status;
 
-	if ((node->right && node->right->type == TK_PIPE)
-		|| (node->parent && node->parent->type == TK_PIPE))
+	if ((node->right && node->right->type == NODE_PIPE)
+		|| (node->parent && node->parent->type == NODE_PIPE))
 	{
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_error(node, "error : pipe()");
