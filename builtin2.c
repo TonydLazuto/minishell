@@ -92,6 +92,7 @@ void	ft_export(t_astnode *node)
 
 	name = NULL;
 	val = NULL;
+
 	if (!node->cmd.arg[1])
 	{
 	 	export_no_args(node);

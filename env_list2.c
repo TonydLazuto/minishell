@@ -35,7 +35,7 @@ int		get_env_size(t_env *env)
 	{
 		while (env)
 		{
-			++size;
+			size++;
 			env = env->next;
 		}
 	}

@@ -31,15 +31,18 @@ t_env	*get_lowest_env_ascii(t_env *env, t_env *tmp, int size)
 	t_env	*elet;
 
 	elet = env;
+	if (get_env_size(env) == 1)
+		return (env);
 	while (elet)
 	{
 		tmp = env;
-		valid = 1;
+		valid = 0;
 		while (tmp)
 		{
 			//a voir la precision de la comparaision
-			if (my_strncmp(elet->name, tmp->name) != 1)
-				valid++;
+			if (my_strncmp(elet->name, tmp->name) != 1){
+				//if (valid)
+				valid++;}
 			tmp = tmp->next;
 		}
 		if (valid == size)
