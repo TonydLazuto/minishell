@@ -1,4 +1,4 @@
-#include "minishell_bis.h"
+#include "minishell.h"
 
 void	printnodes(t_astnode *mynode)
 {
@@ -23,7 +23,6 @@ void	printnodes(t_astnode *mynode)
 		node = node->right;
 	}
 }
-
 
 void	ft_error(t_astnode *node, char *err)
 {
@@ -60,5 +59,20 @@ int		my_strncmp(char *s1, char *s2)
 		else
 			return (-1);
 	}
+	return (0);
+}
+
+int		is_builtin(t_astnode *node)
+{
+	if (!node->cmd.arg[0])
+		return (0);
+	if (my_strncmp(node->cmd.arg[0], "cd") == 0
+		|| my_strncmp(node->cmd.arg[0], "echo") == 0
+		|| my_strncmp(node->cmd.arg[0], "pwd") == 0
+		|| my_strncmp(node->cmd.arg[0], "env") == 0
+		|| my_strncmp(node->cmd.arg[0], "export") == 0
+		|| my_strncmp(node->cmd.arg[0], "unset") == 0
+		|| my_strncmp(node->cmd.arg[0], "exit") == 0)
+		return (1);
 	return (0);
 }

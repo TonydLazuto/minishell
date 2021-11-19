@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
 void	child_out_redi(t_astnode *node)
 {

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_node.c                                         :+:      :+:    :+:   */
+/*   exec_node.c                                         :+:      :+:    :+:  */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,21 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
-int		is_builtin(t_astnode *node)
+int		launch_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);
-	if (my_strncmp(node->cmd.arg[0], "cd") == 0
-		|| my_strncmp(node->cmd.arg[0], "echo") == 0
-		|| my_strncmp(node->cmd.arg[0], "pwd") == 0
-		|| my_strncmp(node->cmd.arg[0], "env") == 0
-		|| my_strncmp(node->cmd.arg[0], "export") == 0
-		|| my_strncmp(node->cmd.arg[0], "unset") == 0
-		|| my_strncmp(node->cmd.arg[0], "exit") == 0)
-		return (1);
-	return (0);
+	else if (my_strncmp(node->cmd.arg[0], "cd") == 0)
+		ft_cd(node);
+	else if (my_strncmp(node->cmd.arg[0], "echo") == 0)
+		ft_echo(node);
+	else if (my_strncmp(node->cmd.arg[0], "pwd") == 0)
+		ft_pwd(node);
+	else if (my_strncmp(node->cmd.arg[0], "env") == 0)
+		ft_env(node);
+	else if (my_strncmp(node->cmd.arg[0], "export") == 0)
+		ft_export(node);
+	// else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
+	//  	ft_unset(node);
+	// else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
+	// 	ft_exit(node);
+	else
+		return (0);
+	return (1);
 }
 
 void	child_node(t_astnode *node, char **envp)

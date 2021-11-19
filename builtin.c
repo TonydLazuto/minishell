@@ -15,9 +15,9 @@
  * pour $?
  */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
-void	change_dir(t_astnode *node)
+void	ft_cd(t_astnode *node)
 {
 	int	i;
 	int	ret;
@@ -88,25 +88,22 @@ void	ft_pwd(t_astnode *node)
 	ft_putendl_fd(buf, 1);
 }
 
-int		launch_builtin(t_astnode *node)
+void    ft_env(t_astnode *node)
 {
-	if (!node->cmd.arg[0])
-		return (0);
-	else if (my_strncmp(node->cmd.arg[0], "cd") == 0)
-		change_dir(node);
-	else if (my_strncmp(node->cmd.arg[0], "echo") == 0)
-		ft_echo(node);
-	else if (my_strncmp(node->cmd.arg[0], "pwd") == 0)
-		ft_pwd(node);
-	else if (my_strncmp(node->cmd.arg[0], "env") == 0)
-		ft_env(node);
-	else if (my_strncmp(node->cmd.arg[0], "export") == 0)
-		ft_export(node);
-	// else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
-	//  	ft_unset(node);
-	// else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
-	// 	ft_exit(node);
-	else
-		return (0);
-	return (1);
+	t_env	*env;
+
+	env = node->env;
+	if (node->cmd.arg[1])
+		ft_error(node, "env: too many arguments");
+	while (env)
+	{
+		if (env->value)
+		{
+			ft_putstr_fd(env->name, 1);
+			ft_putchar_fd('=', 1);
+			ft_putstr_fd(env->value, 1);
+			ft_putchar_fd('\n', 1);
+		}
+		env = env->next;
+	}
 }

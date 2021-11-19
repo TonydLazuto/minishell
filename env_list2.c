@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
 t_env	*new_env(char *name, char *value)
 {
@@ -20,13 +20,13 @@ t_env	*new_env(char *name, char *value)
 	if (!env)
 		return (NULL);
 	env->name = name;
-    env->value = value;
+	env->value = value;
 	env->back = NULL;
 	env->next = NULL;
 	return (env);
 }
 
-int		get_env_size(t_env *env)
+int	get_env_size(t_env *env)
 {
 	int		size;
 
@@ -63,7 +63,7 @@ void	clear_env(t_env **env)
 			tmp = (*env)->next;
 			if ((*env)->name)
 				free((*env)->name);
-            if ((*env)->value)
+			if ((*env)->value)
 				free((*env)->value);
 			free(*env);
 			*env = NULL;

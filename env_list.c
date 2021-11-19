@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
 t_env	*get_env_by_name(t_env *env, char *name)
 {
@@ -32,7 +32,7 @@ t_env	*parse_line_env(t_env *env, char *envp)
 	char			*name;
 	char			*value;
 	size_t			j;
-    unsigned int	start;
+	unsigned int	start;
 
 	j = 0;
 	start = (unsigned int)j;
@@ -54,17 +54,17 @@ t_env	*parse_line_env(t_env *env, char *envp)
 
 t_env   *get_linked_list(char **envp)
 {
-    t_env	*env;
-    int		i;
+	t_env	*env;
+	int		i;
 
-    i = 0;
+	i = 0;
 	env = NULL;
-    while (envp[i])
-    {
+	while (envp[i])
+	{
 		env = parse_line_env(env, envp[i]);
 		if (!env)
 			return (NULL);
-        i++;
-    }
-    return (env);
+		i++;
+	}
+	return (env);
 }

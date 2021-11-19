@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin2.c                                         :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/12 13:54:22 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/12 13:54:23 by aderose          ###   ########.fr       */
+/*   Created: 2021/11/19 19:11:54 by aderose           #+#    #+#             */
+/*   Updated: 2021/11/19 19:11:55 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
+
 /**
  * name
  * A word consisting solely of letters, numbers,
@@ -22,23 +23,6 @@
  * Words may not include unquoted metacharacters. 
  * 
  */
-
-void    ft_env(t_astnode *node)
-{
-	t_env	*env;
-
-	env = node->env;
-	if (node->cmd.arg[1])
-		ft_error(node, "env: too many arguments");
-	while (env)
-	{
-		ft_putstr_fd(env->name, 1);
-		ft_putchar_fd('=', 1);
-		ft_putstr_fd(env->value, 1);
-		ft_putchar_fd('\n', 1);
-		env = env->next;
-	}
-}
 
 void	mini_parse_export(t_astnode *node)
 {
@@ -53,6 +37,8 @@ void	mini_parse_export(t_astnode *node)
 			ft_error(node, "export: invalid character in var env");
 		i++;
 	}
+	if (!node->cmd.arg[1][i])
+		return ;
 	if (node->cmd.arg[1][i] != '=')
 		ft_error(node, "export: invalid argument");
 	i++;
@@ -65,6 +51,7 @@ void	mini_parse_export(t_astnode *node)
 		i++;
 	}
 }
+
 void	split_key_val(t_astnode *node, char **key, char **val)
 {
 	size_t			len;
@@ -77,6 +64,8 @@ void	split_key_val(t_astnode *node, char **key, char **val)
 	*key = ft_substr(node->cmd.arg[1], 0, len);
 	if (!*key)
 		ft_error(node, "export: malloc");
+	if (!node->cmd.arg[1][len])
+		return ;
 	while (node->cmd.arg[1][len])
 		len++;
 	*val = ft_substr(node->cmd.arg[1], start, len);
@@ -92,7 +81,6 @@ void	ft_export(t_astnode *node)
 
 	name = NULL;
 	val = NULL;
-
 	if (!node->cmd.arg[1])
 	{
 	 	export_no_args(node);
@@ -111,4 +99,3 @@ void	ft_export(t_astnode *node)
 	else
 		envadd_back(&node->env, name, val);
 }
-

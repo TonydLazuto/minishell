@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.c                                              :+:      :+:    :+:   */
+/*   node.c                                              :+:      :+:    :+:  */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
 t_astnode	*new_node(char *arg[], int type, t_env *env)
 {
@@ -29,6 +29,7 @@ t_astnode	*new_node(char *arg[], int type, t_env *env)
 	node->parent = NULL;
 	return (node);
 }
+
 t_astnode	*nodelast(t_astnode *node)
 {
 	if (!node)
@@ -41,7 +42,7 @@ t_astnode	*nodelast(t_astnode *node)
 void		clearnodes(t_astnode **node)
 {
 	t_astnode	*tmp;
-	int		i;
+	int			i;
 
 	tmp = NULL;
 	if (*node)

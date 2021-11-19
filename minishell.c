@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bis.h"
+#include "minishell.h"
 
 /*
 export A+=qwe
@@ -55,20 +55,20 @@ int	main(int ac, char *av[], char **envp)
 	char **arg = (char **)malloc(sizeof(char *) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("export");
+	arg[0] = ft_strdup("env");
 	arg[1] = NULL;
 	arg[2] = NULL;
 	nodeadd_right(&node, arg, NODE_WORD, env);
 
 	// nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
 
-	// char **arg3 = (char **)malloc(sizeof(char *) * 2);
+	// char **arg3 = (char **)malloc(sizeof(char *) * 3);
 	// if (!arg3)
 	// 	return (0);
-	// arg3[0] = ft_strdup("/bin/ls");
-	// arg3[1] = NULL;
+	// arg3[0] = ft_strdup("export");
+	// arg3[1] = ft_strdup("MA___VAR");
+	// arg3[2] = NULL;
 	// nodeadd_right(&node, arg3, NODE_WORD, env);
-
 
 	// nodeadd_right(&node, NULL, NODE_PIPE, env);
 
