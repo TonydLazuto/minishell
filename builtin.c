@@ -82,14 +82,13 @@ void	ft_pwd(t_astnode *node)
 	char	*buf;
 
 	buf = NULL;
-
 	if (node->cmd.arg[1])
 		ft_error(node, "pwd: too many arguments");
 	buf = getcwd(buf, 0);
 	ft_putendl_fd(buf, 1);
 }
 
-int		check_builtin(t_astnode *node)
+int		launch_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);

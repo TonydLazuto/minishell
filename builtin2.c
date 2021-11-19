@@ -88,7 +88,7 @@ void	split_key_val(t_astnode *node, char **key, char **val)
 
 void	ft_export(t_astnode *node)
 {
-	char	 *name;
+	char	*name;
 	char 	*val;
 	t_env	*elet;
 
@@ -108,7 +108,5 @@ void	ft_export(t_astnode *node)
 	}
 	else
 		envadd_back(&node->env, name, val);
-//	free(name);
-//	free(val);
 }
 

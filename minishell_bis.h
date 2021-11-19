@@ -84,7 +84,7 @@ void	nodeadd_right(t_astnode **anode, char *arg[],
 void	ft_error(t_astnode *node, char *err);
 void	printnodes(t_astnode *mynode);
 
-int		check_builtin(t_astnode *node);
+int		launch_builtin(t_astnode *node);
 void    ft_env(t_astnode *node);
 void	ft_export(t_astnode *node);
 
@@ -97,6 +97,6 @@ t_env   *get_linked_list(char **envp);
 void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);
 t_env	*get_env_by_name(t_env *env, char *name);
-
+t_env	*envlast(t_env *env);
 
 #endif

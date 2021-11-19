@@ -56,7 +56,7 @@ int	main(int ac, char *av[], char **envp)
 	if (!arg)
 		return (0);
 	arg[0] = ft_strdup("export");
-	arg[1] = NULL;
+	arg[1] = ft_strdup("mavar=123");
 	arg[2] = NULL;
 	nodeadd_right(&node, arg, TK_WORD, env);
 
@@ -89,6 +89,8 @@ int	main(int ac, char *av[], char **envp)
 	arg5[1] = NULL;
 	nodeadd_right(&node, arg5, TK_WORD);
 */
+	t_astnode *first;
+	first = node;
 	while (node)
 	{
 		if (node->type == TK_WORD)
@@ -96,6 +98,7 @@ int	main(int ac, char *av[], char **envp)
 		node = node->right;
 	}
 	clear_env(&env);
+	clearnodes(&first);
 /*
 	while (1)
 	{
