@@ -52,11 +52,12 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg = (char **)malloc(sizeof(char *) * 2);
+	char **arg = (char **)malloc(sizeof(char *) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("env");
+	arg[0] = ft_strdup("export");
 	arg[1] = NULL;
+	arg[2] = NULL;
 	nodeadd_right(&node, arg, TK_WORD, env);
 
 	// nodeadd_right(&node, NULL, TK_HERE_DOC, env);
@@ -64,21 +65,21 @@ int	main(int ac, char *av[], char **envp)
 	// char **arg3 = (char **)malloc(sizeof(char *) * 2);
 	// if (!arg3)
 	// 	return (0);
-	// arg3[0] = ft_strdup("point");
+	// arg3[0] = ft_strdup("/bin/ls");
 	// arg3[1] = NULL;
 	// nodeadd_right(&node, arg3, TK_WORD, env);
 
+
+	// nodeadd_right(&node, NULL, TK_PIPE, env);
+
+	// char **arg4 = (char **)malloc(sizeof(char * ) * 3);
+	// if (!arg4)
+	// 	return (0);
+	// arg4[0] = ft_strdup("env");
+	// arg4[1] = NULL;
+	// arg4[2] = NULL;
+	// nodeadd_right(&node, arg4, TK_WORD, env);
 /*
-	nodeadd_right(&node, NULL, TK_PIPE);
-
-	char **arg4 = (char **)malloc(sizeof(char * ) * 3);
-	if (!arg4)
-		return (0);
-	arg4[0] = ft_strdup("/bin/cat");
-	arg4[1] = ft_strdup("-e");
-	arg4[2] = NULL;
-	nodeadd_right(&node, arg4, TK_WORD);
-
 	nodeadd_right(&node, NULL, TK_OUT_REDIR);
 
 	char **arg5 = (char **)malloc(sizeof(char * ) * 3);

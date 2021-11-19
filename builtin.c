@@ -26,10 +26,10 @@ void	change_dir(t_astnode *node)
 	while (node->cmd.arg[i])
 		i++;
 	if (i != 2 || !node->cmd.arg[1])
-		ft_exit(node, "error: cd bad arguments");
+		ft_error(node, "error: cd bad arguments");
 	ret = chdir(node->cmd.arg[1]);
 	if (ret == -1)
-		ft_exit(node, "error: chdir");
+		ft_error(node, "error: chdir");
 }
 
 int		check_dash_n(t_astnode *node)
@@ -84,15 +84,13 @@ void	ft_pwd(t_astnode *node)
 	buf = NULL;
 
 	if (node->cmd.arg[1])
-		ft_exit(node, "pwd: too many arguments");
+		ft_error(node, "pwd: too many arguments");
 	buf = getcwd(buf, 0);
 	ft_putendl_fd(buf, 1);
 }
 
 int		check_builtin(t_astnode *node)
 {
-	printf("%s\n", (*node->env)->name);
-
 	if (!node->cmd.arg[0])
 		return (0);
 	else if (ft_strcmp(node->cmd.arg[0], "cd") == 0)
@@ -106,9 +104,9 @@ int		check_builtin(t_astnode *node)
 	else if (ft_strcmp(node->cmd.arg[0], "export") == 0)
 		ft_export(node);
 	// else if (ft_strcmp(node->cmd.arg[0], "unset") == 0)
-	// 	;
+	//  	ft_unset(node);
 	// else if (ft_strcmp(node->cmd.arg[0], "exit") == 0)
-	// 	;
+	// 	ft_exit(node);
 	else
 		return (0);
 	return (1);

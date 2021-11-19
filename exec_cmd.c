@@ -24,7 +24,7 @@ void	child_node(t_astnode *node, char **envp)
 	if (check_builtin(node) == 0)
 	{
 		if (execve(node->cmd.arg[0], node->cmd.arg, envp) == -1)
-			ft_exit(node, "error: execve()");
+			ft_error(node, "error: execve()");
 	}
 }
 
@@ -35,7 +35,14 @@ void	parent_node(t_astnode *node)
 		parent_pipe(node);
 }
 
-//check_if_exec();
+int		check_without_fork(t_astnode *node)
+{
+	if ((!node->parent || (node->parent && node->parent->type != TK_PIPE))
+		&& (!node->right || (node->right && node->right->type != TK_PIPE))
+		&& check_builtin(node))
+		return (1);
+	return (0);
+}
 
 void	exec_cmd(t_astnode *node, char **envp)
 {
@@ -46,21 +53,15 @@ void	exec_cmd(t_astnode *node, char **envp)
 		|| (node->parent && node->parent->type == TK_PIPE))
 	{
 		if (pipe(node->cmd.pipefd) == -1)
-			ft_exit(node, "error : pipe()");
+			ft_error(node, "error : pipe()");
 	}
-	/**
-	 * Voir les conditioms pour entre dans le fork
-	 * parce que si execve est lance et qu'il y a pas eu de fork() avant
-	 * le programme s'arrete.
-	 */
-	if ((!node->parent || (node->parent && node->parent->type != TK_PIPE))
-		&& (!node->right || (node->right && node->right->type != TK_PIPE)))
+	if (check_without_fork(node))
 		child_node(node, envp);
 	else
 	{
 		pid = fork();
 		if (pid < 0)
-			ft_exit(node, "error : fork()");
+			ft_error(node, "error : fork()");
 		if (pid == 0)
 			child_node(node, envp);
 		else

@@ -29,11 +29,9 @@ void    ft_env(t_astnode *node)
 {
 	t_env	*env;
 
-	printf("%s\n", (*node->env)->name);
-
-//	env = (*node->env);
+	env = node->env;
 	if (node->cmd.arg[1])
-		ft_exit(node, "env: too many arguments");
+		ft_error(node, "env: too many arguments");
 	while (env)
 	{
 		ft_putstr_fd(env->name, 1);
@@ -50,26 +48,26 @@ void	mini_parse_export(t_astnode *node)
 
 	i = 1;
 	if (!ft_isalpha(node->cmd.arg[1][0]))
-		ft_exit(node, "error: first character of argument is not alpha");
+		ft_error(node, "error: first character of argument is not alpha");
 	while (node->cmd.arg[1][i] && node->cmd.arg[1][i] != '=')
 	{
 		if (!ft_isalnum(node->cmd.arg[1][i]) && node->cmd.arg[1][i] != '_')
-			ft_exit(node, "export: invalid character in var env");
+			ft_error(node, "export: invalid character in var env");
 		i++;
 	}
 	if (node->cmd.arg[1][i] != '=')
-		ft_exit(node, "export: invalid argument");
+		ft_error(node, "export: invalid argument");
 	i++;
 	if (node->cmd.arg[1][i] == '\0')
-		ft_exit(node, "export: not initialized");
+		ft_error(node, "export: not initialized");
 	while (node->cmd.arg[1][i])
 	{
 		if (!ft_isascii(node->cmd.arg[1][i]))
-			ft_exit(node, "export: env value is not ascii");
+			ft_error(node, "export: env value is not ascii");
 		i++;
 	}
 }
-void	split_export(t_astnode *node, char **key, char **val)
+void	split_key_val(t_astnode *node, char **key, char **val)
 {
 	size_t			len;
 	unsigned int	start;
@@ -80,50 +78,37 @@ void	split_export(t_astnode *node, char **key, char **val)
 	start = len + 1;
 	*key = ft_substr(node->cmd.arg[1], 0, len);
 	if (!*key)
-		ft_exit(node, "export: malloc");
+		ft_error(node, "export: malloc");
 	while (node->cmd.arg[1][len])
 		len++;
 	*val = ft_substr(node->cmd.arg[1], start, len);
 	if (!*val)
-		ft_exit(node, "export: malloc");
-}
-/*
-int		is_exist_in_env(char **env)
-{
-	return (1);
+		ft_error(node, "export: malloc");
 }
 
-int		ft_setenv(char *name, char *value, char **env)
-{
-	if (is_exist(name))
-		set_name();
-}
-
-int		ft_unsetenv(char *name, char **env)
-{
-	if (!is_exist(name))
-		return (1);
-}
-*/
 void	ft_export(t_astnode *node)
 {
-	char *key;
-	char *val;
+	char	 *name;
+	char 	*val;
+	t_env	*elet;
 
-	key = NULL;
+	name = NULL;
 	val = NULL;
 	// if (!node->cmd.arg[1])
-	// 	; //export ==> env with no args + declare
+	//  	; export ==> env with no args + declare
 	if (node->cmd.arg[2])
-		ft_exit(node, "export: too many arguments");
+		ft_error(node, "export: too many arguments");
 	mini_parse_export(node);
-	split_export(node, &key, &val);
-
-	// if (val)
-	// 	;//modify env variable
-	// else
-	// 	;//add new env variable
-	free(key);
-	free(val);
+	split_key_val(node, &name, &val);
+	elet = get_env_by_name(node->env, name);
+	if (elet)
+	{
+		free(elet->value);
+		elet->value = ft_strdup(val);
+	}
+	else
+		envadd_back(&node->env, name, val);
+//	free(name);
+//	free(val);
 }
 

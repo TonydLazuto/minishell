@@ -35,7 +35,7 @@ t_env	*envlast(t_env *env)
 	return (env);
 }
 
-void		clear_env(t_env **env)
+void	clear_env(t_env **env)
 {
 	t_env	*tmp;
 

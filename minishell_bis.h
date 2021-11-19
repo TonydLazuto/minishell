@@ -63,7 +63,7 @@ typedef struct s_astNode
 {
 	t_cmd				cmd;
 	enum e_tk_type		type;
-	t_env				**env;
+	t_env				*env;
 	struct s_astNode	*parent;
 	struct s_astNode	*right;
 	struct s_astNode	*left;
@@ -81,7 +81,7 @@ void	clearnodes(t_astnode **node);
 void	nodeadd_right(t_astnode **anode, char *arg[],
 			int type, t_env *env);
 
-void	ft_exit(t_astnode *node, char *err);
+void	ft_error(t_astnode *node, char *err);
 void	printnodes(t_astnode *mynode);
 
 int		check_builtin(t_astnode *node);

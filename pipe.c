@@ -17,12 +17,12 @@ void	child_pipe(t_astnode *node)
 	if (node->right && node->right->type == TK_PIPE)
 	{
 		if (dup2(node->cmd.pipefd[1], STDOUT_FILENO) < 0)
-			ft_exit(node, "error : dup2()");
+			ft_error(node, "error : dup2()");
 	}
 	if (node->parent && node->parent->type == TK_PIPE)
 	{
 		if (dup2(node->parent->parent->cmd.pipefd[0], STDIN_FILENO) < 0)
-			ft_exit(node, "error : dup2()");
+			ft_error(node, "error : dup2()");
 	}
 	if ((node->right && node->right->type == TK_PIPE)
 		|| (node->parent && node->parent->type == TK_PIPE))

@@ -41,7 +41,7 @@ int	ft_strcmp(char *s1, const char *s2)
 }
 
 
-void	ft_exit(t_astnode *node, char *err)
+void	ft_error(t_astnode *node, char *err)
 {
 	ft_putstr_fd(err, 1);
 	ft_putstr_fd("\n", 1);
