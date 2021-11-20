@@ -38,7 +38,7 @@ int	launch_builtin(t_astnode *node)
 void	child_node(t_astnode *node, char **envp)
 {
 	if (node->parent && (node->parent->type == NODE_OUT_REDIR
-		|| node->parent->type == NODE_OUT_DREDIR))
+			|| node->parent->type == NODE_OUT_DREDIR))
 		return ;
 	if ((node->right && node->right->type == NODE_PIPE)
 		|| (node->parent && node->parent->type == NODE_PIPE))

@@ -82,7 +82,7 @@ void	child_append(t_astnode *node);
 void	child_out_redir(t_astnode *node);
 void	child_pipe(t_astnode *node);
 void	exec_cmd(t_astnode *node, char **env);
-char    *check_relatif_path(t_astnode *node);
+char	*check_relatif_path(t_astnode *node);
 
 void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);

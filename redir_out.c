@@ -39,7 +39,7 @@ void	child_out_redir(t_astnode *node)
 
 void	child_append(t_astnode *node)
 {
-    int	fd;
+	int	fd;
 
 	if (!node->right->right)
 		ft_error(node, "output redirection nowhere");
