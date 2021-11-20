@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 /**
+ * INFO
  * name
  * A word consisting solely of letters, numbers,
  * and underscores, and beginning with a letter or underscore.
@@ -21,7 +22,6 @@
  * word
  * A sequence of characters treated as a unit by the shell.
  * Words may not include unquoted metacharacters. 
- * 
  */
 
 void	mini_parse_export(t_astnode *node)

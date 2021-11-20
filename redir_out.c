@@ -19,6 +19,7 @@
  * instead, copy the content of the command
  * and keep the rest of the content of the file
  */
+
 void	child_out_redir(t_astnode *node)
 {
 	int	fd;

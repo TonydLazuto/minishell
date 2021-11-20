@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 /**
+ * INFO
  * La ligne de l'env dont le name est "_"
  * n'est pas dans l'export selon bash.
  */
