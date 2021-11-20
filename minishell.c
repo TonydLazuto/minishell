@@ -55,40 +55,56 @@ int	main(int ac, char *av[], char **envp)
 	char **arg = (char **)malloc(sizeof(char *) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("env");
-	arg[1] = NULL;
+	arg[0] = ft_strdup("export");
+	arg[1] = ft_strdup("MANEWVAR");
 	arg[2] = NULL;
 	nodeadd_right(&node, arg, NODE_WORD, env);
 
 	// nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
-
-	// char **arg3 = (char **)malloc(sizeof(char *) * 3);
-	// if (!arg3)
+	// char **arg2 = (char **)malloc(sizeof(char * ) * 2);
+	// if (!arg2)
 	// 	return (0);
-	// arg3[0] = ft_strdup("export");
-	// arg3[1] = ft_strdup("MA___VAR");
-	// arg3[2] = NULL;
-	// nodeadd_right(&node, arg3, NODE_WORD, env);
+	// arg2[0] = ft_strdup("env");
+	// arg2[1] = NULL;
+	// nodeadd_right(&node, arg2, NODE_WORD, env);
+
+
+	char **arg3 = (char **)malloc(sizeof(char *) * 3);
+	if (!arg3)
+		return (0);
+	arg3[0] = ft_strdup("export");
+	arg3[1] = NULL;
+	arg3[2] = NULL;
+	nodeadd_right(&node, arg3, NODE_WORD, env);
 
 	// nodeadd_right(&node, NULL, NODE_PIPE, env);
 
 	// char **arg4 = (char **)malloc(sizeof(char * ) * 3);
 	// if (!arg4)
 	// 	return (0);
-	// arg4[0] = ft_strdup("env");
-	// arg4[1] = NULL;
+	// arg4[0] = ft_strdup("/usr/bin/grep");
+	// arg4[1] = ft_strdup("MANEWVAR");
 	// arg4[2] = NULL;
-	// nodeadd_right(&node, arg4, NODE_WORD, env);
-/*
-	nodeadd_right(&node, NULL, NODE_OUT_REDIR);
+	// nodeadd_right(&node, ./arg4, NODE_WORD, env);
 
-	char **arg5 = (char **)malloc(sizeof(char * ) * 3);
-	if (!arg5)
-		return (0);
-	arg5[0] = ft_strdup("file");
-	arg5[1] = NULL;
-	nodeadd_right(&node, arg5, NODE_WORD);
-*/
+	// nodeadd_right(&node, NULL, NODE_OUT_REDIR);
+
+	// char **arg5 = (char **)malloc(sizeof(char * ) * 3);
+	// if (!arg5)
+	// 	return (0);
+	// arg5[0] = ft_strdup("unset");
+	// arg5[1] = ft_strdup("MANEWVAR");
+	// arg5[2] = NULL;
+	// nodeadd_right(&node, arg5, NODE_WORD, env);
+
+	// char **arg6 = (char **)malloc(sizeof(char *) * 3);
+	// if (!arg6)
+	// 	return (0);
+	// arg6[0] = ft_strdup("env");
+	// arg6[1] = NULL;
+	// arg6[2] = NULL;
+	// nodeadd_right(&node, arg6, NODE_WORD, env);
+
 	t_astnode *first;
 	first = node;
 	while (node)

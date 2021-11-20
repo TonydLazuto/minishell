@@ -12,6 +12,33 @@
 
 #include "minishell.h"
 
+t_env	*pop_env(t_env *env, char *name)
+{
+	t_env	*del_elet;
+	t_env	*before;
+	t_env	*after;
+
+	del_elet = get_env_by_name(env, name);
+	before = del_elet->back;
+	after = del_elet->next;
+	if (after)
+		after->back = before;
+	if (before)
+		before->next = after;
+	free(del_elet);
+	del_elet = NULL;
+	if (after)
+		env = after;
+	else if (before)
+		env = before;
+	else
+		env = NULL;
+	if (env)
+		while (env->back)
+			env = env->back;
+	return (env);
+}
+
 t_env	*get_env_by_name(t_env *env, char *name)
 {
 	t_env	*elet;
@@ -24,7 +51,7 @@ t_env	*get_env_by_name(t_env *env, char *name)
 			return (elet);
 		elet = elet->next;
 	}
-	return (elet);
+	return (NULL);
 }
 
 t_env	*parse_line_env(t_env *env, char *envp)

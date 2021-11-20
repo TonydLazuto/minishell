@@ -92,7 +92,7 @@ void    ft_env(t_astnode *node)
 {
 	t_env	*env;
 
-	env = node->env;
+	env = node->cmd.env;
 	if (node->cmd.arg[1])
 		ft_error(node, "env: too many arguments");
 	while (env)

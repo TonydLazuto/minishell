@@ -23,6 +23,7 @@ SRCS		=	minishell.c \
 				pipe.c \
 				redir_out.c \
 				builtin.c \
+				builtin2.c \
 				exec_cmd.c \
 				export.c \
 				export_no_args.c \

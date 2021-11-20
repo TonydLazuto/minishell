@@ -30,12 +30,6 @@
 # include "libft/libft.h"
 # define BUFFER_SIZE 50
 
-typedef struct s_cmd
-{
-	char	**arg;
-	int		pipefd[2];
-}				t_cmd;
-
 enum e_node_type
 {
 	NODE_PIPE,
@@ -56,11 +50,18 @@ typedef struct s_env
 	struct s_env	*back;
 }				t_env;
 
+typedef struct s_cmd
+{
+	char	**arg;
+	int		pipefd[2];
+	int		len; // while arg[i]
+	t_env	*env;
+}				t_cmd;
+
 typedef struct s_astNode
 {
 	t_cmd				cmd;
 	enum e_node_type	type;
-	t_env				*env;
 	struct s_astNode	*parent;
 	struct s_astNode	*right;
 	struct s_astNode	*left;
@@ -94,15 +95,18 @@ void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);
 t_env	*envlast(t_env *env);
 int		get_env_size(t_env *env);
+t_env	*pop_env(t_env *env, char *name);
 t_env	*get_env_by_name(t_env *env, char *name);
 t_env   *get_linked_list(char **envp);
 
+int		is_builtin(t_astnode *node);
 void	ft_cd(t_astnode *node);
 void	ft_echo(t_astnode *node);
 void	ft_pwd(t_astnode *node);
 void    ft_env(t_astnode *node);
 void	ft_export(t_astnode *node);
 void    export_no_args(t_astnode *node);
-int		is_builtin(t_astnode *node);
+void	ft_unset(t_astnode *node);
+
 
 #endif

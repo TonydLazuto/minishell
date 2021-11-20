@@ -90,12 +90,12 @@ void	ft_export(t_astnode *node)
 		ft_error(node, "export: too many arguments");
 	mini_parse_export(node);
 	split_key_val(node, &name, &val);
-	elet = get_env_by_name(node->env, name);
+	elet = get_env_by_name(node->cmd.env, name);
 	if (elet)
 	{
 		free(elet->value);
 		elet->value = ft_strdup(val);
 	}
 	else
-		envadd_back(&node->env, name, val);
+		envadd_back(&node->cmd.env, name, val);
 }

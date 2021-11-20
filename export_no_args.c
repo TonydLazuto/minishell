@@ -55,33 +55,6 @@ t_env	*get_lowest_env_ascii(t_env *env, t_env *tmp, int size)
 	return (elet);
 }
 
-t_env	*pop_env(t_env *env, char *name)
-{
-	t_env	*del_elet;
-	t_env	*before;
-	t_env	*after;
-
-	del_elet = get_env_by_name(env, name);
-	before = del_elet->back;
-	after = del_elet->next;
-	if (after)
-		after->back = before;
-	if (before)
-		before->next = after;
-	free(del_elet);
-	del_elet = NULL;
-	if (after)
-		env = after;
-	else if (before)
-		env = before;
-	else
-		env = NULL;
-	if (env)
-		while (env->back)
-			env = env->back;
-	return (env);
-}
-
 void	print_env_line(t_env *env)
 {
 	if (env)
@@ -104,7 +77,7 @@ void	export_no_args(t_astnode *node)
 	t_env	*lowest;
 	t_env	*cpy;
 
-	cpy = cpy_env_list(node->env);
+	cpy = cpy_env_list(node->cmd.env);
 	while (cpy)
 	{
 		lowest = get_lowest_env_ascii(cpy, NULL, get_env_size(cpy));

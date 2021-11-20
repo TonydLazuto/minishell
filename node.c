@@ -22,8 +22,9 @@ t_astnode	*new_node(char *arg[], int type, t_env *env)
 	node->cmd.arg = arg;
 	node->cmd.pipefd[0] = 0;
 	node->cmd.pipefd[1] = 0;
+	node->cmd.env = env;
+	node->cmd.len = 0; // while arg[i]
 	node->type = type;
-	node->env = env;
 	node->left = NULL;
 	node->right = NULL;
 	node->parent = NULL;
