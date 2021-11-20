@@ -23,3 +23,11 @@ void	ft_unset(t_astnode *node)
 	if (elet)
 		node->cmd.env = pop_env(node->cmd.env, elet->name);
 }
+
+void	ft_exit(t_astnode *node)
+{
+	while (node->parent)
+		node = node->parent;
+	clearnodes(&node);
+	exit(EXIT_SUCCESS);
+}

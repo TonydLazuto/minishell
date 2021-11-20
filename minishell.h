@@ -54,6 +54,7 @@ typedef struct s_cmd
 {
 	char	**arg;
 	int		pipefd[2];
+	int		side;
 	int		len; // while arg[i]
 	t_env	*env;
 }				t_cmd;
@@ -100,5 +101,6 @@ void	ft_env(t_astnode *node);
 void	ft_export(t_astnode *node);
 void	export_no_args(t_astnode *node);
 void	ft_unset(t_astnode *node);
+void	ft_exit(t_astnode *node);
 
 #endif

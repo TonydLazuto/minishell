@@ -28,8 +28,8 @@ int	launch_builtin(t_astnode *node)
 		ft_export(node);
 	else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
 		ft_unset(node);
-	// else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
-	// 	ft_exit(node);
+	else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
+		ft_exit(node);
 	else
 		return (0);
 	return (1);

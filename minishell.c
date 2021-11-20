@@ -39,6 +39,25 @@ MANDATORY PATH DIFF !!!
  * Change what's displayed on the screen to reflect the current contents of rl_line_buffer.
  * 
  */
+char	**set_args(char *s1, char *s2, char *s3)
+{
+	char **arg;
+	
+	arg = (char **)malloc(sizeof(char *) * 4);
+	if (!arg)
+		return (NULL);
+	arg[0] = NULL;
+	arg[1] = NULL;
+	arg[2] = NULL;
+	if (s1)
+		arg[0] = ft_strdup(s1);
+	if (s2)
+		arg[1] = ft_strdup(s2);
+	if (s3)
+		arg[2] = ft_strdup(s3);
+	arg[3] = NULL;
+	return (arg);
+}
 int	main(int ac, char *av[], char **envp)
 {
 	t_astnode	*node;
@@ -52,60 +71,30 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg = (char **)malloc(sizeof(char *) * 4);
-	if (!arg)
-		return (0);
-	arg[0] = ft_strdup("echo");
-	arg[1] = ft_strdup("-nnnnnnnn");
-	arg[2] = ft_strdup("hellooo");
-	arg[3] = NULL;
-	nodeadd_right(&node, arg, NODE_WORD, env);
-
-	nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
-
-	char **arg2 = (char **)malloc(sizeof(char * ) * 2);
-	if (!arg2)
-		return (0);
-	arg2[0] = ft_strdup("file");
-	arg2[1] = NULL;
+	char **arg2 = set_args("ls", "-l", NULL);
 	nodeadd_right(&node, arg2, NODE_WORD, env);
+	nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	char **arg3 = set_args("myls" , NULL, NULL);
+	nodeadd_right(&node, arg3, NODE_WORD, env);
 
-	// nodeadd_right(&node, NULL, NODE_PIPE, env);
+	// char **arg23 = set_args("echo", "ORF", NULL);
+	// nodeadd_right(&node, arg23, NODE_WORD, env);
+	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// char **arg34 = set_args("myecho" , NULL, NULL);
+	// nodeadd_right(&node, arg34, NODE_WORD, env);
 
-	// char **arg3 = (char **)malloc(sizeof(char *) * 3);
-	// if (!arg3)
-	// 	return (0);
-	// arg3[0] = ft_strdup("grep");
-	// arg3[1] = ft_strdup("mi");
-	// arg3[2] = NULL;
-	// nodeadd_right(&node, arg3, NODE_WORD, env);
-
-
-	// char **arg4 = (char **)malloc(sizeof(char * ) * 3);
-	// if (!arg4)
-	// 	return (0);
-	// arg4[0] = ft_strdup("/usr/bin/grep");
-	// arg4[1] = ft_strdup("MANEWVAR");
-	// arg4[2] = NULL;
-	// nodeadd_right(&node, ./arg4, NODE_WORD, env);
-
-	// nodeadd_right(&node, NULL, NODE_OUT_REDIR);
-
-	// char **arg5 = (char **)malloc(sizeof(char * ) * 3);
-	// if (!arg5)
-	// 	return (0);
-	// arg5[0] = ft_strdup("unset");
-	// arg5[1] = ft_strdup("MANEWVAR");
-	// arg5[2] = NULL;
+	// char **arg5 = set_args("env", NULL, NULL);
 	// nodeadd_right(&node, arg5, NODE_WORD, env);
-
-	// char **arg6 = (char **)malloc(sizeof(char *) * 3);
-	// if (!arg6)
-	// 	return (0);
-	// arg6[0] = ft_strdup("env");
-	// arg6[1] = NULL;
-	// arg6[2] = NULL;
+	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// char **arg6 = set_args("myenv2", NULL, NULL);
 	// nodeadd_right(&node, arg6, NODE_WORD, env);
+
+	// char **arg7 = set_args("export", NULL, NULL);
+	// nodeadd_right(&node, arg7, NODE_WORD, env);
+	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// char **arg8 = set_args("myexport2", NULL, NULL);
+	// nodeadd_right(&node, arg8, NODE_WORD, env);
+	
 
 	t_astnode *first;
 	first = node;
