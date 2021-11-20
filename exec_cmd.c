@@ -46,6 +46,8 @@ void	child_node(t_astnode *node, char **envp)
 		return ;
 	if (launch_builtin(node) == 0)
 	{
+		if (node->cmd.arg[0][0] != '/')
+			node->cmd.arg[0] = check_relatif_path(node);
 		if (execve(node->cmd.arg[0], node->cmd.arg, envp) == -1)
 			ft_error(node, "error: execve()");
 	}

@@ -36,6 +36,12 @@ void	printnodes(t_astnode *mynode)
 	}
 }
 
+void	ft_free(char **s)
+{
+	free(*s);
+	*s = NULL;
+}
+
 void	ft_error(t_astnode *node, char *err)
 {
 	ft_putstr_fd(err, 1);

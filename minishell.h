@@ -67,25 +67,20 @@ typedef struct s_astNode
 	struct s_astNode	*left;
 }						t_astnode;
 
-int		get_next_line(int fd, char **line);
-void	my_free(char **s);
-size_t	my_strlen(const char *str);
-char	*strjoinfree(char *s1, char *s2);
-char	*my_strdup(char *s1);
-char	*my_substr(char *s, unsigned int start, size_t len);
+void	ft_error(t_astnode *node, char *err);
+void	printnodes(t_astnode *mynode);
 int		my_strncmp(char *s1, char *s2);
+void	ft_free(char **s);
 
 void	clearnodes(t_astnode **node);
 void	nodeadd_right(t_astnode **anode, char *arg[],
 			int type, t_env *env);
 
-void	ft_error(t_astnode *node, char *err);
-void	printnodes(t_astnode *mynode);
-
-void	exec_cmd(t_astnode *node, char **env);
 void	parent_pipe(t_astnode *node);
 void	child_out_redi(t_astnode *node);
 void	child_pipe(t_astnode *node);
+void	exec_cmd(t_astnode *node, char **env);
+char    *check_relatif_path(t_astnode *node);
 
 void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);

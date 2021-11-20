@@ -18,18 +18,19 @@ INC			= minishell.h
 
 OBJ_DIR		= obj
 
-SRCS		=	minishell.c \
-				node.c \
-				pipe.c \
-				redir_out.c \
-				builtin.c \
+SRCS		=	builtin.c \
 				builtin2.c \
+				check_path.c \
+				env_list.c \
+				env_list2.c \
 				exec_cmd.c \
 				export.c \
 				export_no_args.c \
-				env_list.c \
-				env_list2.c \
-				utils.c
+				minishell.c \
+				node.c \
+				utils.c \
+				redir_out.c \
+				redir_pipe.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 

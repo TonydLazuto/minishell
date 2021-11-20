@@ -55,29 +55,29 @@ int	main(int ac, char *av[], char **envp)
 	char **arg = (char **)malloc(sizeof(char *) * 3);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("export");
-	arg[1] = ft_strdup("MANEWVAR");
+	arg[0] = ft_strdup("ls");
+	arg[1] = ft_strdup("-l");
 	arg[2] = NULL;
 	nodeadd_right(&node, arg, NODE_WORD, env);
 
-	// nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
-	// char **arg2 = (char **)malloc(sizeof(char * ) * 2);
-	// if (!arg2)
-	// 	return (0);
-	// arg2[0] = ft_strdup("env");
-	// arg2[1] = NULL;
-	// nodeadd_right(&node, arg2, NODE_WORD, env);
-
-
-	char **arg3 = (char **)malloc(sizeof(char *) * 3);
-	if (!arg3)
+	nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
+	char **arg2 = (char **)malloc(sizeof(char * ) * 2);
+	if (!arg2)
 		return (0);
-	arg3[0] = ft_strdup("export");
-	arg3[1] = NULL;
-	arg3[2] = NULL;
-	nodeadd_right(&node, arg3, NODE_WORD, env);
+	arg2[0] = ft_strdup("env");
+	arg2[1] = NULL;
+	nodeadd_right(&node, arg2, NODE_WORD, env);
 
 	// nodeadd_right(&node, NULL, NODE_PIPE, env);
+
+	// char **arg3 = (char **)malloc(sizeof(char *) * 3);
+	// if (!arg3)
+	// 	return (0);
+	// arg3[0] = ft_strdup("grep");
+	// arg3[1] = ft_strdup("mi");
+	// arg3[2] = NULL;
+	// nodeadd_right(&node, arg3, NODE_WORD, env);
+
 
 	// char **arg4 = (char **)malloc(sizeof(char * ) * 3);
 	// if (!arg4)
