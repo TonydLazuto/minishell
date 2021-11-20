@@ -52,19 +52,21 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg = (char **)malloc(sizeof(char *) * 3);
+	char **arg = (char **)malloc(sizeof(char *) * 4);
 	if (!arg)
 		return (0);
-	arg[0] = ft_strdup("ls");
-	arg[1] = ft_strdup("-l");
-	arg[2] = NULL;
+	arg[0] = ft_strdup("echo");
+	arg[1] = ft_strdup("-nnnnnnnn");
+	arg[2] = ft_strdup("hellooo");
+	arg[3] = NULL;
 	nodeadd_right(&node, arg, NODE_WORD, env);
 
-	nodeadd_right(&node, NULL, NODE_HERE_DOC, env);
+	nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+
 	char **arg2 = (char **)malloc(sizeof(char * ) * 2);
 	if (!arg2)
 		return (0);
-	arg2[0] = ft_strdup("env");
+	arg2[0] = ft_strdup("file");
 	arg2[1] = NULL;
 	nodeadd_right(&node, arg2, NODE_WORD, env);
 

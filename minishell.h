@@ -77,7 +77,8 @@ void	nodeadd_right(t_astnode **anode, char *arg[],
 			int type, t_env *env);
 
 void	parent_pipe(t_astnode *node);
-void	child_out_redi(t_astnode *node);
+void	child_append(t_astnode *node);
+void	child_out_redir(t_astnode *node);
 void	child_pipe(t_astnode *node);
 void	exec_cmd(t_astnode *node, char **env);
 char    *check_relatif_path(t_astnode *node);

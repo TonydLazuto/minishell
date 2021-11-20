@@ -45,6 +45,7 @@ int	check_dash_n(t_astnode *node)
 				return (0);
 			i++;
 		}
+		return (2);
 	}
 	return (1);
 }
@@ -53,27 +54,17 @@ void	ft_echo(t_astnode *node)
 {
 	int	i;
 
-	i = 1;
 	if (!node->cmd.arg[1])
 		ft_putstr_fd("\n", 1);
 	if (node->cmd.arg[1])
 	{
-		if (check_dash_n(node))
-		{
-			if (node->cmd.arg[2])
-				ft_putstr_fd(node->cmd.arg[2], 1);
-			else
-				return ; // rl_on_new_line()
-		}
-		else
-		{
-			while (node->cmd.arg[i])
-			{
-				ft_putstr_fd(node->cmd.arg[i], 1);
-				i++;
-			}
+		i = check_dash_n(node);
+		if (i == 0)
+			ft_error(node, "Error: echo -n + gibberish");
+		if (node->cmd.arg[i])
+			ft_putstr_fd(node->cmd.arg[i], 1);
+		if (i == 1)
 			ft_putstr_fd("\n", 1);
-		}
 	}
 }
 

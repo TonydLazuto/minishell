@@ -37,13 +37,16 @@ int	launch_builtin(t_astnode *node)
 
 void	child_node(t_astnode *node, char **envp)
 {
+	if (node->parent && (node->parent->type == NODE_OUT_REDIR
+		|| node->parent->type == NODE_OUT_DREDIR))
+		return ;
 	if ((node->right && node->right->type == NODE_PIPE)
 		|| (node->parent && node->parent->type == NODE_PIPE))
 		child_pipe(node);
 	if (node->right && node->right->type == NODE_OUT_REDIR)
-		child_out_redi(node);
-	if (node->parent && node->parent->type == NODE_OUT_REDIR)
-		return ;
+		child_out_redir(node);
+	if (node->right && node->right->type == NODE_OUT_DREDIR)
+		child_append(node);
 	if (launch_builtin(node) == 0)
 	{
 		if (node->cmd.arg[0][0] != '/')

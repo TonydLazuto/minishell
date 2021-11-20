@@ -12,6 +12,29 @@
 
 #include "minishell.h"
 
+char	*joinpath(char *s1, char *s2)
+{
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 2);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	str[i] = '/';
+	i++;
+	while (*s2)
+	{
+		str[i] = *s2++;
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
 void	clear_paths(char **paths)
 {
 	int	i;
@@ -34,7 +57,7 @@ char	*check_access(char *cur_path, char *cmd)
 {
 	char	*new_cmd;
 
-	new_cmd = ft_strjoin(cur_path, cmd);
+	new_cmd = joinpath(cur_path, cmd);
 	if (access(new_cmd, X_OK | F_OK) == 0)
 	{
 		ft_free(&cmd);
