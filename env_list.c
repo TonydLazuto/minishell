@@ -47,7 +47,7 @@ t_env	*get_env_by_name(t_env *env, char *name)
 	while (elet)
 	{
 		if (ft_strlen(name) == ft_strlen(elet->name)
-		&& my_strncmp(elet->name, name) == 0)
+			&& my_strncmp(elet->name, name) == 0)
 			return (elet);
 		elet = elet->next;
 	}
@@ -79,7 +79,7 @@ t_env	*parse_line_env(t_env *env, char *envp)
 	return (env);
 }
 
-t_env   *get_linked_list(char **envp)
+t_env	*get_linked_list(char **envp)
 {
 	t_env	*env;
 	int		i;

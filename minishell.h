@@ -82,10 +82,6 @@ void	nodeadd_right(t_astnode **anode, char *arg[],
 void	ft_error(t_astnode *node, char *err);
 void	printnodes(t_astnode *mynode);
 
-int		launch_builtin(t_astnode *node);
-void    ft_env(t_astnode *node);
-void	ft_export(t_astnode *node);
-
 void	exec_cmd(t_astnode *node, char **env);
 void	parent_pipe(t_astnode *node);
 void	child_out_redi(t_astnode *node);
@@ -97,16 +93,16 @@ t_env	*envlast(t_env *env);
 int		get_env_size(t_env *env);
 t_env	*pop_env(t_env *env, char *name);
 t_env	*get_env_by_name(t_env *env, char *name);
-t_env   *get_linked_list(char **envp);
+t_env	*get_linked_list(char **envp);
 
+int		launch_builtin(t_astnode *node);
 int		is_builtin(t_astnode *node);
 void	ft_cd(t_astnode *node);
 void	ft_echo(t_astnode *node);
 void	ft_pwd(t_astnode *node);
-void    ft_env(t_astnode *node);
+void	ft_env(t_astnode *node);
 void	ft_export(t_astnode *node);
-void    export_no_args(t_astnode *node);
+void	export_no_args(t_astnode *node);
 void	ft_unset(t_astnode *node);
-
 
 #endif

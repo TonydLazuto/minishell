@@ -32,9 +32,9 @@ void	ft_cd(t_astnode *node)
 		ft_error(node, "error: chdir");
 }
 
-int		check_dash_n(t_astnode *node)
+int	check_dash_n(t_astnode *node)
 {
-	int i;
+	int	i;
 
 	i = 2;
 	if (my_strncmp(node->cmd.arg[1], "-n") == 0)
@@ -88,7 +88,7 @@ void	ft_pwd(t_astnode *node)
 	ft_putendl_fd(buf, 1);
 }
 
-void    ft_env(t_astnode *node)
+void	ft_env(t_astnode *node)
 {
 	t_env	*env;
 

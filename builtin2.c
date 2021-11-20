@@ -14,7 +14,7 @@
 
 void	ft_unset(t_astnode *node)
 {
-	t_env   *elet;
+	t_env	*elet;
 
 	elet = node->cmd.env;
 	if (!node->cmd.arg[1])

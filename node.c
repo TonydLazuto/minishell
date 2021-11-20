@@ -40,7 +40,7 @@ t_astnode	*nodelast(t_astnode *node)
 	return (node);
 }
 
-void		clearnodes(t_astnode **node)
+void	clearnodes(t_astnode **node)
 {
 	t_astnode	*tmp;
 	int			i;
@@ -68,7 +68,7 @@ void		clearnodes(t_astnode **node)
 	}
 }
 
-void		nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
+void	nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
 {
 	t_astnode	*node;
 	t_astnode	*new;

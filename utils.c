@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/20 13:14:16 by aderose           #+#    #+#             */
+/*   Updated: 2021/11/20 13:14:21 by aderose          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	printnodes(t_astnode *mynode)
 {
 	t_astnode	*node;
-	int		i;
+	int			i;
 
 	node = mynode;
 	while (node)
@@ -34,7 +46,7 @@ void	ft_error(t_astnode *node, char *err)
 	exit(EXIT_FAILURE);
 }
 
-int		my_strncmp(char *s1, char *s2)
+int	my_strncmp(char *s1, char *s2)
 {
 	size_t			i;
 	unsigned char	*str1;
@@ -62,7 +74,7 @@ int		my_strncmp(char *s1, char *s2)
 	return (0);
 }
 
-int		is_builtin(t_astnode *node)
+int	is_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);

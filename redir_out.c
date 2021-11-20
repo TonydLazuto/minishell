@@ -14,18 +14,18 @@
 
 void	child_out_redi(t_astnode *node)
 {
-	int		file;
+	int	file;
 
 	if (!node->right)
- 		ft_error(node, "output redirection nulle part");
+		ft_error(node, "output redirection nulle part");
 	file = open(node->right->right->cmd.arg[0], O_RDWR | O_CREAT,
-	S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (file == -1)
 		ft_error(node, "error : open()");
 	if (node->cmd.arg != NULL)
 	{
 		if (dup2(file, 1) < 0)
-			ft_error(node, "error : fatal");	
+			ft_error(node, "error : fatal");
 	}
 	close(file);
 }

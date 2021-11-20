@@ -76,14 +76,14 @@ void	split_key_val(t_astnode *node, char **key, char **val)
 void	ft_export(t_astnode *node)
 {
 	char	*name;
-	char 	*val;
+	char	*val;
 	t_env	*elet;
 
 	name = NULL;
 	val = NULL;
 	if (!node->cmd.arg[1])
 	{
-	 	export_no_args(node);
+		export_no_args(node);
 		return ;
 	}
 	if (node->cmd.arg[2])

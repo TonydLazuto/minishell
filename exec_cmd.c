@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int		launch_builtin(t_astnode *node)
+int	launch_builtin(t_astnode *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);
@@ -27,7 +27,7 @@ int		launch_builtin(t_astnode *node)
 	else if (my_strncmp(node->cmd.arg[0], "export") == 0)
 		ft_export(node);
 	else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
-	 	ft_unset(node);
+		ft_unset(node);
 	// else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
 	// 	ft_exit(node);
 	else
@@ -58,7 +58,7 @@ void	parent_node(t_astnode *node)
 		parent_pipe(node);
 }
 
-int		check_without_fork(t_astnode *node)
+int	check_without_fork(t_astnode *node)
 {
 	if ((!node->parent || (node->parent && node->parent->type != NODE_PIPE))
 		&& (!node->right || (node->right && node->right->type != NODE_PIPE))

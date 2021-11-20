@@ -18,7 +18,7 @@
 
 t_env	*cpy_env_list(t_env *env)
 {
-	t_env   *cpy;
+	t_env	*cpy;
 
 	cpy = NULL;
 	while (env)
