@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	launch_builtin(t_astnode *node)
+int	launch_builtin(t_node *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);
@@ -35,17 +35,17 @@ int	launch_builtin(t_astnode *node)
 	return (1);
 }
 
-void	child_node(t_astnode *node, char **envp)
+void	child_node(t_node *node, char **envp)
 {
-	if (node->parent && (node->parent->type == NODE_OUT_REDIR
-			|| node->parent->type == NODE_OUT_DREDIR))
+	if (node->back && (node->back->type == NODE_OUT_REDIR
+			|| node->back->type == NODE_OUT_DREDIR))
 		return ;
-	if ((node->right && node->right->type == NODE_PIPE)
-		|| (node->parent && node->parent->type == NODE_PIPE))
+	if ((node->next && node->next->type == NODE_PIPE)
+		|| (node->back && node->back->type == NODE_PIPE))
 		child_pipe(node);
-	if (node->right && node->right->type == NODE_OUT_REDIR)
+	if (node->next && node->next->type == NODE_OUT_REDIR)
 		child_out_redir(node);
-	if (node->right && node->right->type == NODE_OUT_DREDIR)
+	if (node->next && node->next->type == NODE_OUT_DREDIR)
 		child_append(node);
 	if (launch_builtin(node) == 0)
 	{
@@ -56,29 +56,29 @@ void	child_node(t_astnode *node, char **envp)
 	}
 }
 
-void	parent_node(t_astnode *node)
+void	parent_node(t_node *node)
 {
-	if ((node->right && node->right->type == NODE_PIPE)
-		|| (node->parent && node->parent->type == NODE_PIPE))
+	if ((node->next && node->next->type == NODE_PIPE)
+		|| (node->back && node->back->type == NODE_PIPE))
 		parent_pipe(node);
 }
 
-int	check_without_fork(t_astnode *node)
+int	check_without_fork(t_node *node)
 {
-	if ((!node->parent || (node->parent && node->parent->type != NODE_PIPE))
-		&& (!node->right || (node->right && node->right->type != NODE_PIPE))
+	if ((!node->back || (node->back && node->back->type != NODE_PIPE))
+		&& (!node->next || (node->next && node->next->type != NODE_PIPE))
 		&& is_builtin(node))
 		return (1);
 	return (0);
 }
 
-void	exec_cmd(t_astnode *node, char **envp)
+void	exec_cmd(t_node *node, char **envp)
 {
 	pid_t	pid;
 	int		status;
 
-	if ((node->right && node->right->type == NODE_PIPE)
-		|| (node->parent && node->parent->type == NODE_PIPE))
+	if ((node->next && node->next->type == NODE_PIPE)
+		|| (node->back && node->back->type == NODE_PIPE))
 	{
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_error(node, "error : pipe()");

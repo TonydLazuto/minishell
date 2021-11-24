@@ -18,15 +18,16 @@
  * by the previous command
  * instead, copy the content of the command
  * and keep the rest of the content of the file
+ * 
  */
 
-void	child_out_redir(t_astnode *node)
+void	child_out_redir(t_node *node)
 {
 	int	fd;
 
-	if (!node->right->right)
+	if (!node->next->next)
 		ft_error(node, "output redirection nowhere");
-	fd = open(node->right->right->cmd.arg[0], O_RDWR | O_CREAT,
+	fd = open(node->next->next->cmd.arg[0], O_RDWR | O_TRUNC | O_CREAT,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 		ft_error(node, "error : open()");
@@ -38,13 +39,13 @@ void	child_out_redir(t_astnode *node)
 	close(fd);
 }
 
-void	child_append(t_astnode *node)
+void	child_append(t_node *node)
 {
 	int	fd;
 
-	if (!node->right->right)
+	if (!node->next->next)
 		ft_error(node, "output redirection nowhere");
-	fd = open(node->right->right->cmd.arg[0], O_APPEND | O_RDWR | O_CREAT,
+	fd = open(node->next->next->cmd.arg[0], O_APPEND | O_RDWR | O_CREAT,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 		ft_error(node, "error : open()");

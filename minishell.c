@@ -28,6 +28,10 @@ echo $truc
 
 MANDATORY PATH DIFF !!!
 
+export MYLS="ls -la"
+$MYLS : works
+"$MYLS" : command not found
+
 */
 
 /**
@@ -39,6 +43,7 @@ MANDATORY PATH DIFF !!!
  * Change what's displayed on the screen to reflect the current contents of rl_line_buffer.
  * 
  */
+
 char	**set_args(char *s1, char *s2, char *s3)
 {
 	char **arg;
@@ -60,7 +65,7 @@ char	**set_args(char *s1, char *s2, char *s3)
 }
 int	main(int ac, char *av[], char **envp)
 {
-	t_astnode	*node;
+	t_node	*node;
 	t_env		*env;
 	// char		*line_read;
 
@@ -71,38 +76,40 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg2 = set_args("ls", "-l", NULL);
-	nodeadd_right(&node, arg2, NODE_WORD, env);
-	nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
-	char **arg3 = set_args("myls" , NULL, NULL);
-	nodeadd_right(&node, arg3, NODE_WORD, env);
+	char **arg2 = set_args("echo", "lorem ipsum", NULL);
+	nodeadd_back(&node, arg2, NODE_WORD, env);
+	// >
+	nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
+
+	char **arg3 = set_args("latin" , NULL, NULL);
+	nodeadd_back(&node, arg3, NODE_WORD, env);
 
 	// char **arg23 = set_args("echo", "ORF", NULL);
-	// nodeadd_right(&node, arg23, NODE_WORD, env);
-	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg23, NODE_WORD, env);
+	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
 	// char **arg34 = set_args("myecho" , NULL, NULL);
-	// nodeadd_right(&node, arg34, NODE_WORD, env);
+	// nodeadd_back(&node, arg34, NODE_WORD, env);
 
 	// char **arg5 = set_args("env", NULL, NULL);
-	// nodeadd_right(&node, arg5, NODE_WORD, env);
-	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg5, NODE_WORD, env);
+	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
 	// char **arg6 = set_args("myenv2", NULL, NULL);
-	// nodeadd_right(&node, arg6, NODE_WORD, env);
+	// nodeadd_back(&node, arg6, NODE_WORD, env);
 
 	// char **arg7 = set_args("export", NULL, NULL);
-	// nodeadd_right(&node, arg7, NODE_WORD, env);
-	// nodeadd_right(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg7, NODE_WORD, env);
+	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
 	// char **arg8 = set_args("myexport2", NULL, NULL);
-	// nodeadd_right(&node, arg8, NODE_WORD, env);
+	// nodeadd_back(&node, arg8, NODE_WORD, env);
 	
 
-	t_astnode *first;
+	t_node *first;
 	first = node;
 	while (node)
 	{
 		if (node->type == NODE_WORD)
 			exec_cmd(node, envp);
-		node = node->right;
+		node = node->next;
 	}
 	clear_env(&env);
 	clearnodes(&first);

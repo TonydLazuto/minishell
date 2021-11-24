@@ -24,7 +24,7 @@
  * Words may not include unquoted metacharacters. 
  */
 
-void	mini_parse_export(t_astnode *node)
+void	mini_parse_export(t_node *node)
 {
 	int	i;
 
@@ -52,7 +52,7 @@ void	mini_parse_export(t_astnode *node)
 	}
 }
 
-void	split_key_val(t_astnode *node, char **key, char **val)
+void	split_key_val(t_node *node, char **key, char **val)
 {
 	size_t			len;
 	unsigned int	start;
@@ -73,7 +73,7 @@ void	split_key_val(t_astnode *node, char **key, char **val)
 		ft_error(node, "export: malloc");
 }
 
-void	ft_export(t_astnode *node)
+void	ft_export(t_node *node)
 {
 	char	*name;
 	char	*val;

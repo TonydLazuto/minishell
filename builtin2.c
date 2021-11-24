@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	ft_unset(t_astnode *node)
+void	ft_unset(t_node *node)
 {
 	t_env	*elet;
 
@@ -24,10 +24,10 @@ void	ft_unset(t_astnode *node)
 		node->cmd.env = pop_env(node->cmd.env, elet->name);
 }
 
-void	ft_exit(t_astnode *node)
+void	ft_exit(t_node *node)
 {
-	while (node->parent)
-		node = node->parent;
+	while (node->back)
+		node = node->back;
 	clearnodes(&node);
 	exit(EXIT_SUCCESS);
 }

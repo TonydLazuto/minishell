@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-t_astnode	*new_node(char *arg[], int type, t_env *env)
+t_node	*new_node(char *arg[], int type, t_env *env)
 {
-	t_astnode	*node;
+	t_node	*node;
 
-	node = (t_astnode *)malloc(sizeof(*node));
+	node = (t_node *)malloc(sizeof(*node));
 	if (!node)
 		return (NULL);
 	node->cmd.arg = arg;
@@ -25,32 +25,31 @@ t_astnode	*new_node(char *arg[], int type, t_env *env)
 	node->cmd.env = env;
 	node->cmd.len = 0; // while arg[i]
 	node->type = type;
-	node->left = NULL;
-	node->right = NULL;
-	node->parent = NULL;
+	node->next = NULL;
+	node->back = NULL;
 	return (node);
 }
 
-t_astnode	*nodelast(t_astnode *node)
+t_node	*nodelast(t_node *node)
 {
 	if (!node)
 		return (NULL);
-	while (node->right)
-		node = node->right;
+	while (node->next)
+		node = node->next;
 	return (node);
 }
 
-void	clearnodes(t_astnode **node)
+void	clearnodes(t_node **node)
 {
-	t_astnode	*tmp;
-	int			i;
+	t_node	*tmp;
+	int		i;
 
 	tmp = NULL;
 	if (*node)
 	{
 		while (*node)
 		{
-			tmp = (*node)->right;
+			tmp = (*node)->next;
 			if ((*node)->cmd.arg)
 			{
 				i = 0;
@@ -68,10 +67,10 @@ void	clearnodes(t_astnode **node)
 	}
 }
 
-void	nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
+void	nodeadd_back(t_node **anode, char *arg[], int type, t_env *env)
 {
-	t_astnode	*node;
-	t_astnode	*new;
+	t_node	*node;
+	t_node	*new;
 
 	new = new_node(arg, type, env);
 	if (!new)
@@ -82,6 +81,6 @@ void	nodeadd_right(t_astnode **anode, char *arg[], int type, t_env *env)
 		return ;
 	}
 	node = nodelast(*anode);
-	node->right = new;
-	new->parent = node;
+	node->next = new;
+	new->back = node;
 }

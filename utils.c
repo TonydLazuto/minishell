@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	printnodes(t_astnode *mynode)
+void	printnodes(t_node *mynode)
 {
-	t_astnode	*node;
+	t_node		*node;
 	int			i;
 
 	node = mynode;
@@ -30,9 +30,9 @@ void	printnodes(t_astnode *mynode)
 			}
 		}
 		printf("node->type : %d\n", node->type);
-		if (node->right)
+		if (node->next)
 			printf("\n");
-		node = node->right;
+		node = node->next;
 	}
 }
 
@@ -42,12 +42,12 @@ void	ft_free(char **s)
 	*s = NULL;
 }
 
-void	ft_error(t_astnode *node, char *err)
+void	ft_error(t_node *node, char *err)
 {
 	ft_putstr_fd(err, 1);
 	ft_putstr_fd("\n", 1);
-	while (node->parent)
-		node = node->parent;
+	while (node->back)
+		node = node->back;
 	clearnodes(&node);
 	exit(EXIT_FAILURE);
 }
@@ -80,7 +80,7 @@ int	my_strncmp(char *s1, char *s2)
 	return (0);
 }
 
-int	is_builtin(t_astnode *node)
+int	is_builtin(t_node *node)
 {
 	if (!node->cmd.arg[0])
 		return (0);

@@ -73,7 +73,7 @@ void	print_env_line(t_env *env)
 	}
 }
 
-void	export_no_args(t_astnode *node)
+void	export_no_args(t_node *node)
 {
 	t_env	*lowest;
 	t_env	*cpy;

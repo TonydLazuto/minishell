@@ -18,7 +18,7 @@
 
 #include "minishell.h"
 
-void	ft_cd(t_astnode *node)
+void	ft_cd(t_node *node)
 {
 	int	i;
 	int	ret;
@@ -33,7 +33,7 @@ void	ft_cd(t_astnode *node)
 		ft_error(node, "error: chdir");
 }
 
-int	check_dash_n(t_astnode *node)
+int	check_dash_n(t_node *node)
 {
 	int	i;
 
@@ -51,7 +51,7 @@ int	check_dash_n(t_astnode *node)
 	return (1);
 }
 
-void	ft_echo(t_astnode *node)
+void	ft_echo(t_node *node)
 {
 	int	i;
 
@@ -69,7 +69,7 @@ void	ft_echo(t_astnode *node)
 	}
 }
 
-void	ft_pwd(t_astnode *node)
+void	ft_pwd(t_node *node)
 {
 	char	*buf;
 
@@ -80,7 +80,7 @@ void	ft_pwd(t_astnode *node)
 	ft_putendl_fd(buf, 1);
 }
 
-void	ft_env(t_astnode *node)
+void	ft_env(t_node *node)
 {
 	t_env	*env;
 

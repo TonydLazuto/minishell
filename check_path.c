@@ -67,7 +67,7 @@ char	*check_access(char *cur_path, char *cmd)
 	return (NULL);
 }
 
-char	*check_relatif_path(t_astnode *node)
+char	*check_relatif_path(t_node *node)
 {
 	t_env	*env;
 	char	*new_cmd;
