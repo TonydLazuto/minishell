@@ -38,7 +38,7 @@ int	launch_builtin(t_node *node)
 void	child_node(t_node *node, char **envp)
 {
 	if ((node->type == NODE_OUT_REDIR
-		|| node->type == NODE_OUT_DREDIR))
+			|| node->type == NODE_OUT_DREDIR))
 		return ;
 	if ((node->next && node->next->type == NODE_PIPE)
 		|| (node->back && node->back->type == NODE_PIPE))
@@ -81,10 +81,8 @@ void	exec_cmd(t_node *node, char **envp)
 
 	if ((node->next && node->next->type == NODE_PIPE)
 		|| (node->back && node->back->type == NODE_PIPE))
-	{
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_error(node, "error : pipe()");
-	}
 	if (check_without_fork(node))
 		child_node(node, envp);
 	else
@@ -99,7 +97,7 @@ void	exec_cmd(t_node *node, char **envp)
 			parent_node(node);
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status) && (!node->back
-				|| (node->back && node->back->type != NODE_PIPE)))
+					|| (node->back && node->back->type != NODE_PIPE)))
 				node->cmd.exit_status = WEXITSTATUS(status);
 		}
 	}
