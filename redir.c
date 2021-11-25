@@ -1,41 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redir_out.c                                        :+:      :+:    :+:   */
+/*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:47:49 by aderose           #+#    #+#             */
-/*   Updated: 2021/10/11 17:31:38 by aderose          ###   ########.fr       */
+/*   Updated: 2021/11/25 16:55:38 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * BE CAREFUL 
- * Simple redirection do not replace all content
- * by the previous command
- * instead, copy the content of the command
- * and keep the rest of the content of the file
- * 
- */
-
 void	child_out_redir(t_node *node)
 {
 	int	fd;
 
-	if (!node->next->next)
-		ft_error(node, "output redirection nowhere");
-	fd = open(node->next->next->cmd.arg[0], O_RDWR | O_TRUNC | O_CREAT,
+	if (node->next->cmd.len != 1)
+		ft_error(node, "error : wrong nb_args NODE_REDIR");
+	fd = open(node->next->cmd.arg[0], O_RDWR | O_TRUNC | O_CREAT,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 		ft_error(node, "error : open()");
-	if (node->cmd.arg[0] != NULL)
-	{
-		if (dup2(fd, 1) < 0)
-			ft_error(node, "error : fatal");
-	}
+	if (dup2(fd, 1) < 0)
+		ft_error(node, "error : fatal");
+	close(fd);
+}
+
+void	child_in_redir(t_node *node)
+{
+	int	fd;
+
+	if (node->cmd.len != 1)
+		ft_error(node, "error : wrong nb_args NODE_REDIR");
+	fd = open(node->cmd.arg[0], O_RDWR);
+	if (fd == -1)
+		ft_error(node, "error : open()");
+	if (dup2(fd, 0) < 0)
+		ft_error(node, "error : fatal");
 	close(fd);
 }
 
@@ -43,16 +45,13 @@ void	child_append(t_node *node)
 {
 	int	fd;
 
-	if (!node->next->next)
-		ft_error(node, "output redirection nowhere");
-	fd = open(node->next->next->cmd.arg[0], O_APPEND | O_RDWR | O_CREAT,
+	if (node->next->cmd.len != 1)
+		ft_error(node, "error : wrong nb_args NODE_DREDIR");
+	fd = open(node->next->cmd.arg[0], O_APPEND | O_RDWR | O_CREAT,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 		ft_error(node, "error : open()");
-	if (node->cmd.arg[0] != NULL)
-	{
-		if (dup2(fd, 1) < 0)
-			ft_error(node, "error : fatal");
-	}
+	if (dup2(fd, 1) < 0)
+		ft_error(node, "error : fatal");
 	close(fd);
 }

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 /**
- * BE CAREFUL
+ * INFO
  * Tous les builtin doivent retourner une valeur
  * pour $?
  */
@@ -24,6 +24,7 @@ void	ft_cd(t_node *node)
 	int	ret;
 
 	i = 0;
+	node->cmd.exit_status = 1;
 	while (node->cmd.arg[i])
 		i++;
 	if (i != 2 || !node->cmd.arg[1])
@@ -31,6 +32,7 @@ void	ft_cd(t_node *node)
 	ret = chdir(node->cmd.arg[1]);
 	if (ret == -1)
 		ft_error(node, "error: chdir");
+	node->cmd.exit_status = 0;
 }
 
 int	check_dash_n(t_node *node)

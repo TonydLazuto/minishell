@@ -15,7 +15,14 @@
 t_node	*new_node(char *arg[], int type, t_env *env)
 {
 	t_node	*node;
+	int		len;
 
+	len = 0;
+	if (arg)
+	{
+		while (arg[len])
+			len++;
+	}
 	node = (t_node *)malloc(sizeof(*node));
 	if (!node)
 		return (NULL);
@@ -23,7 +30,7 @@ t_node	*new_node(char *arg[], int type, t_env *env)
 	node->cmd.pipefd[0] = 0;
 	node->cmd.pipefd[1] = 0;
 	node->cmd.env = env;
-	node->cmd.len = 0; // while arg[i]
+	node->cmd.len = len;
 	node->type = type;
 	node->next = NULL;
 	node->back = NULL;

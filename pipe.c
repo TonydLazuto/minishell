@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redir_pipe.c                                       :+:      :+:    :+:   */
+/*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:57:47 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/20 13:31:45 by aderose          ###   ########.fr       */
+/*   Updated: 2021/11/25 16:55:57 by aderose          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ void	parent_pipe(t_node *node)
 		close(node->cmd.pipefd[1]);
 		if (node->back && node->back->type == NODE_PIPE)
 		{
-			close(node->back->back->cmd.pipefd[0]);
+			if (node->back->back)
+				close(node->back->back->cmd.pipefd[0]);
 			if (!node->next || (node->next && node->next->type != NODE_PIPE))
 				close(node->cmd.pipefd[0]);
 		}

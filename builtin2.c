@@ -16,12 +16,14 @@ void	ft_unset(t_node *node)
 {
 	t_env	*elet;
 
+	node->cmd.exit_status = 1;
 	elet = node->cmd.env;
 	if (!node->cmd.arg[1])
 		return ;
 	elet = get_env_by_name(node->cmd.env, node->cmd.arg[1]);
 	if (elet)
 		node->cmd.env = pop_env(node->cmd.env, elet->name);
+	node->cmd.exit_status = 0;
 }
 
 void	ft_exit(t_node *node)

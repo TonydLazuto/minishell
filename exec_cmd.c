@@ -37,12 +37,14 @@ int	launch_builtin(t_node *node)
 
 void	child_node(t_node *node, char **envp)
 {
-	if (node->back && (node->back->type == NODE_OUT_REDIR
-			|| node->back->type == NODE_OUT_DREDIR))
+	if ((node->type == NODE_OUT_REDIR
+		|| node->type == NODE_OUT_DREDIR))
 		return ;
 	if ((node->next && node->next->type == NODE_PIPE)
 		|| (node->back && node->back->type == NODE_PIPE))
 		child_pipe(node);
+	if (node->type == NODE_IN_REDIR)
+		child_in_redir(node);
 	if (node->next && node->next->type == NODE_OUT_REDIR)
 		child_out_redir(node);
 	if (node->next && node->next->type == NODE_OUT_DREDIR)
@@ -96,6 +98,9 @@ void	exec_cmd(t_node *node, char **envp)
 		{
 			parent_node(node);
 			waitpid(pid, &status, 0);
+			if (WIFEXITED(status) && (!node->back
+				|| (node->back && node->back->type != NODE_PIPE)))
+				node->cmd.exit_status = WEXITSTATUS(status);
 		}
 	}
 }

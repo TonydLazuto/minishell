@@ -29,8 +29,8 @@ SRCS		=	builtin.c \
 				minishell.c \
 				node.c \
 				utils.c \
-				redir_out.c \
-				redir_pipe.c
+				redir.c \
+				pipe.c
 
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 

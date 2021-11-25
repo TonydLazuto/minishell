@@ -81,6 +81,7 @@ void	ft_export(t_node *node)
 
 	name = NULL;
 	val = NULL;
+	node->cmd.exit_status = 0;
 	if (!node->cmd.arg[1])
 	{
 		export_no_args(node);

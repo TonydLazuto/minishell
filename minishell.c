@@ -17,20 +17,17 @@ export A+=qwe
 export A+=rty
 --> A=qwerty
 
-export MAVAR="ls -a"
-$MAVAR
---> command not found ls -a
-
 cat << ""
-
-echo $truc
---> si truc n'est pas dans env \n
 
 MANDATORY PATH DIFF !!!
 
 export MYLS="ls -la"
 $MYLS : works
 "$MYLS" : command not found
+
+<< oui | << non
+> oui
+> non
 
 */
 
@@ -66,8 +63,8 @@ char	**set_args(char *s1, char *s2, char *s3)
 int	main(int ac, char *av[], char **envp)
 {
 	t_node	*node;
-	t_env		*env;
-	// char		*line_read;
+	t_env	*env;
+	// char	*line_read;
 
 	(void)ac;
 	(void)av;
@@ -76,38 +73,36 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg2 = set_args("echo", "lorem ipsum", NULL);
-	nodeadd_back(&node, arg2, NODE_WORD, env);
-	// >
-	nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
-
-	char **arg3 = set_args("latin" , NULL, NULL);
-	nodeadd_back(&node, arg3, NODE_WORD, env);
+	char **arg2 = set_args("ls", "ghfjghfd", NULL);
+	nodeadd_back(&node, arg2, NODE_CMD, env);
+ 
+	nodeadd_back(&node, NULL, NODE_PIPE, env);
+	char **arg3 = set_args("grep" , "mi", NULL);
+	nodeadd_back(&node, arg3, NODE_CMD, env);
 
 	// char **arg23 = set_args("echo", "ORF", NULL);
-	// nodeadd_back(&node, arg23, NODE_WORD, env);
-	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg23, NODE_CMD, env);
+	
 	// char **arg34 = set_args("myecho" , NULL, NULL);
-	// nodeadd_back(&node, arg34, NODE_WORD, env);
+	// nodeadd_back(&node, arg34, NODE_OUT_REDIR, env);
 
 	// char **arg5 = set_args("env", NULL, NULL);
-	// nodeadd_back(&node, arg5, NODE_WORD, env);
-	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg5, NODE_CMD, env);
+
 	// char **arg6 = set_args("myenv2", NULL, NULL);
-	// nodeadd_back(&node, arg6, NODE_WORD, env);
+	// nodeadd_back(&node, arg6, NODE_OUT_REDIR, env);
 
 	// char **arg7 = set_args("export", NULL, NULL);
-	// nodeadd_back(&node, arg7, NODE_WORD, env);
-	// nodeadd_back(&node, NULL, NODE_OUT_REDIR, env);
+	// nodeadd_back(&node, arg7, NODE_CMD, env);
+
 	// char **arg8 = set_args("myexport2", NULL, NULL);
-	// nodeadd_back(&node, arg8, NODE_WORD, env);
-	
+	// nodeadd_back(&node, arg8, NODE_OUT_REDIR, env);
 
 	t_node *first;
 	first = node;
 	while (node)
 	{
-		if (node->type == NODE_WORD)
+		if (node->type == NODE_CMD)
 			exec_cmd(node, envp);
 		node = node->next;
 	}

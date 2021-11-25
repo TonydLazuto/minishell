@@ -28,7 +28,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
-# define BUFFER_SIZE 50
 
 enum e_node_type
 {
@@ -36,9 +35,7 @@ enum e_node_type
 	NODE_IN_REDIR,
 	NODE_OUT_REDIR,
 	NODE_OUT_DREDIR,
-	NODE_WORD,
-	NODE_OR,
-	NODE_AND,
+	NODE_CMD,
 	NODE_HERE_DOC
 };
 
@@ -54,7 +51,7 @@ typedef struct s_cmd
 {
 	char	**arg;
 	int		pipefd[2];
-	int		len; // while arg[i]
+	int		len;
 	int		exit_status;
 	t_env	*env;
 }				t_cmd;
@@ -79,6 +76,7 @@ void	nodeadd_back(t_node **anode, char *arg[],
 void	parent_pipe(t_node *node);
 void	child_append(t_node *node);
 void	child_out_redir(t_node *node);
+void	child_in_redir(t_node *node);
 void	child_pipe(t_node *node);
 void	exec_cmd(t_node *node, char **env);
 char	*check_relatif_path(t_node *node);
