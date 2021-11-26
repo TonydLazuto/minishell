@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+void	free_env_elet(t_env *elet)
+{
+	if (elet->name)
+	{
+		free(elet->name);
+		elet->name = NULL;
+	}
+	if (elet->value)
+	{
+		free(elet->value);
+		elet->value = NULL;
+	}
+	free(elet);
+	elet = NULL;
+}
+
 t_env	*pop_env(t_env *env, char *name)
 {
 	t_env	*del_elet;
@@ -25,8 +41,7 @@ t_env	*pop_env(t_env *env, char *name)
 		after->back = before;
 	if (before)
 		before->next = after;
-	free(del_elet);
-	del_elet = NULL;
+	free_env_elet(del_elet);
 	if (after)
 		env = after;
 	else if (before)

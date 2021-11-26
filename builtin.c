@@ -18,20 +18,17 @@
 
 #include "minishell.h"
 
-void	ft_cd(t_node *node)
+void	ft_unset(t_node *node)
 {
-	int	i;
-	int	ret;
+	t_env	*elet;
 
-	i = 0;
 	node->cmd.exit_status = 1;
-	while (node->cmd.arg[i])
-		i++;
-	if (i != 2 || !node->cmd.arg[1])
-		ft_error(node, "error: cd bad arguments");
-	ret = chdir(node->cmd.arg[1]);
-	if (ret == -1)
-		ft_error(node, "error: chdir");
+	elet = node->cmd.env;
+	if (!node->cmd.arg[1])
+		return ;
+	elet = get_env_by_name(node->cmd.env, node->cmd.arg[1]);
+	if (elet)
+		node->cmd.env = pop_env(node->cmd.env, elet->name);
 	node->cmd.exit_status = 0;
 }
 
@@ -79,7 +76,10 @@ void	ft_pwd(t_node *node)
 	if (node->cmd.arg[1])
 		ft_error(node, "pwd: too many arguments");
 	buf = getcwd(buf, 0);
+	if (!buf)
+		ft_error(node, "error: malloc PWD");
 	ft_putendl_fd(buf, 1);
+	ft_free(&buf);
 }
 
 void	ft_env(t_node *node)
