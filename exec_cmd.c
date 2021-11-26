@@ -51,7 +51,6 @@ void	child_node(t_node *node, char **envp)
 	if (check_pipe(node))
 		if (!check_cmd(node))
 			return ;
-	printf("|%s|\n", node->cmd.arg[0]);
 	if (launch_builtin(node) == 0 || node->type == NODE_CMD)
 	{
 		if (node->cmd.arg[0][0] != '/')

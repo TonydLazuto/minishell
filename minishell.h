@@ -69,8 +69,6 @@ void	printnodes(t_node *mynode);
 int		my_strncmp(char *s1, char *s2);
 char	*strjoinfree(char *s1, char *s2);
 void	ft_free(char **s);
-char	*joinpath(char *s1, char *s2);
-void	clear_paths(char **paths);
 
 void	clearnodes(t_node **node);
 void	nodeadd_back(t_node **anode, char *arg[],

@@ -15,9 +15,9 @@
 int	check_both_pipe_cmd(t_node *node)
 {
 	if ((node->type == NODE_CMD
-		&& (node->next && node->next->type == NODE_PIPE))
+			&& (node->next && node->next->type == NODE_PIPE))
 		|| ((node->back && node->back->type == NODE_PIPE)
-		&& node->back->back->type == NODE_CMD))
+			&& node->back->back->type == NODE_CMD))
 		return (1);
 	return (0);
 }
@@ -33,7 +33,7 @@ int	check_pipe(t_node *node)
 int	check_cmd(t_node *node)
 {
 	if (node->type == NODE_CMD
-	&& node->back->back->type == NODE_CMD)
+		&& node->back->back->type == NODE_CMD)
 		return (1);
 	return (0);
 }
