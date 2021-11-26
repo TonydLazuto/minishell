@@ -24,6 +24,7 @@ SRCS		=	builtin.c \
 				env_list.c \
 				env_list2.c \
 				exec_cmd.c \
+				exec_checker.c \
 				export.c \
 				export2.c \
 				export_no_args.c \

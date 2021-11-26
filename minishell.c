@@ -70,20 +70,29 @@ int	main(int ac, char *av[], char **envp)
 	if (!env)
 		return (-1);
 
-	char **arg3 = set_args("env", NULL, NULL);
+	char **arg3 = set_args("ls", NULL, NULL);
 	nodeadd_back(&node, arg3, NODE_CMD, env);
+	
+	char **arg61 = set_args("file", NULL, NULL);
+	nodeadd_back(&node, arg61, NODE_OUT_REDIR, env);
+	char **arg62 = set_args("file2", NULL, NULL);
+	nodeadd_back(&node, arg62, NODE_OUT_REDIR, env);
+	char **arg63 = set_args("file3", NULL, NULL);
+	nodeadd_back(&node, arg63, NODE_OUT_REDIR, env);
+
 	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg4 = set_args("grep" , "TEST", NULL);
+	char **arg4 = set_args("grep" , "mi", NULL);
 	nodeadd_back(&node, arg4, NODE_CMD, env);
+	
 
-	char **arg2 = set_args("export", "TEST+=123", NULL);
-	nodeadd_back(&node, arg2, NODE_CMD, env);
+	// char **arg2 = set_args("export", "TEST+=123", NULL);
+	// nodeadd_back(&node, arg2, NODE_CMD, env);
 
-	char **arg9 = set_args("env", NULL, NULL);
-	nodeadd_back(&node, arg9, NODE_CMD, env);
-	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg10 = set_args("grep" , "TEST", NULL);
-	nodeadd_back(&node, arg10, NODE_CMD, env);
+	// char **arg9 = set_args("env", NULL, NULL);
+	// nodeadd_back(&node, arg9, NODE_CMD, env);
+	// nodeadd_back(&node, NULL, NODE_PIPE, env);
+	// char **arg10 = set_args("grep" , "TEST", NULL);
+	// nodeadd_back(&node, arg10, NODE_CMD, env);
 
 	// char **arg1 = set_args("cd", "/usr/bin", NULL);
 	// nodeadd_back(&node, arg1, NODE_CMD, env);
@@ -93,9 +102,6 @@ int	main(int ac, char *av[], char **envp)
 	// nodeadd_back(&node, NULL, NODE_PIPE, env);
 	// char **arg11 = set_args("grep" , "PWD", NULL);
 	// nodeadd_back(&node, arg11, NODE_CMD, env);
-
-	// char **arg6 = set_args("myenv2", NULL, NULL);
-	// nodeadd_back(&node, arg6, NODE_OUT_REDIR, env);
 
 	// char **arg7 = set_args("export", NULL, NULL);
 	// nodeadd_back(&node, arg7, NODE_CMD, env);

@@ -40,19 +40,22 @@ void	child_node(t_node *node, char **envp)
 	if ((node->type == NODE_OUT_REDIR
 			|| node->type == NODE_OUT_DREDIR))
 		return ;
-	if ((node->next && node->next->type == NODE_PIPE)
-		|| (node->back && node->back->type == NODE_PIPE))
-		child_pipe(node);
 	if (node->type == NODE_IN_REDIR)
 		child_in_redir(node);
 	if (node->next && node->next->type == NODE_OUT_REDIR)
 		child_out_redir(node);
 	if (node->next && node->next->type == NODE_OUT_DREDIR)
 		child_append(node);
-	if (launch_builtin(node) == 0)
+	if (check_both_pipe_cmd(node))
+		child_pipe(node);
+	if (check_pipe(node))
+		if (!check_cmd(node))
+			return ;
+	printf("|%s|\n", node->cmd.arg[0]);
+	if (launch_builtin(node) == 0 || node->type == NODE_CMD)
 	{
 		if (node->cmd.arg[0][0] != '/')
-			node->cmd.arg[0] = check_relatif_path(node);
+			check_relatif_path(node, &node->cmd.arg[0]);
 		if (execve(node->cmd.arg[0], node->cmd.arg, envp) == -1)
 			ft_error(node, "error: execve()");
 	}
@@ -60,18 +63,8 @@ void	child_node(t_node *node, char **envp)
 
 void	parent_node(t_node *node)
 {
-	if ((node->next && node->next->type == NODE_PIPE)
-		|| (node->back && node->back->type == NODE_PIPE))
+	if (check_both_pipe_cmd(node))
 		parent_pipe(node);
-}
-
-int	check_without_fork(t_node *node)
-{
-	if ((!node->back || (node->back && node->back->type != NODE_PIPE))
-		&& (!node->next || (node->next && node->next->type != NODE_PIPE))
-		&& is_builtin(node))
-		return (1);
-	return (0);
 }
 
 void	exec_cmd(t_node *node, char **envp)
@@ -79,8 +72,7 @@ void	exec_cmd(t_node *node, char **envp)
 	pid_t	pid;
 	int		status;
 
-	if ((node->next && node->next->type == NODE_PIPE)
-		|| (node->back && node->back->type == NODE_PIPE))
+	if (check_both_pipe_cmd(node))
 		if (pipe(node->cmd.pipefd) == -1)
 			ft_error(node, "error : pipe()");
 	if (check_without_fork(node))
@@ -94,11 +86,11 @@ void	exec_cmd(t_node *node, char **envp)
 			child_node(node, envp);
 		else
 		{
-			parent_node(node);
-			waitpid(pid, &status, 0);
+			waitpid(pid, &status, WNOHANG);
 			if (WIFEXITED(status) && (!node->back
 					|| (node->back && node->back->type != NODE_PIPE)))
 				node->cmd.exit_status = WEXITSTATUS(status);
+			parent_node(node);
 		}
 	}
 }

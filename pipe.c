@@ -24,8 +24,7 @@ void	child_pipe(t_node *node)
 		if (dup2(node->back->back->cmd.pipefd[0], STDIN_FILENO) < 0)
 			ft_error(node, "error : dup2()");
 	}
-	if ((node->next && node->next->type == NODE_PIPE)
-		|| (node->back && node->back->type == NODE_PIPE))
+	if (check_both_pipe_cmd(node))
 	{
 		close(node->cmd.pipefd[1]);
 		close(node->cmd.pipefd[0]);
@@ -34,8 +33,7 @@ void	child_pipe(t_node *node)
 
 void	parent_pipe(t_node *node)
 {
-	if ((node->next && node->next->type == NODE_PIPE)
-		|| (node->back && node->back->type == NODE_PIPE))
+	if (check_both_pipe_cmd(node))
 	{
 		close(node->cmd.pipefd[1]);
 		if (node->back && node->back->type == NODE_PIPE)

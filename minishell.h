@@ -69,10 +69,17 @@ void	printnodes(t_node *mynode);
 int		my_strncmp(char *s1, char *s2);
 char	*strjoinfree(char *s1, char *s2);
 void	ft_free(char **s);
+char	*joinpath(char *s1, char *s2);
+void	clear_paths(char **paths);
 
 void	clearnodes(t_node **node);
 void	nodeadd_back(t_node **anode, char *arg[],
 			int type, t_env *env);
+
+int		check_both_pipe_cmd(t_node *node);
+int		check_pipe(t_node *node);
+int		check_cmd(t_node *node);
+int		check_without_fork(t_node *node);
 
 void	parent_pipe(t_node *node);
 void	child_append(t_node *node);
@@ -80,7 +87,7 @@ void	child_out_redir(t_node *node);
 void	child_in_redir(t_node *node);
 void	child_pipe(t_node *node);
 void	exec_cmd(t_node *node, char **env);
-char	*check_relatif_path(t_node *node);
+void	check_relatif_path(t_node *node, char **mycmd);
 
 void	clear_env(t_env **env);
 void	envadd_back(t_env **aenv, char *name, char *value);

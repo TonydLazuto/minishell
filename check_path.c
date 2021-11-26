@@ -53,24 +53,28 @@ void	clear_paths(char **paths)
 	}
 }
 
-char	*check_access(char *cur_path, char *cmd)
+int	check_access(char *cur_path, char **mycmd)
 {
 	char	*new_cmd;
 
-	new_cmd = joinpath(cur_path, cmd);
+	new_cmd = NULL;
+	if (!cur_path)
+		return (0);
+	new_cmd = joinpath(cur_path, *mycmd);
 	if (access(new_cmd, X_OK | F_OK) == 0)
 	{
-		ft_free(&cmd);
-		return (new_cmd);
+		ft_free(mycmd);
+		*mycmd = ft_strdup(new_cmd);
+		ft_free(&new_cmd);
+		return (0);
 	}
 	ft_free(&new_cmd);
-	return (NULL);
+	return (1);
 }
 
-char	*check_relatif_path(t_node *node)
+void	check_relatif_path(t_node *node, char **mycmd)
 {
 	t_env	*env;
-	char	*new_cmd;
 	char	**paths;
 	int		i;
 
@@ -83,15 +87,7 @@ char	*check_relatif_path(t_node *node)
 	paths = ft_split(env->value, ':');
 	if (!paths)
 		ft_error(node, "error: malloc()");
-	while (paths[i])
-	{
-		new_cmd = check_access(paths[i], node->cmd.arg[0]);
-		if (new_cmd)
-			break ;
+	while (check_access(paths[i], mycmd))
 		i++;
-	}
-	if (!new_cmd)
-		new_cmd = node->cmd.arg[0];
 	clear_paths(paths);
-	return (new_cmd);
 }
