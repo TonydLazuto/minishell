@@ -67,6 +67,7 @@ typedef struct s_node
 void	ft_error(t_node *node, char *err);
 void	printnodes(t_node *mynode);
 int		my_strncmp(char *s1, char *s2);
+char	*strjoinfree(char *s1, char *s2);
 void	ft_free(char **s);
 
 void	clearnodes(t_node **node);
@@ -96,6 +97,8 @@ void	ft_echo(t_node *node);
 void	ft_pwd(t_node *node);
 void	ft_env(t_node *node);
 void	ft_export(t_node *node);
+void	export_append(t_node *node);
+void	export_normal(t_node *node);
 void	export_no_args(t_node *node);
 void	ft_unset(t_node *node);
 void	ft_exit(t_node *node);

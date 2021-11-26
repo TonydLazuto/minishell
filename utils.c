@@ -12,28 +12,28 @@
 
 #include "minishell.h"
 
-void	printnodes(t_node *mynode)
+char	*strjoinfree(char *s1, char *s2)
 {
-	t_node		*node;
-	int			i;
+	char	*str;
+	int		i;
 
-	node = mynode;
-	while (node)
+	i = 0;
+	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
 	{
-		i = 0;
-		if (node->cmd.arg)
-		{
-			while (node->cmd.arg[i])
-			{
-				printf("node->cmd.arg : %s\n", node->cmd.arg[i]);
-				i++;
-			}
-		}
-		printf("node->type : %d\n", node->type);
-		if (node->next)
-			printf("\n");
-		node = node->next;
+		str[i] = s1[i];
+		i++;
 	}
+	while (*s2)
+	{
+		str[i] = *s2++;
+		i++;
+	}
+	str[i] = '\0';
+	ft_free(&s1);
+	return (str);
 }
 
 void	ft_free(char **s)

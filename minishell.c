@@ -13,9 +13,6 @@
 #include "minishell.h"
 
 /*
-export A+=qwe
-export A+=rty
---> A=qwerty
 
 cat << ""
 
@@ -28,12 +25,6 @@ $MYLS : works
 << oui | << non
 > oui
 > non
-
-Mettre a jour les variables d'environnements :
-- PWD OLDPWD (cd)
-- SHELL (./minishell)
-
- tester d'unset et de reset le PATH pendant le programme
 
 */
 
@@ -82,27 +73,27 @@ int	main(int ac, char *av[], char **envp)
 	char **arg3 = set_args("env", NULL, NULL);
 	nodeadd_back(&node, arg3, NODE_CMD, env);
 	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg4 = set_args("grep" , "PWD", NULL);
+	char **arg4 = set_args("grep" , "TEST", NULL);
 	nodeadd_back(&node, arg4, NODE_CMD, env);
 
-	char **arg2 = set_args("cd", NULL, NULL);
+	char **arg2 = set_args("export", "TEST+=123", NULL);
 	nodeadd_back(&node, arg2, NODE_CMD, env);
-/*
+
 	char **arg9 = set_args("env", NULL, NULL);
 	nodeadd_back(&node, arg9, NODE_CMD, env);
 	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg10 = set_args("grep" , "PWD", NULL);
+	char **arg10 = set_args("grep" , "TEST", NULL);
 	nodeadd_back(&node, arg10, NODE_CMD, env);
 
-	char **arg1 = set_args("cd", "/usr/bin", NULL);
-	nodeadd_back(&node, arg1, NODE_CMD, env);
+	// char **arg1 = set_args("cd", "/usr/bin", NULL);
+	// nodeadd_back(&node, arg1, NODE_CMD, env);
 
-	char **arg5 = set_args("env", NULL, NULL);
-	nodeadd_back(&node, arg5, NODE_CMD, env);
-	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg11 = set_args("grep" , "PWD", NULL);
-	nodeadd_back(&node, arg11, NODE_CMD, env);
-*/
+	// char **arg5 = set_args("env", NULL, NULL);
+	// nodeadd_back(&node, arg5, NODE_CMD, env);
+	// nodeadd_back(&node, NULL, NODE_PIPE, env);
+	// char **arg11 = set_args("grep" , "PWD", NULL);
+	// nodeadd_back(&node, arg11, NODE_CMD, env);
+
 	// char **arg6 = set_args("myenv2", NULL, NULL);
 	// nodeadd_back(&node, arg6, NODE_OUT_REDIR, env);
 

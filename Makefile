@@ -25,6 +25,7 @@ SRCS		=	builtin.c \
 				env_list2.c \
 				exec_cmd.c \
 				export.c \
+				export2.c \
 				export_no_args.c \
 				minishell.c \
 				node.c \
