@@ -12,6 +12,21 @@
 
 #include "minishell.h"
 
+int	is_builtin(t_node *node)
+{
+	if (!node->cmd.arg[0])
+		return (0);
+	if (my_strncmp(node->cmd.arg[0], "cd") == 0
+		|| my_strncmp(node->cmd.arg[0], "echo") == 0
+		|| my_strncmp(node->cmd.arg[0], "pwd") == 0
+		|| my_strncmp(node->cmd.arg[0], "env") == 0
+		|| my_strncmp(node->cmd.arg[0], "export") == 0
+		|| my_strncmp(node->cmd.arg[0], "unset") == 0
+		|| my_strncmp(node->cmd.arg[0], "exit") == 0)
+		return (1);
+	return (0);
+}
+
 int	check_both_pipe_cmd(t_node *node)
 {
 	if ((node->type == NODE_CMD
