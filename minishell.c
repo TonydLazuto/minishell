@@ -26,6 +26,17 @@ $MYLS : works
 > oui
 > non
 
+CTRL+C = SIGINT
+CTRL+\ = SIGQUIT
+CTRL+D = n'est pas un signal,
+c'est une touche de controle
+qui envoie un end of file a ton readline
+
+ls > out | cat file > out2
+pour cette ligne j'ai le meme comportement mais
+pas de messages command not found sur mon programme lol
+c'est pas grave du coup?
+
 */
 
 /**
@@ -73,16 +84,16 @@ int	main(int ac, char *av[], char **envp)
 	char **arg3 = set_args("ls", NULL, NULL);
 	nodeadd_back(&node, arg3, NODE_CMD, env);
 	
-	char **arg61 = set_args("file", NULL, NULL);
+	char **arg61 = set_args("out", NULL, NULL);
 	nodeadd_back(&node, arg61, NODE_OUT_REDIR, env);
-	char **arg62 = set_args("file2", NULL, NULL);
-	nodeadd_back(&node, arg62, NODE_OUT_REDIR, env);
-	char **arg63 = set_args("file3", NULL, NULL);
-	nodeadd_back(&node, arg63, NODE_OUT_REDIR, env);
 
-	nodeadd_back(&node, NULL, NODE_PIPE, env);
-	char **arg4 = set_args("grep" , "mi", NULL);
-	nodeadd_back(&node, arg4, NODE_CMD, env);
+	// nodeadd_back(&node, NULL, NODE_PIPE, env);
+
+	char **arg62 = set_args("out2", NULL, NULL);
+	nodeadd_back(&node, arg62, NODE_OUT_REDIR, env);
+
+	char **arg63 = set_args("out3", NULL, NULL);
+	nodeadd_back(&node, arg63, NODE_OUT_REDIR, env);
 	
 
 	// char **arg2 = set_args("export", "TEST+=123", NULL);

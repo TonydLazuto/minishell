@@ -53,6 +53,7 @@ typedef struct s_cmd
 	int		pipefd[2];
 	int		len;
 	int		exit_status;
+	int		fd;
 	t_env	*env;
 }				t_cmd;
 

@@ -8,7 +8,6 @@ exec_cmd.c
 export2.c
 export.c
 export_no_args.c
-file
 libft
 Makefile
 minishell
@@ -16,6 +15,7 @@ minishell.c
 minishell.h
 node.c
 obj
+out
 pipe.c
 redir.c
 test

@@ -31,6 +31,7 @@ t_node	*new_node(char *arg[], int type, t_env *env)
 	node->cmd.pipefd[1] = 0;
 	node->cmd.env = env;
 	node->cmd.len = len;
+	node->cmd.fd = -1;
 	node->type = type;
 	node->next = NULL;
 	node->back = NULL;

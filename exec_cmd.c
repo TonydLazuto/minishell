@@ -35,10 +35,23 @@ int	launch_builtin(t_node *node)
 	return (1);
 }
 
+int	check_end_redir(t_node *node)
+{
+	if (node->next && node->next->type != NODE_OUT_REDIR)
+		close(node->cmd.fd);
+	if (node->type == NODE_OUT_REDIR)
+	{
+		if (node->back)
+			close(node->back->cmd.fd);
+		if (!node->next)
+			return (1);
+	}
+	return (0);
+}
+
 void	child_node(t_node *node, char **envp)
 {
-	if ((node->type == NODE_OUT_REDIR
-			|| node->type == NODE_OUT_DREDIR))
+	if (check_end_redir(node))
 		return ;
 	if (node->type == NODE_IN_REDIR)
 		child_in_redir(node);
@@ -51,7 +64,7 @@ void	child_node(t_node *node, char **envp)
 	if (check_pipe(node))
 		if (!check_cmd(node))
 			return ;
-	if (launch_builtin(node) == 0 || node->type == NODE_CMD)
+	if (launch_builtin(node) == 0 && node->type == NODE_CMD)
 	{
 		if (node->cmd.arg[0][0] != '/')
 			check_relatif_path(node, &node->cmd.arg[0]);
