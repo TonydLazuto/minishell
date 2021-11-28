@@ -26,7 +26,7 @@ int	my_strncmp(char *s1, char *s2)
 	else
 		n = ft_strlen(s2);
 	i = 0;
-	if (n == 0)
+	if (n == -1)
 		return (0);
 	while (str1[i] && str2[i] && str1[i] == str2[i] && i < n - 1)
 		i++;
