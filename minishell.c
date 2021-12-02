@@ -37,6 +37,10 @@ pour cette ligne j'ai le meme comportement mais
 pas de messages command not found sur mon programme lol
 c'est pas grave du coup?
 
+ls << qqch | cat-e
+ctrl-\ quitte un minishell
+commandes pipes dans here doc + ctrl-\
+
 */
 
 /**
