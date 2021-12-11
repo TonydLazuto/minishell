@@ -14,32 +14,30 @@
 
 /*
 
-cat << ""
+CTRL+C = SIGINT
+CTRL+\ = SIGQUIT
+CTRL+D = EOF (pas de signal)
 
-MANDATORY PATH DIFF !!!
+termios echoctl pour retirer ^C
+
+
+/-----\ A tester /-----\
+
+commandes pipes dans here_doc "<<" + CTRL+C ou CTRL+D 
+ls << qqch | cat-e
+> file1 cat << eof -e < file2 > file3
+<< oui | << non
+cat << ""
 
 export MYLS="ls -la"
 $MYLS : works
 "$MYLS" : command not found
 
-<< oui | << non
-> oui
-> non
+/-----\ Comportement Differemt /-----\
 
-CTRL+C = SIGINT
-CTRL+\ = SIGQUIT
-CTRL+D = n'est pas un signal,
-c'est une touche de controle
-qui envoie un end of file a ton readline
-
+> ok ls | < file < file2 | cat -e
 ls > out | cat file > out2
-pour cette ligne j'ai le meme comportement mais
-pas de messages command not found sur mon programme lol
-c'est pas grave du coup?
 
-ls << qqch | cat-e
-ctrl-\ quitte un minishell
-commandes pipes dans here doc + ctrl-\
 
 */
 
