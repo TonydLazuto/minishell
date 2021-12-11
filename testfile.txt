@@ -1,0 +1,31 @@
+export > file.txt | file.txt < grep SHL
+export > file.txt | grep SHL < file.txt
+cat Makefile > file.txt | grep all < file.txt
+cat Makefile > file.txt | cat < file.txt
+
+cat Makefile > file.txt | grep SHL < file.txt
+
+export | grep SHL
+export | export
+cat Makefile | export | grep SHL
+
+cd - marche pas]
+export > file.txt
+
+cat | grep 
+cat | cat | ls
+
+ctrl z kills
+
+cat Makefile > file.txt
+cat Makefile >> file.txt
+cat < file.txt
+grep h << end
+cat Makefile > file.txt | cat < file.txt        fonctionne si fichier existe ok plante a "pipe dup 2" cree le fichier
+cat Makefile > file.txt | grep SHL < file.txt fonctionne pas ok plante a pipe dup 2 devrais creer file.txt a clean au parsing
+cat Makefile > file.txt | cat Makefile      fonctionne pour les deux ne cree pas le fichier dans le minishell
+cat Makefile >> file.txt | sort < file.txt fonctionne pas en bash mais cree le fichier minishell ne cree pas le fichier
+
+
+sort < file.txt | cat Makefile > file.txt
+grep h << end | wc
