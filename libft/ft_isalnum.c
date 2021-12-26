@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:12:17 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:29:49 by aderose          ###   ########.fr       */
+/*   Created: 2020/04/27 22:59:24 by jdidier           #+#    #+#             */
+/*   Updated: 2020/05/09 20:31:40 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,6 @@ int	ft_isalnum(int c)
 {
 	if (ft_isdigit(c) || ft_isalpha(c))
 		return (1);
-	return (0);
+	else
+		return (0);
 }

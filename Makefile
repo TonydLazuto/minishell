@@ -1,62 +1,55 @@
-.PHONY		= all clean fclean re bonus libclean libfclean
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/11/14 15:16:41 by jdidier           #+#    #+#              #
+#    Updated: 2021/12/16 17:07:11 by jdidier          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-NAME		= minishell
+NAME= minishell
 
-LIBA		= libft.a
+CC=gcc
 
-LIB_DIR		= libft
+CFLAGS= -Wall -Wextra -Werror
 
-FLAGS		= -L libft -lft -lreadline
+FLAGS= -L libft -lft -lreadline 
 
-CC			= gcc
+HEADERS=minishell.h libft/libft.h
 
-CFLAGS		= -Wall -Wextra -Werror
+RM=rm -f
 
-RM			= /bin/rm -f
+SRCS= main.c lexer.c lexer_tools.c parser.c parser_tools.c exit.c \
+utils.c get_set_env.c cut_space.c builtin.c builtin_tools.c builtin2.c \
+check_path.c exec_cmd_tools.c exec_cmd.c export.c export2.c env_tools.c env_tools2.c\
+redir.c redir_tools.c pipe.c check_syntax.c global.c heredoc.c parser2.c parser3.c signal.c
 
-INC			= minishell.h
+SRCS_BONUS=
 
-OBJ_DIR		= obj
+OBJS=	${SRCS:.c=.o}
 
-SRCS		=	builtin.c \
-				builtin2.c \
-				check_path.c \
-				env_list.c \
-				env_list2.c \
-				exec_cmd.c \
-				exec_checker.c \
-				export.c \
-				export2.c \
-				export_no_args.c \
-				minishell.c \
-				node.c \
-				utils.c \
-				redir.c \
-				pipe.c
+BONUS=	${SRCS_BONUS:.c=.o}
 
-OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
+all:	${NAME}
 
-all: 			$(NAME)
+${NAME}:	${OBJS} ${HEADERS}
+			@make --silent -C libft all
+			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${FLAGS}
 
-$(NAME): 		$(OBJS)
-				@make --silent -C $(LIB_DIR)
-				$(CC) $(LIB_DIR)/$(LIBA) -o $(NAME) $(OBJS) $(FLAGS)
+%.o:	%.c
+		${CC} ${CFLAGS} -c $< -o $@
 
-$(OBJ_DIR)/%.o:	%.c
-				@mkdir -p $(OBJ_DIR)
-				$(CC) $(CFLAGS) -I$(LIB_DIR) -c $< -o $@
+clean:
+		@make -C libft clean
+		${RM} ${OBJS} 
 
-libclean:		
-				@make clean -C $(LIB_DIR)
+fclean: clean
+		${RM} libft/libft.a
+		${RM} ${NAME}
 
-libfclean:
-				@make fclean -C $(LIB_DIR)
+re: fclean all
 
-clean:			libclean
-				rm -rf $(OBJ_DIR)
-
-fclean:			clean
-				$(RM) $(LIB_DIR)/$(LIBA)
-				$(RM) $(NAME)
-
-re:				fclean all
+.PHONY: clean fclean re all

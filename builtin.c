@@ -3,101 +3,116 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:55:56 by aderose           #+#    #+#             */
-/*   Updated: 2021/10/11 14:48:49 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/15 14:09:00 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/**
- * INFO
- * Tous les builtin doivent retourner une valeur
- * pour $?
- */
-
 #include "minishell.h"
 
-void	ft_unset(t_node *node)
-{
-	t_env	*elet;
+/**
+ * ft_unset(t_node *node)
+ * 		supprime 
+ * check_dash_n(t_node *node)
+ * 		check echo -nnnnnnnn salut
+ * 		si le "-n" ne contient bien que des "n"
+ * ft_env(t_node *node)
+ * 		affiche ma liste chainee d'environnement
+ * 		uniquement si la value associee existe
+ */
 
-	node->cmd.exit_status = 1;
-	elet = node->cmd.env;
-	if (!node->cmd.arg[1])
+void	ft_unset(t_msh *msh, t_token *tk)
+{
+	int		line;
+	char	**tmp_env;
+	int		i;
+
+	g_exit_status = 1;
+	tmp_env = NULL;
+	if (!tk->arg[1])
 		return ;
-	elet = get_env_by_name(node->cmd.env, node->cmd.arg[1]);
-	if (elet)
-		node->cmd.env = pop_env(node->cmd.env, elet->name);
-	node->cmd.exit_status = 0;
+	i = 1;
+	while (tk->arg[i])
+	{
+		line = get_env_line(msh->myenv, tk->arg[i]);
+		if (msh->myenv && line >= 0)
+		{
+			tmp_env = env_after_unset(msh->myenv, line);
+			free_myenv(msh->myenv);
+			msh->myenv = env_cpy(tmp_env);
+			free_myenv(tmp_env);
+		}
+		i++;
+	}
+	g_exit_status = 0;
 }
 
-int	check_dash_n(t_node *node)
+int	check_dash_n(t_token *tk, int *num, int newline)
 {
-	int	i;
+	int	j;
 
-	i = 2;
-	if (my_strncmp(node->cmd.arg[1], "-n") == 0)
+	while (tk->arg[*num]
+		&& (tk->arg[*num][0] == '-' && (tk->arg[*num][1] == 'n')))
 	{
-		while (node->cmd.arg[1][i])
+		j = 2;
+		while (tk->arg[*num][j] && tk->arg[*num][j] == 'n')
+			j++;
+		if (j != (int)ft_strlen(tk->arg[*num]))
+			return (newline);
+		*num += 1;
+		newline = 1;
+	}
+	return (newline);
+}
+
+void	ft_echo(t_list *node)
+{
+	t_token	*tk;
+	int		newline;
+	int		i;
+
+	newline = 0;
+	i = 1;
+	tk = (t_token *)node->content;
+	if (tk->len == 1)
+	{
+		ft_putstr_fd("\n", 1);
+		return ;
+	}
+	if (check_dash_n(tk, &i, newline))
+		newline = 1;
+	while (tk->arg[i])
+	{
+		ft_putstr_fd(tk->arg[i], 1);
+		i++;
+		if (tk->arg[i])
+			ft_putstr_fd(" ", 1);
+	}
+	if (newline == 0)
+		ft_putstr_fd("\n", 1);
+}
+
+void	ft_env(t_msh *msh)
+{
+	int		i;
+	t_token	*tk;
+
+	i = 0;
+	tk = (t_token *)msh->node->content;
+	if (tk->len != 1)
+	{
+		ft_putstr_fd("Error: env too many arguments.\n", 1);
+		return ;
+	}
+	if (msh->myenv)
+	{
+		while (msh->myenv[i])
 		{
-			if (node->cmd.arg[1][i] != 'n')
-				return (0);
+			if (ft_strchr(msh->myenv[i], '='))
+				ft_putendl_fd(msh->myenv[i], 1);
 			i++;
 		}
-		return (2);
-	}
-	return (1);
-}
-
-void	ft_echo(t_node *node)
-{
-	int	i;
-
-	if (!node->cmd.arg[1])
-		ft_putstr_fd("\n", 1);
-	if (node->cmd.arg[1])
-	{
-		i = check_dash_n(node);
-		if (i == 0)
-			ft_error(node, "Error: echo -n + gibberish");
-		if (node->cmd.arg[i])
-			ft_putstr_fd(node->cmd.arg[i], 1);
-		if (i == 1)
-			ft_putstr_fd("\n", 1);
-	}
-}
-
-void	ft_pwd(t_node *node)
-{
-	char	*buf;
-
-	buf = NULL;
-	if (node->cmd.arg[1])
-		ft_error(node, "pwd: too many arguments");
-	buf = getcwd(buf, 0);
-	if (!buf)
-		ft_error(node, "error: malloc PWD");
-	ft_putendl_fd(buf, 1);
-	ft_free(&buf);
-}
-
-void	ft_env(t_node *node)
-{
-	t_env	*env;
-
-	env = node->cmd.env;
-	if (node->cmd.arg[1])
-		ft_error(node, "env: too many arguments");
-	while (env)
-	{
-		if (env->value)
-		{
-			ft_putstr_fd(env->name, 1);
-			ft_putchar_fd('=', 1);
-			ft_putstr_fd(env->value, 1);
-			ft_putchar_fd('\n', 1);
-		}
-		env = env->next;
 	}
 }

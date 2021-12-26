@@ -3,39 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/20 13:14:16 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/20 13:14:21 by aderose          ###   ########.fr       */
+/*   Created: 2021/12/01 17:26:07 by jdidier           #+#    #+#             */
+/*   Updated: 2021/12/15 14:17:31 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	my_strncmp(char *s1, char *s2)
+void	ft_free(char **s)
 {
-	size_t			i;
-	unsigned char	*str1;
-	unsigned char	*str2;
-	size_t			n;
-
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	if (ft_strlen(s1) <= ft_strlen(s2))
-		n = ft_strlen(s1);
-	else
-		n = ft_strlen(s2);
-	i = 0;
-	while (str1[i] && str2[i] && str1[i] == str2[i] && i < n - 1)
-		i++;
-	if (str1[i] != str2[i])
-	{
-		if (str1[i] - str2[i] > 0)
-			return (1);
-		else
-			return (-1);
-	}
-	return (0);
+	free(*s);
+	*s = NULL;
 }
 
 char	*strjoinfree(char *s1, char *s2)
@@ -44,6 +24,9 @@ char	*strjoinfree(char *s1, char *s2)
 	int		i;
 
 	i = 0;
+	str = NULL;
+	if (!s1)
+		return (ft_strdup(s2));
 	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!str)
 		return (NULL);
@@ -60,20 +43,4 @@ char	*strjoinfree(char *s1, char *s2)
 	str[i] = '\0';
 	ft_free(&s1);
 	return (str);
-}
-
-void	ft_free(char **s)
-{
-	free(*s);
-	*s = NULL;
-}
-
-void	ft_error(t_node *node, char *err)
-{
-	ft_putstr_fd(err, 1);
-	ft_putstr_fd("\n", 1);
-	while (node->back)
-		node = node->back;
-	clearnodes(&node);
-	exit(EXIT_FAILURE);
 }

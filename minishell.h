@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/16 10:02:12 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/19 18:56:37 by aderose          ###   ########.fr       */
+/*   Created: 2021/10/28 14:15:49 by jdidier           #+#    #+#             */
+/*   Updated: 2021/12/17 17:18:24 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/types.h>
@@ -27,86 +28,140 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "libft/libft.h"
 
-enum e_node_type
+enum e_state
 {
-	NODE_PIPE,
-	NODE_IN_REDIR,
-	NODE_OUT_REDIR,
-	NODE_OUT_DREDIR,
-	NODE_CMD,
-	NODE_HERE_DOC
+	STATE_GENERAL,
+	STATE_IN_QUOTE,
+	STATE_IN_DQUOTE,
+	STATE_IN_WORD,
+	STATE_IN_OPERATOR,
+	STATE_SPACE,
+	STATE_NULL
 };
 
-typedef struct s_env
+enum e_tk_type
 {
-	char			*name;
+	TK_WHITE_SPACE,
+	TK_WORD,
+	TK_CMD,
+	TK_HERE_DOC,
+	TK_IN_REDIR,
+	TK_OUT_REDIR,
+	TK_OUT_DREDIR,
+	TK_PIPE,
+};
+
+int		g_exit_status;
+
+typedef struct s_msh
+{
+	pid_t	*pid;
+	t_list	*node;
+	char	**myenv;
+	int		save_stdout;
+	int		save_stdin;
+	int		nb_cmds;
+}				t_msh;
+
+typedef struct s_token
+{
+	int				len;
+	enum e_tk_type	type;
 	char			*value;
-	struct s_env	*next;
-	struct s_env	*back;
-}				t_env;
+	char			**arg;
+	int				pipefd[2];
+}					t_token;
 
-typedef struct s_cmd
+typedef struct s_env_var
 {
-	char	**arg;
-	int		pipefd[2];
-	int		len;
-	int		exit_status;
-	int		fd;
-	t_env	*env;
-}				t_cmd;
+	char	*value;
+	char	*rest;
+}			t_env_var;
 
-typedef struct s_node
-{
-	t_cmd				cmd;
-	enum e_node_type	type;
-	struct s_node		*back;
-	struct s_node		*next;
-}						t_node;
+int		is_operator(char c);
+int		is_same_operator(char c, char operator, int i);
+int		is_in_word(enum e_state state);
+int		is_redirection(enum e_tk_type type);
+void	tokenization(char *str, t_list **node);
+void	ft_error(t_list **list, char *str);
+int		parser(t_list **node, char **env, t_msh *msh);
+t_token	*get_next_token(t_list *node);
+t_token	*get_prev_token(t_list *node);
+char	*get_env(char *str, char **envp);
+void	del_token(void *token);
+int		get_tk_type(char *c);
+t_token	*new_token(char *str, enum e_tk_type type);
 
-void	ft_error(t_node *node, char *err);
-void	printnodes(t_node *mynode);
-int		my_strncmp(char *s1, char *s2);
-char	*strjoinfree(char *s1, char *s2);
+void	replace_env(char **str, char **env, t_msh *msh);
+void	get_set_env(t_list *node, char **env, t_msh *msh);
+void	parse_word(t_list *node);
+void	erase_space(t_list *node);
+char	*fusion(char *str, t_env_var d_env_var);
+void	cut_space(t_list *node);
+void	cut_and_join(t_list *node);
+
+char	**env_cpy(char **envp);
+int		get_env_line(char **env, char *name);
+char	**env_after_unset(char **env, int line);
+char	**env_add(char **env, char *line);
+char	*replace_env_line(char *line, char *new_line);
+char	*join_env_value(char *line, char *name, char *value);
+char	*get_env_value(char *name, char **env, t_msh *msh);
+void	free_myenv(char **myenv);
+
+void	export_new(t_msh *msh, char *arg, char *name);
+void	modify_export(t_msh *msh, int line, char *arg);
+void	print_export(t_msh *msh);
+void	ft_export(t_msh *msh);
+void	ft_unset(t_msh *msh, t_token *tk);
+void	ft_echo(t_list *node);
+void	ft_pwd(t_list *node);
+void	ft_env(t_msh *msh);
+void	ft_exit(t_msh *msh);
+void	ft_cd(t_msh *msh);
+
+int		check_path(t_msh *msh, char **mycmd);
+int		check_pipe(t_list *node);
+
+void	ft_error_msh(t_msh *msh, char *str);
+int		is_builtin(t_token *tk);
+void	launch_builtin(t_msh *msh);
+void	child_node(t_list *node, char **envp);
+void	parent_node(t_list *node);
+
+void	child_pipe(t_list *node);
+void	parent_pipe(t_list *node);
+void	no_pipe(t_msh *msh);
+void	multiple_cmds(t_msh *msh);
+
+char	*apply_redir(t_list *node);
+char	*redir_in(t_list *node, char *err_msg_fd, int *redir_in_done);
+char	*redir_out(t_list *node, char *err_msg_fd, int *redir_out_done);
+char	*redir_append(t_list *node, char *err_msg_fd, int *redir_out_done);
+char	*redir_heredoc(t_list *node, char *err_msg_fd, int *redir_in_done);
+void	get_tilde(t_msh *msh);
+void	try_redirs(t_list *node);
+
 void	ft_free(char **s);
+char	*strjoinfree(char *s1, char *s2);
+void	run_exec(t_msh *msh);
 
-void	clearnodes(t_node **node);
-void	nodeadd_back(t_node **anode, char *arg[],
-			int type, t_env *env);
+int		check_syntax_redir(t_list *tokens);
+int		check_syntax_pipe(t_list *node);
 
-int		check_both_pipe_cmd(t_node *node);
-int		check_pipe(t_node *node);
-int		check_cmd(t_node *node);
-int		check_without_fork(t_node *node);
+void	set_stdio(t_msh *msh);
+void	unset_stdio(t_msh *msh);
+void	set_global(t_msh *msh);
+void	init_pids_pipes(t_msh *msh);
 
-void	parent_pipe(t_node *node);
-void	child_append(t_node *node);
-void	child_out_redir(t_node *node);
-void	child_in_redir(t_node *node);
-void	child_pipe(t_node *node);
-void	exec_cmd(t_node *node, char **env);
-void	check_relatif_path(t_node *node, char **mycmd);
-
-void	clear_env(t_env **env);
-void	envadd_back(t_env **aenv, char *name, char *value);
-t_env	*envlast(t_env *env);
-int		get_env_size(t_env *env);
-t_env	*pop_env(t_env *env, char *name);
-t_env	*get_env_by_name(t_env *env, char *name);
-t_env	*get_linked_list(char **envp);
-
-int		launch_builtin(t_node *node);
-int		is_builtin(t_node *node);
-void	ft_cd(t_node *node);
-void	ft_echo(t_node *node);
-void	ft_pwd(t_node *node);
-void	ft_env(t_node *node);
-void	ft_export(t_node *node);
-void	export_append(t_node *node);
-void	export_normal(t_node *node);
-void	export_no_args(t_node *node);
-void	ft_unset(t_node *node);
-void	ft_exit(t_node *node);
+void	check_env_intero(t_token *tk);
+int		get_nb_args(t_list *node);
+char	**set_arg(t_list *node);
+void	simplification_redir(t_list *node);
+void	heredoc(char *delemiter);
+void	get_heredoc(t_list *node);
+void	parent_signal(int sig);
+void	child_signal(int sig);
 
 #endif

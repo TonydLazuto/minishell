@@ -3,47 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:34:19 by aderose           #+#    #+#             */
-/*   Updated: 2020/05/15 16:32:51 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/01 11:54:36 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 10:13:07 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static int	check_set(char const *set, char c)
+static int	ft_ischarset(char c, char const *charset)
 {
-	while (*set)
+	unsigned int	i;
+
+	i = 0;
+	while (charset[i])
 	{
-		if (*set == c)
+		if (charset[i] == c)
 			return (1);
-		set++;
+		i++;
 	}
 	return (0);
 }
 
-char	*ft_strtrim(char const *s, char const *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*str;
-	int		i;
-	int		j;
-	int		len;
+	char			*result;
+	unsigned int	start;
+	unsigned int	end;
+	int				result_len;
 
-	i = 0;
-	if (!s)
-		return (NULL);
-	j = ft_strlen(s) - 1;
-	while (check_set(set, s[i]))
-		i++;
-	while (check_set(set, s[j]) && j)
-		j--;
-	len = j - i + 1;
-	if (len < 0)
-		len = 0;
-	str = ft_substr(s, i, len);
-	if (!str)
-		return (NULL);
-	return (str);
+	start = 0;
+	if (*s1 == '\0')
+		return (ft_substr(s1, 0, 0));
+	end = ft_strlen(s1) - 1;
+	while (s1[start] && ft_ischarset(s1[start], set))
+		start++;
+	while (end && ft_ischarset(s1[end], set))
+		end--;
+	if ((int)(end - start + 1) >= 0)
+		result_len = end - start + 1;
+	else
+		result_len = 0;
+	result = ft_substr(s1, start, result_len);
+	return (result);
 }

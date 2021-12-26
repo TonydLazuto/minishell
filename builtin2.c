@@ -3,80 +3,118 @@
 /*                                                        :::      ::::::::   */
 /*   builtin2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 12:13:58 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/20 12:14:01 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/15 14:09:42 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(t_node *node)
-{
-	while (node->back)
-		node = node->back;
-	clearnodes(&node);
-	exit(EXIT_SUCCESS);
-}
+/**
+ * translate_home(t_node *node)
+ * 		traduit le ~ avec le path de la var
+ * 		d'environnement HOME lors du "cd"
+ * maj_pwd(t_node *node)
+ * 		met a jour les var d'environnements
+ * 		PWD et OLDPWD apres un "cd"
+ */
 
-void	translate_home(t_node *node)
+void	ft_pwd(t_list *node)
 {
-	t_env	*elet;
+	char	*buf;
 
-	elet = get_env_by_name(node->cmd.env, "HOME");
-	if (elet)
+	buf = NULL;
+	if (((t_token *)node->content)->len != 1)
 	{
-		free(node->cmd.arg[1]);
-		node->cmd.arg[1] = NULL;
-		node->cmd.arg[1] = ft_strdup(elet->value);
-		if (!node->cmd.arg[1])
-			ft_error(node, "error: malloc HOME");
+		ft_putstr_fd("Error: pwd too many arguments.\n", 1);
+		return ;
+	}
+	buf = getcwd(buf, 0);
+	if (buf)
+	{
+		ft_putendl_fd(buf, 1);
+		ft_free(&buf);
 	}
 	else
-		ft_error(node, "error: HOME doesn't exist");
+		ft_putendl_fd("This folder's been deleted", 1);
 }
 
-void	maj_pwd(t_node *node)
+void	check_home_env(t_msh *msh)
 {
-	t_env	*env_pwd;
-	t_env	*env_oldpwd;
+	int		line;
+	char	*home_path;
+
+	g_exit_status = 0;
+	home_path = NULL;
+	line = get_env_line(msh->myenv, "HOME");
+	if (line == -1)
+		ft_putendl_fd("Error: HOME doesn't exist.", 1);
+	else
+	{
+		home_path = ft_strchr(msh->myenv[line], '=');
+		if (home_path && *home_path != '\0' && *home_path++ != '\0')
+		{
+			if (chdir(home_path) == -1)
+				ft_putendl_fd("Error: folder doesn't exist.", 1);
+		}
+		else
+			ft_putendl_fd("Error: HOME has no value.", 1);
+		g_exit_status = 1;
+	}
+}
+
+void	maj_pwd(t_msh *msh)
+{
+	int		pwd_line;
+	int		oldpwd_line;
 	char	*buf;
 
 	buf = NULL;
 	buf = getcwd(buf, 0);
 	if (!buf)
-		ft_error(node, "error: malloc oldpwd");
-	env_pwd = get_env_by_name(node->cmd.env, "PWD");
-	env_oldpwd = get_env_by_name(node->cmd.env, "OLDPWD");
-	if (env_pwd && env_oldpwd)
-	{
-		free(env_oldpwd->value);
-		env_oldpwd->value = ft_strdup(env_pwd->value);
-		if (!env_oldpwd->value)
-			ft_error(node, "error: malloc PWD");
+		ft_error_msh(msh, "Malloc oldpwd");
+	pwd_line = get_env_line(msh->myenv, "PWD");
+	oldpwd_line = get_env_line(msh->myenv, "OLDPWD");
+	if (pwd_line >= 0 && oldpwd_line >= 0
+		&& ft_strchr(msh->myenv[pwd_line], '='))
+	{	
+		msh->myenv[oldpwd_line] = join_env_value(msh->myenv[oldpwd_line],
+				"OLDPWD", ft_strchr(msh->myenv[pwd_line], '='));
+		if (!msh->myenv[oldpwd_line])
+			ft_error_msh(msh, "Malloc PWD");
 	}
-	if (env_pwd)
-	{
-		free(env_pwd->value);
-		env_pwd->value = ft_strdup(buf);
-		if (!env_pwd->value)
-			ft_error(node, "error: malloc PWD");
-	}
+	if (pwd_line >= 0)
+		msh->myenv[pwd_line] = join_env_value(msh->myenv[pwd_line],
+				"PWD=", buf);
+	if (pwd_line >= 0)
+		if (!msh->myenv[pwd_line])
+			ft_error_msh(msh, "Malloc PWD");
 	ft_free(&buf);
 }
 
-void	ft_cd(t_node *node)
+void	ft_cd(t_msh *msh)
 {
-	node->cmd.exit_status = 1;
-	if (node->cmd.len > 2)
-		ft_error(node, "cd: too many arguments");
-	if (!node->cmd.arg[1] || (node->cmd.arg[1]
-			&& (node->cmd.arg[1][0] == '~'
-			&& node->cmd.arg[1][0] == '\0')))
-		translate_home(node);
-	if (chdir(node->cmd.arg[1]) == -1)
-		ft_error(node, "error: chdir");
-	maj_pwd(node);
-	node->cmd.exit_status = 0;
+	t_token	*tk;
+
+	tk = (t_token *)msh->node->content;
+	g_exit_status = 1;
+	if (tk->len > 2)
+	{
+		ft_putstr_fd("Error: too many arguments.\n", 1);
+		return ;
+	}
+	if (!tk->arg[1])
+	{
+		check_home_env(msh);
+		return ;
+	}
+	if (chdir(tk->arg[1]) == -1)
+	{
+		ft_putstr_fd("Error: folder doesn't exists.\n", 1);
+		return ;
+	}
+	maj_pwd(msh);
+	g_exit_status = 0;
 }

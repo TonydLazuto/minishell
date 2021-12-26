@@ -3,31 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:16:28 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:31:41 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/12 20:37:29 by jdidier           #+#    #+#             */
+/*   Updated: 2021/11/10 16:49:41 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
 void	ft_lstdelone(t_list *lst, void (*del)(void*))
 {
-	t_list	*tmp;
-	t_list	*before;
-
-	if (lst == NULL || !del)
-		return ;
-	tmp = lst;
-	before = lst;
-	while (tmp != lst)
+	if (lst && del)
 	{
-		before = tmp;
-		tmp = tmp->next;
+		del(lst->content);
+		free(lst);
+		lst = NULL;
 	}
-	before->next = tmp->next;
-	free(tmp);
-	del(tmp->content);
 }

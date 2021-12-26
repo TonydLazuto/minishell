@@ -3,72 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:14:44 by aderose           #+#    #+#             */
-/*   Updated: 2020/05/12 18:47:55 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/01 15:20:39 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 10:26:34 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static char	*ft_strnew(size_t size)
+static void	ft_recursive(int n, char *result, int *i)
 {
-	char	*str;
-	size_t	i;
+	long int	nbl;
 
-	str = (char *)malloc(size + 1);
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (i < size)
+	nbl = n;
+	if (nbl < 0)
 	{
-		str[i] = '\0';
-		i++;
+		result[*i] = '-';
+		nbl *= -1;
+		*i += 1;
 	}
-	str[i] = '\0';
-	return (str);
-}
-
-static size_t	set_size(int n)
-{
-	size_t	size;
-
-	size = 1;
-	if (n < 0)
-		size++;
-	while (n)
+	if (nbl >= 10)
 	{
-		n /= 10;
-		size++;
+		ft_recursive(nbl / 10, result, i);
+		ft_recursive(nbl % 10, result, i);
 	}
-	return (size);
+	else
+	{
+		result[*i] = (nbl + '0');
+		*i += 1;
+	}
 }
 
 char	*ft_itoa(int n)
 {
-	long	nb;
-	char	*s;
-	size_t	size;
+	int		counter;
+	int		nb;
+	char	*result;
 
-	nb = (long)n;
-	size = set_size(n);
-	s = ft_strnew(size);
-	if (!s)
-		return (NULL);
-	if (nb == 0)
-		s[0] = '0';
+	counter = 0;
+	nb = n;
 	if (nb < 0)
 	{
-		nb = -nb;
-		s[0] = '-';
+		counter++;
+		nb *= -1;
 	}
-	while (nb > 0)
+	while (nb >= 1)
 	{
-		size--;
-		s[size] = nb % 10 + '0';
 		nb /= 10;
+		counter++;
 	}
-	return (s);
+	result = malloc(sizeof(*result) * (counter + 1));
+	if (!result)
+		return (NULL);
+	counter = 0;
+	ft_recursive(n, result, &counter);
+	result[counter] = '\0';
+	return (result);
 }

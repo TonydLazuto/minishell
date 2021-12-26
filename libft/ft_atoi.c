@@ -3,46 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:10:10 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:27:17 by aderose          ###   ########.fr       */
+/*   Created: 2020/04/28 19:36:17 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 09:38:37 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static const char	*skip_space(const char *str)
+int	ft_isspace(char c)
 {
-	while (*str == '\t' || *str == '\n' || *str == '\v'
-		|| *str == '\f' || *str == '\r' || *str == ' ')
-		str++;
-	return (str);
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r')
+		return (1);
+	else
+		return (0);
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi(const char *nptr)
 {
-	int			sign;
-	long long	nb;
+	int	minus;
+	int	result;
 
-	nb = 0;
-	sign = 1;
-	str = skip_space(str);
-	if (*str == '+' || *str == '-')
+	minus = 1;
+	result = 0;
+	if (!(ft_isdigit(*nptr) || *nptr == '-' || *nptr == '+'
+			|| ft_isspace(*nptr)))
+		return (0);
+	else
 	{
-		if (*str == '-')
-			sign = -1;
-		str++;
+		while (ft_isspace(*nptr))
+			nptr++;
+		if (*nptr == '-' || *nptr == '+')
+		{
+			if (*nptr == '-')
+				minus *= -1;
+			nptr++;
+		}
 	}
-	while (*str && ft_isdigit(*str))
+	while (ft_isdigit(*nptr))
 	{
-		nb = nb * 10 + *str - '0';
-		if (nb < 0 && sign == -1)
-			return (0);
-		if (nb < 0 && sign == 1)
-			return (-1);
-		str++;
+		result = result * 10 + (*nptr - 48);
+		nptr++;
 	}
-	nb *= sign;
-	return ((int)nb);
+	return (result * minus);
 }

@@ -3,93 +3,82 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 14:16:03 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/26 14:16:07 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/08 12:11:06 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	split_append(t_node *node, char **name, char **val)
+void	print_export_value(t_msh *msh, int i, int j)
 {
-	size_t			len;
-	unsigned int	start;
-
-	len = 1;
-	while (node->cmd.arg[1][len] != '+')
-		len++;
-	*name = ft_substr(node->cmd.arg[1], 0, len);
-	if (!*name)
-		ft_error(node, "export: malloc");
-	len++;
-	start = len + 1;
-	if (!node->cmd.arg[1][len])
-		return ;
-	while (node->cmd.arg[1][len])
-		len++;
-	*val = ft_substr(node->cmd.arg[1], start, len);
-	if (!*val)
-		ft_error(node, "export: malloc");
+	if (msh->myenv[i][j])
+	{
+		ft_putchar_fd('=', 1);
+		ft_putchar_fd('"', 1);
+		j++;
+		while (msh->myenv[i][j])
+		{
+			ft_putchar_fd(msh->myenv[i][j], 1);
+			j++;
+		}
+		ft_putchar_fd('"', 1);
+	}
 }
 
-void	export_append(t_node *node)
+void	print_export(t_msh *msh)
 {
-	t_env	*elet;
-	char	*name;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (msh->myenv[i])
+	{
+		ft_putstr_fd("declare -x ", 1);
+		j = 0;
+		while (msh->myenv[i][j] && msh->myenv[i][j] != '=')
+		{
+			ft_putchar_fd(msh->myenv[i][j], 1);
+			j++;
+		}
+		print_export_value(msh, i, j);
+		ft_putchar_fd('\n', 1);
+		i++;
+	}
+}
+
+void	export_new(t_msh *msh, char *arg, char *name)
+{
+	char	*s;
 	char	*val;
 
-	name = NULL;
-	val = NULL;
-	split_append(node, &name, &val);
-	elet = get_env_by_name(node->cmd.env, name);
-	if (elet)
-	{
-		elet->value = strjoinfree(elet->value, val);
-		if (!elet->value)
-			ft_error(node, "export: malloc export_append()");
-	}
+	val = ft_strchr(arg, '=');
+	if (ft_strnstr(arg, "+=", ft_strlen(arg)))
+		s = ft_strjoin(name, val);
 	else
-		envadd_back(&node->cmd.env, name, val);
+		s = ft_strdup(arg);
+	msh->myenv = env_add(msh->myenv, s);
+	ft_free(&s);
 }
 
-void	split_normal(t_node *node, char **name, char **val)
+void	modify_export(t_msh *msh, int line, char *arg)
 {
-	size_t			len;
-	unsigned int	start;
-
-	len = 1;
-	while (node->cmd.arg[1][len] != '=')
-		len++;
-	start = len + 1;
-	*name = ft_substr(node->cmd.arg[1], 0, len);
-	if (!*name)
-		ft_error(node, "export: malloc");
-	if (!node->cmd.arg[1][len])
-		return ;
-	while (node->cmd.arg[1][len])
-		len++;
-	*val = ft_substr(node->cmd.arg[1], start, len);
-	if (!*val)
-		ft_error(node, "export: malloc");
-}
-
-void	export_normal(t_node *node)
-{
-	t_env	*elet;
-	char	*name;
 	char	*val;
+	char	*tmp;
 
-	name = NULL;
-	val = NULL;
-	split_normal(node, &name, &val);
-	elet = get_env_by_name(node->cmd.env, name);
-	if (elet)
+	tmp = NULL;
+	val = ft_strchr(arg, '=');
+	if (!val || *val == '\0' || *val++ == '\0')
+		return ;
+	if (ft_strnstr(arg, "+=", ft_strlen(arg)))
 	{
-		free(elet->value);
-		elet->value = ft_strdup(val);
+		tmp = ft_strdup(msh->myenv[line]);
+		msh->myenv[line] = join_env_value(msh->myenv[line], tmp, val);
+		ft_free(&tmp);
 	}
 	else
-		envadd_back(&node->cmd.env, name, val);
+		msh->myenv[line] = replace_env_line(msh->myenv[line], arg);
 }

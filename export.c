@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 19:11:54 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/19 19:11:55 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/08 13:53:51 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,78 +14,86 @@
 
 /**
  * INFO
- * name
- * A word consisting solely of letters, numbers,
- * and underscores, and beginning with a letter or underscore.
- * Names are used as shell variable and function names.
- * Also referred to as an identifier.
- * word
- * A sequence of characters treated as a unit by the shell.
- * Words may not include unquoted metacharacters. 
+ * env name (or key)
+ * A word consisting solely of letters, numbers, and underscores,
+ * and beginning with a letter or underscore.
+ * 
+ * Le dollar $ apres le mot export
+ * devrait etre une error mais passe
  */
 
-int	mini_parse_export2(t_node *node, int i, int *append)
+int	check_valid_name(char *arg)
 {
-	if (node->cmd.arg[1][i] == '+')
+	int	j;
+
+	j = 0;
+	if (!ft_isalpha(arg[j]) && arg[j] != '_')
+		return (0);
+	j++;
+	while (arg[j] && arg[j] != '+' && arg[j] != '=')
 	{
-		i++;
-		if (node->cmd.arg[1][i] != '=')
-			ft_error(node, "export: invalid argument");
-		i++;
-		*append = 1;
+		if (!ft_isalnum(arg[j]) && arg[j] != '_')
+			return (0);
+		j++;
 	}
-	else if (node->cmd.arg[1][i] == '=')
-		i++;
-	else
-		ft_error(node, "export: invalid argument");
-	return (i);
+	return (1);
 }
 
-void	mini_parse_export(t_node *node, int *append)
+char	*get_name(t_msh *msh, char *arg)
 {
-	int	i;
+	char	*name;
+	char	*equal;
+	char	*sep;
+
+	equal = ft_strchr(arg, '=');
+	sep = ft_strnstr(arg, "+=", ft_strlen(arg));
+	name = NULL;
+	if (sep)
+		name = ft_substr(arg, 0, sep - arg);
+	else if (equal)
+		name = ft_substr(arg, 0, equal - arg);
+	else
+		name = ft_strdup(arg);
+	if (!name)
+		ft_error_msh(msh, "malloc name env.");
+	return (name);
+}
+
+void	ft_export2(t_msh *msh, char *arg)
+{
+	char	*name;
+	int		line;
+
+	name = get_name(msh, arg);
+	line = get_env_line(msh->myenv, name);
+	if (line == -1)
+		export_new(msh, arg, name);
+	else
+		modify_export(msh, line, arg);
+	ft_free(&name);
+}
+
+void	ft_export(t_msh *msh)
+{
+	t_token	*tk;
+	int		i;
 
 	i = 1;
-	if (!ft_isalpha(node->cmd.arg[1][0]))
-		ft_error(node, "error: first character of argument is not alpha");
-	while (node->cmd.arg[1][i] && node->cmd.arg[1][i] != '='
-			&& node->cmd.arg[1][i] != '+')
+	tk = (t_token *)msh->node->content;
+	g_exit_status = 0;
+	if (tk->len == 1)
 	{
-		if (!ft_isalnum(node->cmd.arg[1][i]) && node->cmd.arg[1][i] != '_')
-			ft_error(node, "export: invalid character in var env");
-		i++;
-	}
-	if (!node->cmd.arg[1][i])
-		return ;
-	i = mini_parse_export2(node, i, append);
-	if (node->cmd.arg[1][i - 1] != '=')
-		ft_error(node, "export: invalid argument");
-	if (node->cmd.arg[1][i] == '\0')
-		ft_error(node, "export: not initialized");
-	while (node->cmd.arg[1][i])
-	{
-		if (!ft_isascii(node->cmd.arg[1][i]))
-			ft_error(node, "export: env value is not ascii");
-		i++;
-	}
-}
-
-void	ft_export(t_node *node)
-{
-	int	append;
-
-	append = 0;
-	node->cmd.exit_status = 0;
-	if (node->cmd.len == 1)
-	{
-		export_no_args(node);
+		print_export(msh);
 		return ;
 	}
-	if (node->cmd.len != 2)
-		ft_error(node, "export: too many arguments");
-	mini_parse_export(node, &append);
-	if (append == 1)
-		export_append(node);
-	else
-		export_normal(node);
+	while (tk->arg[i])
+	{
+		if (!check_valid_name(tk->arg[i]))
+		{
+			ft_putendl_fd("invalid export.", STDOUT_FILENO);
+			return ;
+		}
+		ft_export2(msh, tk->arg[i]);
+		i++;
+	}
 }

@@ -3,51 +3,124 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/11 12:47:49 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/25 16:55:38 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/17 17:18:33 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_out_redir(t_node *node)
+int	check_next_redir(t_list *node)
 {
-	if (node->next->cmd.len != 1)
-		ft_error(node, "error : wrong nb_args NODE_REDIR");
-	node->cmd.fd= open(node->next->cmd.arg[0], O_RDWR | O_TRUNC | O_CREAT,
-			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	// printf("fd |%d|\n", node->next->cmd.fd);
-	if (node->cmd.fd == -1)
-		ft_error(node, "error : open()");
-	if (dup2(node->cmd.fd, 1) < 0)
-		ft_error(node, "error : fatal");
-	if (node->next->type != NODE_OUT_REDIR)
-		close(node->cmd.fd);
+	t_token	*tk_next;
+
+	tk_next = get_next_token(node);
+	if (!node || !node->next)
+		return (0);
+	if (tk_next && ((tk_next->type == TK_IN_REDIR)
+			|| (tk_next->type == TK_OUT_REDIR)
+			|| (tk_next->type == TK_OUT_DREDIR)
+			|| (tk_next->type == TK_HERE_DOC)))
+		return (1);
+	return (0);
 }
 
-void	child_in_redir(t_node *node)
+char	*redir_heredoc(t_list *node, char *err_msg_fd, int *redir_in_done)
 {
-	if (node->cmd.len != 1)
-		ft_error(node, "error : wrong nb_args NODE_REDIR");
-	node->cmd.fd= open(node->cmd.arg[0], O_RDWR);
-	if (node->cmd.fd == -1)
-		ft_error(node, "error : open()");
-	if (dup2(node->cmd.fd, 0) < 0)
-		ft_error(node, "error : fatal");
-	close(node->cmd.fd);
+	t_token	*tk;
+	int		fd;
+
+	tk = (t_token *)node->content;
+	fd = open(tk->value, O_RDONLY);
+	if (fd == -1)
+	{
+		err_msg_fd = "Error: no such file or directory in_redir";
+		return (err_msg_fd);
+	}
+	if (check_next_redir(node))
+		close(fd);
+	else
+	{
+		*redir_in_done = 1;
+		if (dup2(fd, STDIN_FILENO) < 0)
+			ft_error(&node, "fatal");
+	}
+	close(fd);
+	return (err_msg_fd);
 }
 
-void	child_append(t_node *node)
+char	*redir_in(t_list *node, char *err_msg_fd, int *redir_in_done)
 {
-	if (node->next->cmd.len != 1)
-		ft_error(node, "error : wrong nb_args NODE_DREDIR");
-	node->cmd.fd= open(node->next->cmd.arg[0], O_APPEND | O_RDWR | O_CREAT,
+	t_token	*tk;
+	int		fd;
+
+	tk = (t_token *)node->content;
+	fd = open(tk->value, O_RDONLY);
+	if (fd == -1)
+	{
+		err_msg_fd = "Error: no such file or directory in_redir";
+		return (err_msg_fd);
+	}
+	if (check_next_redir(node))
+		close(fd);
+	else
+	{
+		*redir_in_done = 1;
+		if (dup2(fd, STDIN_FILENO) < 0)
+			ft_error(&node, "fatal");
+	}
+	close(fd);
+	return (err_msg_fd);
+}
+
+char	*redir_out(t_list *node, char *err_msg_fd, int *redir_out_done)
+{
+	t_token	*tk;
+	int		fd;
+
+	tk = (t_token *)node->content;
+	fd = open(tk->value, O_RDWR | O_TRUNC | O_CREAT,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (node->cmd.fd == -1)
-		ft_error(node, "error : open()");
-	if (dup2(node->cmd.fd, 1) < 0)
-		ft_error(node, "error : fatal");
-	close(node->cmd.fd);
+	if (fd == -1)
+	{
+		err_msg_fd = "Error: no such file or directory out_redir";
+		return (err_msg_fd);
+	}
+	if (check_next_redir(node))
+		close(fd);
+	else
+	{
+		*redir_out_done = 1;
+		if (dup2(fd, STDOUT_FILENO) < 0)
+			ft_error(&node, "fatal");
+	}
+	close(fd);
+	return (err_msg_fd);
+}
+
+char	*redir_append(t_list *node, char *err_msg_fd, int *redir_out_done)
+{
+	t_token	*tk;
+	int		fd;
+
+	tk = (t_token *)node->content;
+	fd = open(tk->value, O_APPEND | O_RDWR | O_CREAT,
+			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	if (fd == -1)
+	{
+		err_msg_fd = "Error: no such file or directory out_dredir";
+		return (err_msg_fd);
+	}
+	if (check_next_redir(node))
+		close(fd);
+	else
+	{
+		*redir_out_done = 1;
+		if (dup2(fd, STDOUT_FILENO) < 0)
+			ft_error(&node, "fatal");
+	}
+	close(fd);
+	return (err_msg_fd);
 }

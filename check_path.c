@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/20 13:31:29 by aderose           #+#    #+#             */
-/*   Updated: 2021/11/20 14:20:52 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/15 14:10:23 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,59 +35,48 @@ char	*joinpath(char *s1, char *s2)
 	return (str);
 }
 
-void	clear_paths(char **paths)
-{
-	int	i;
-
-	i = 0;
-	if (paths)
-	{
-		while (paths[i])
-		{
-			free(paths[i]);
-			paths[i] = NULL;
-			i++;
-		}
-		free(paths);
-		paths = NULL;
-	}
-}
-
-int	check_access(char *cur_path, char **mycmd)
+int	check_access(char *path, char *next_path, char **mycmd)
 {
 	char	*new_cmd;
+	char	*cur_path;
 
-	new_cmd = NULL;
-	if (!cur_path)
-		return (0);
+	if (next_path)
+		cur_path = ft_substr(path, 0, next_path - path - 1);
+	else
+		cur_path = ft_strdup(path);
 	new_cmd = joinpath(cur_path, *mycmd);
 	if (access(new_cmd, X_OK | F_OK) == 0)
 	{
 		ft_free(mycmd);
 		*mycmd = ft_strdup(new_cmd);
+		ft_free(&cur_path);
 		ft_free(&new_cmd);
-		return (0);
+		return (1);
 	}
+	ft_free(&cur_path);
 	ft_free(&new_cmd);
-	return (1);
+	return (0);
 }
 
-void	check_relatif_path(t_node *node, char **mycmd)
+int	check_path(t_msh *msh, char **mycmd)
 {
-	t_env	*env;
-	char	**paths;
-	int		i;
+	char	*path;
+	char	*next_path;
+	int		ret;
 
-	i = 0;
-	paths = NULL;
-	env = get_env_by_name(node->cmd.env, "PATH");
-	if (!env)
-		ft_error(node, "error: PATH env dosen't exist. \
-			Cannot add relative path.");
-	paths = ft_split(env->value, ':');
-	if (!paths)
-		ft_error(node, "error: malloc()");
-	while (check_access(paths[i], mycmd))
-		i++;
-	clear_paths(paths);
+	path = NULL;
+	next_path = NULL;
+	ret = 0;
+	path = get_env_value("PATH", msh->myenv, msh);
+	if (!path)
+		return (0);
+	while (path && !ret)
+	{
+		next_path = ft_strchr(path, ':');
+		if (next_path)
+			next_path++;
+		ret = check_access(path, next_path, mycmd);
+		path = next_path;
+	}
+	return (ret);
 }

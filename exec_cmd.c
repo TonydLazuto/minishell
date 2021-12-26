@@ -1,108 +1,106 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_node.c                                         :+:      :+:    :+:  */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 21:26:44 by aderose           #+#    #+#             */
-/*   Updated: 2021/10/13 21:26:54 by aderose          ###   ########.fr       */
+/*   Updated: 2021/12/19 11:40:54 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	launch_builtin(t_node *node)
+void	exec_cmd(t_msh *msh, char **env, int *i)
 {
-	if (!node->cmd.arg[0])
-		return (0);
-	else if (my_strncmp(node->cmd.arg[0], "cd") == 0)
-		ft_cd(node);
-	else if (my_strncmp(node->cmd.arg[0], "echo") == 0)
-		ft_echo(node);
-	else if (my_strncmp(node->cmd.arg[0], "pwd") == 0)
-		ft_pwd(node);
-	else if (my_strncmp(node->cmd.arg[0], "env") == 0)
-		ft_env(node);
-	else if (my_strncmp(node->cmd.arg[0], "export") == 0)
-		ft_export(node);
-	else if (my_strncmp(node->cmd.arg[0], "unset") == 0)
-		ft_unset(node);
-	else if (my_strncmp(node->cmd.arg[0], "exit") == 0)
-		ft_exit(node);
-	else
-		return (0);
-	return (1);
-}
+	t_token	*tk;
 
-int	check_end_redir(t_node *node)
-{
-	if (node->next && node->next->type != NODE_OUT_REDIR)
-		close(node->cmd.fd);
-	if (node->type == NODE_OUT_REDIR)
+	tk = (t_token *)msh->node->content;
+	msh->pid[*i] = fork();
+	if (msh->pid[*i] < 0)
+		ft_error_msh(msh, "fork().");
+	if (msh->pid[*i] == 0)
 	{
-		if (node->back)
-			close(node->back->cmd.fd);
-		if (!node->next)
-			return (1);
+		if (check_pipe(msh->node))
+			child_pipe(msh->node);
+		if (tk->arg[0][0] != '/')
+			check_path(msh, &tk->arg[0]);
+		if (execve(tk->arg[0], tk->arg, env) == -1)
+			ft_error_msh(msh, "command not found.");
 	}
-	return (0);
-}
-
-void	child_node(t_node *node, char **envp)
-{
-	if (check_end_redir(node))
-		return ;
-	if (node->type == NODE_IN_REDIR)
-		child_in_redir(node);
-	if (node->next && node->next->type == NODE_OUT_REDIR)
-		child_out_redir(node);
-	if (node->next && node->next->type == NODE_OUT_DREDIR)
-		child_append(node);
-	if (check_both_pipe_cmd(node))
-		child_pipe(node);
-	if (check_pipe(node))
-		if (!check_cmd(node))
-			return ;
-	if (launch_builtin(node) == 0 && node->type == NODE_CMD)
+	else
 	{
-		if (node->cmd.arg[0][0] != '/')
-			check_relatif_path(node, &node->cmd.arg[0]);
-		if (execve(node->cmd.arg[0], node->cmd.arg, envp) == -1)
-			ft_error(node, "error: execve()");
+		signal(SIGINT, child_signal);
+		signal(SIGQUIT, child_signal);
+		if (check_pipe(msh->node))
+			parent_pipe(msh->node);
 	}
 }
 
-void	parent_node(t_node *node)
+void	prep_exec(t_msh *msh, t_token *tk, int *i)
 {
-	if (check_both_pipe_cmd(node))
-		parent_pipe(node);
+	if (check_pipe(msh->node))
+		if (pipe(tk->pipefd) == -1)
+			ft_error_msh(msh, "pipe().");
+	if (is_builtin(tk))
+		launch_builtin(msh);
+	else if (tk->type == TK_CMD)
+	{
+		exec_cmd(msh, msh->myenv, i);
+		(*i)++;
+	}
 }
 
-void	exec_cmd(t_node *node, char **envp)
+char	*loop_run_exec(t_msh *msh, t_token *tk)
 {
-	pid_t	pid;
-	int		status;
+	char	*err_msg_fd;
+	t_token	*tk_prev;
+	int		i;
 
-	if (check_both_pipe_cmd(node))
-		if (pipe(node->cmd.pipefd) == -1)
-			ft_error(node, "error : pipe()");
-	if (check_without_fork(node))
-		child_node(node, envp);
-	else
+	i = 0;
+	tk_prev = NULL;
+	err_msg_fd = apply_redir(msh->node);
+	while (msh->node)
 	{
-		pid = fork();
-		if (pid < 0)
-			ft_error(node, "error : fork()");
-		if (pid == 0)
-			child_node(node, envp);
-		else
+		tk = (t_token *)msh->node->content;
+		tk_prev = get_prev_token(msh->node);
+		if (msh->node->prev && tk_prev->type == TK_PIPE)
+			err_msg_fd = apply_redir(msh->node);
+		if (err_msg_fd)
+			return (err_msg_fd);
+		prep_exec(msh, tk, &i);
+		if (tk->type == TK_PIPE || !msh->node->next)
 		{
-			waitpid(pid, &status, WNOHANG);
-			if (WIFEXITED(status) && (!node->back
-					|| (node->back && node->back->type != NODE_PIPE)))
-				node->cmd.exit_status = WEXITSTATUS(status);
-			parent_node(node);
+			unset_stdio(msh);
+			set_stdio(msh);
 		}
+		msh->node = msh->node->next;
 	}
+	multiple_cmds(msh);
+	return (err_msg_fd);
+}
+
+void	run_exec(t_msh *msh)
+{
+	t_token	*tk;
+	char	*err_msg_fd;
+
+	err_msg_fd = NULL;
+	tk = NULL;
+	if (msh->node)
+		tk = (t_token *)msh->node->content;
+	set_stdio(msh);
+	get_tilde(msh);
+	try_redirs(msh->node);
+	init_pids_pipes(msh);
+	err_msg_fd = loop_run_exec(msh, tk);
+	if (err_msg_fd)
+		ft_putendl_fd(err_msg_fd, 2);
+	if (msh->pid)
+	{
+		free(msh->pid);
+		msh->pid = NULL;
+	}
+	unset_stdio(msh);
 }

@@ -3,39 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:16:56 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:33:33 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/12 21:15:36 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 10:24:46 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*first;
-	t_list	*elmt;
+	const t_list	*lstp;
+	void			*is_success;
+	t_list			*ret;
+	t_list			*new;
 
-	if (!lst || !f)
-		return (NULL);
-	elmt = ft_lstnew(f(lst->content));
-	if (!elmt)
-		return (NULL);
-	lst = lst->next;
-	first = elmt;
-	while (lst)
+	lstp = lst;
+	ret = NULL;
+	new = NULL;
+	while (lstp)
 	{
-		elmt->next = ft_lstnew(f(lst->content));
-		if (!(elmt->next))
+		is_success = f(lstp->content);
+		if (is_success)
 		{
-			ft_lstclear(&first, del);
-			return (first);
+			new = ft_lstnew(is_success);
+			if (!new)
+			{
+				ft_lstclear(&lst, del);
+				return (NULL);
+			}
+			ft_lstadd_back(&ret, new);
 		}
-		elmt = elmt->next;
-		lst = lst->next;
+		lstp = lstp->next;
 	}
-	elmt = NULL;
-	return (first);
+	return (ret);
 }

@@ -1,0 +1,28 @@
+/-----\ Test done /-----\
+
+ls << qqch | cat-e
+<< oui | << non
+cat << ""
+export MYLS="ls -la"
+$MYLS : works
+"$MYLS" : command not found
+ls > out | cat file > out2
+<test/file3 < test/file cat | cat -e > test/file4
+
+
+/-----\ Comportement Differemt /-----\
+
+> ok ls | < file < file2 | cat -e
+> file1 cat << eof -e < file2 > file3
+cat << eof1 > file1 | cat << eof2 > file2
+
+/-----\ NOTE /-----\
+
+ls /proc/self/fd
+check les fd ouverts
+
+
+/-----\ A tester /-----\
+
+here doc apres ctrl-c
+here doc apres ctrl-d (pas obligatoire)
