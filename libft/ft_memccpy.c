@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:18:12 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:35:31 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/04 11:47:30 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 10:22:03 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memccpy(void *restrict dst, const void *restrict src,
-			int c, size_t n)
+void	*ft_memccpy(void *dest, const void *src, int c, size_t n)
 {
 	size_t			i;
-	unsigned char	*s_dst;
-	unsigned char	*s_src;
+	unsigned char	*tmpdest;
+	unsigned char	*tmpsrc;
+	unsigned char	tmpc;
 
-	s_dst = (unsigned char *)dst;
-	s_src = (unsigned char *)src;
 	i = 0;
+	tmpdest = (unsigned char *)dest;
+	tmpsrc = (unsigned char *)src;
+	tmpc = (unsigned char)c;
 	while (i < n)
 	{
-		s_dst[i] = s_src[i];
-		if (s_src[i] == (unsigned char)c)
-			return ((void *)(s_dst + i + 1));
+		tmpdest[i] = tmpsrc[i];
+		if (tmpsrc[i] == tmpc)
+			return (&tmpdest[i + 1]);
 		i++;
 	}
 	return (NULL);

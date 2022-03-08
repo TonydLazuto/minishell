@@ -1,39 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/01 17:26:07 by jdidier           #+#    #+#             */
+/*   Updated: 2021/12/15 14:17:31 by jdidier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void	printnodes(t_node *mynode)
+void	ft_free(char **s)
 {
-	t_node	*node;
-	int		i;
-
-	node = mynode;
-	while (node)
-	{
-		printf("node->ntype : %d\n", node->ntype);
-		if (node->ntype == CMD)
-		{
-			i = 0;
-			if (node->cmd.arg)
-			{
-				while (node->cmd.arg[i])
-				{
-					printf("node->cmd.arg[%d] : %s\n", i, node->cmd.arg[i]);
-					i++;
-				}
-			}
-			printf("node->cmd.type : %d\n", node->cmd.type);
-			if (node->right)
-				printf("\n");
-		}
-		node = node->right;
-	}
+	free(*s);
+	*s = NULL;
 }
 
-void	ft_exit(t_node *node, char *err)
+char	*strjoinfree(char *s1, char *s2)
 {
-	ft_putstr_fd(err, 1);
-	ft_putstr_fd("\n", 1);
-	while (node->parent)
-		node = node->parent;
-	clear_node(node);
-	exit(EXIT_FAILURE);
+	char	*str;
+	int		i;
+
+	i = 0;
+	str = NULL;
+	if (!s1)
+		return (ft_strdup(s2));
+	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (*s2)
+	{
+		str[i] = *s2++;
+		i++;
+	}
+	str[i] = '\0';
+	ft_free(&s1);
+	return (str);
 }

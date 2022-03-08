@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:20:10 by aderose           #+#    #+#             */
-/*   Updated: 2020/05/02 23:06:20 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/03 14:14:16 by jdidier           #+#    #+#             */
+/*   Updated: 2020/05/12 17:49:42 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
+	unsigned char	*tmpdst;
+	unsigned char	*tmpsrc;
 	size_t			i;
-	unsigned char	*s_dst;
-	unsigned char	*s_src;
 
-	i = 0;
-	s_dst = (unsigned char *)dst;
-	s_src = (unsigned char *)src;
-	if (dst == NULL && src == NULL)
-		return (NULL);
-	if (s_src < s_dst)
-		while (++i <= len)
-			s_dst[len - i] = s_src[len - i];
+	tmpdst = (unsigned char *)dst;
+	tmpsrc = (unsigned char *)src;
+	if (!(tmpdst || tmpsrc))
+		return (dst);
+	i = len;
+	if ((tmpdst > tmpsrc) && (tmpdst < tmpsrc + len))
+		while (i-- > 0)
+			*(tmpdst + i) = *(tmpsrc + i);
 	else
-		while (len-- > 0)
-			*(s_dst++) = *(s_src++);
+		while (i-- > 0)
+			*tmpdst++ = *tmpsrc++;
 	return (dst);
 }

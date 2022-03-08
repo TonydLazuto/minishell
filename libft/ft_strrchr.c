@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:33:44 by aderose           #+#    #+#             */
-/*   Updated: 2020/05/02 18:46:15 by aderose          ###   ########.fr       */
+/*   Created: 2020/04/28 08:59:09 by jdidier           #+#    #+#             */
+/*   Updated: 2021/11/14 16:46:25 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,19 @@
 
 char	*ft_strrchr(const char *s, int c)
 {
-	char	*str;
-	int		count;
-	int		i;
+	char	*tmp;
+	int		index;
 
-	str = (char *)s;
-	count = -1;
-	i = 0;
-	while (str[i] != '\0')
+	tmp = (char *)s;
+	index = (int)ft_strlen(s);
+	tmp += index;
+	while (index >= 0 && *tmp != c)
 	{
-		if (str[i] == c)
-			count = i;
-		i++;
+		tmp--;
+		index--;
 	}
-	if (c == '\0')
-		return (&str[i]);
-	if (count == -1)
+	if (*tmp == c)
+		return (tmp);
+	else
 		return (NULL);
-	return (&str[count]);
 }

@@ -3,84 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:25:09 by aderose           #+#    #+#             */
-/*   Updated: 2021/05/01 07:10:19 by tonyd            ###   ########.fr       */
+/*   Created: 2020/05/07 10:35:38 by jdidier           #+#    #+#             */
+/*   Updated: 2021/10/14 10:21:09 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
-static char	**fillstr(char *s, char c, char **str)
+static int	ft_wordscounter(char const *s, char c)
 {
-	unsigned int	i;
+	int	flag;
+	int	result;
+
+	flag = 0;
+	result = 0;
+	while (*s)
+	{
+		if (*s != c && !flag)
+		{
+			flag = 1;
+			result++;
+		}
+		if (*s == c)
+			flag = 0;
+		s++;
+	}
+	return (result);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char			**result;
 	unsigned int	start;
-	size_t			len;
-	int				wrd;
+	unsigned int	index;
+	unsigned int	i;
 
-	i = 0;
 	start = 0;
-	len = 0;
-	wrd = -1;
-	while (s[i])
-	{
-		if (s[i] == c)
-		{
-			if (len != 0)
-				str[++wrd] = ft_substr(s, start, len);
-			start = i + 1;
-			len = -1;
-		}
-		i++;
-		len++;
-	}
-	if (len != 0)
-		str[++wrd] = ft_substr(s, start, len);
-	str[++wrd] = NULL;
-	return (str);
-}
-
-static size_t	get_nbwords(char *s, char c)
-{
-	size_t	i;
-	int		j;
-	size_t	words;
-
+	index = 0;
 	i = 0;
-	j = 0;
-	words = 0;
-	while (s[i])
+	result = malloc(sizeof(char *) * (ft_wordscounter(s, c) + 1));
+	if (!result)
+		return (NULL);
+	while (s[index])
 	{
-		if (s[i] == c)
-		{
-			if (j != 0)
-				words++;
-			j = -1;
-		}
-		i++;
-		j++;
+		if (index > 0 && s[index] != c && s[index - 1] == c)
+			start = index;
+		if (index > 0 && s[index] == c && s[index - 1] != c)
+			result[i++] = ft_substr(s, start, (index - start));
+		index++;
 	}
-	if (j != 0)
-		words++;
-	return (words);
-}
-
-char	**ft_split(char *s, char c)
-{
-	char	**str;
-	size_t	words;
-
-	str = NULL;
-	if (!s || !c)
-		return (NULL);
-	words = get_nbwords(s, c);
-	if (words == 0)
-		return (NULL);
-	str = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!str)
-		return (NULL);
-	str = fillstr(s, c, str);
-	return (str);
+	if (index > 0 && s[index - 1] != c)
+		result[i++] = ft_substr(s, start, (index - start));
+	result[i] = NULL;
+	return (result);
 }

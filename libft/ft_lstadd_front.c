@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:15:39 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:31:18 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/12 18:50:26 by jdidier           #+#    #+#             */
+/*   Updated: 2021/05/25 23:02:15 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,11 @@
 
 void	ft_lstadd_front(t_list **alst, t_list *new)
 {
-	t_list	*lst;
+	t_list	*to_add;
 
-	if (new == NULL)
-		return ;
-	if (*alst == NULL)
-		new->next = NULL;
-	else
-	{
-		lst = *alst;
-		new->next = lst;
-	}
-	*alst = new;
+	to_add = new;
+	to_add->next = *alst;
+	if (*alst)
+		(*alst)->prev = to_add;
+	*alst = to_add;
 }

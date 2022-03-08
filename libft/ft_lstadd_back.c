@@ -3,28 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:15:21 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:31:08 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/12 20:05:15 by jdidier           #+#    #+#             */
+/*   Updated: 2021/12/01 20:25:30 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../minishell.h"
 
 void	ft_lstadd_back(t_list **alst, t_list *new)
 {
-	t_list	*lst;
+	t_list	*last;
 
-	if (new == NULL)
-		return ;
-	if (*alst == NULL)
+	if (!new)
 	{
-		*alst = new;
-		new->next = NULL;
-		return ;
+		
 	}
-	lst = ft_lstlast(*alst);
-	lst->next = new;
-	new->next = NULL;
+	last = ft_lstlast(*alst);
+	if (*alst)
+	{
+		last->next = new;
+		new->prev = last;
+	}
+	else
+		*alst = new;
 }

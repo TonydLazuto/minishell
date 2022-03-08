@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aderose <aderose@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdidier <jdidier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/05/02 12:10:20 by aderose           #+#    #+#             */
-/*   Updated: 2021/09/06 19:27:53 by aderose          ###   ########.fr       */
+/*   Created: 2020/05/03 12:04:48 by jdidier           #+#    #+#             */
+/*   Updated: 2020/05/09 20:21:17 by jdidier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	size_t	i;
+	unsigned char	*tmp;
+	size_t			i;
 
+	tmp = (unsigned char *)s;
 	i = 0;
 	while (i < n)
 	{
-		((char *)s)[i] = 0;
+		*tmp = '\0';
+		tmp++;
 		i++;
 	}
 }
